@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configuration du Modèle de Prédiction</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.active .material-symbols-outlined {
+    font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.5em 1.5em;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCf9WvBc0pDpNMpRsp1eoDdzEL1veR8ojGDUp84wIR6KdkPYx1p4g_qwLhUO6DhXFsJQnyjpRDmYZ00-ON74PlxknKTnOCJGWVtPdcYyBQmjkJ9qRw-qJYDMx3S-ORF0pVwSqTnmgiUe0zxe7rRaog_VVmtNljUFtX0OdarpMnaXENMXZxRwedE93vh5CEUI2VD65OVSf0y3TIId6wOvRPLoZUibKCU09jVOJREolS05CVKxsTa6VLQY8UigAYbsduKxp9gXmXh2Q)
+    }</style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex min-h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex w-64 flex-col border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark p-4">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAutU5Brmgqm_YjDLxEqvLUjQ50ILMCHo-yGC2OkR91XMZTrZ0hmPIxQ4D8U7DWz5559jIU4UIoVQrekEYcvBRI5yyUDGB43GqCP6egs9ICtO28rjKXSEbfICVzKIV90It8Po3LH4EW28cx5V9SB693miEMqegdjtt5bK_pt8Nc4hwljxuC1hbqRL_huQflPEWbkNi4vDQm-pQRjX97oQ4FguYS3p70s_Nb9gceyygwEJNlNMMhIsgQ-kCjmuyW0T-Inl3MCS2mhQ");'></div>
+<div class="flex flex-col">
+<h1 class="text-gray-900 dark:text-white text-base font-medium leading-normal">Dr. Awa Samb</h1>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Entomologist</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-700 dark:text-gray-300">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-700 dark:text-gray-300">database</span>
+<p class="text-sm font-medium leading-normal">Data Collection</p>
+</a>
+<a class="active flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-white" href="#">
+<span class="material-symbols-outlined text-primary dark:text-white">build</span>
+<p class="text-sm font-medium leading-normal">Model Configuration</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-700 dark:text-gray-300">map</span>
+<p class="text-sm font-medium leading-normal">Risk Map</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-700 dark:text-gray-300">assessment</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+</nav>
+</div>
+<div class="mt-auto flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-700 dark:text-gray-300">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined text-gray-700 dark:text-gray-300">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto p-8">
+<div class="mx-auto max-w-4xl">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-3 pb-8">
+<div class="flex flex-col gap-2">
+<p class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Configuration du Modèle de Prédiction</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Configurez les données, choisissez un modèle et lancez la prédiction du risque.</p>
+</div>
+</div>
+<!-- Section 1: Data Input -->
+<div class="mb-8">
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-4">1. Données d'Entrée</h2>
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark p-6">
+<label class="flex flex-col">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal pb-2">Données entomologiques</p>
+<select class="form-select w-full rounded-lg text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-primary focus:ring-primary h-12 text-base font-normal">
+<option>Données collectées 2023 - Région de Tambacounda</option>
+<option>Données historiques 2020-2022</option>
+</select>
+</label>
+</div>
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark p-6">
+<label class="flex flex-col">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal pb-2">Données environnementales</p>
+<select class="form-select w-full rounded-lg text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-primary focus:ring-primary h-12 text-base font-normal">
+<option>Données satellite Sentinel-2 (2023)</option>
+<option>Données de végétation (NDVI)</option>
+</select>
+</label>
+</div>
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark p-6">
+<label class="flex flex-col">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal pb-2">Données météorologiques</p>
+<select class="form-select w-full rounded-lg text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-primary focus:ring-primary h-12 text-base font-normal">
+<option>Données météo ANACIM (2023)</option>
+<option>Prévisions saisonnières</option>
+</select>
+</label>
+</div>
+<div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark p-6">
+<label class="flex flex-col">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal pb-2">Données DHIS2</p>
+<select class="form-select w-full rounded-lg text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-primary focus:ring-primary h-12 text-base font-normal">
+<option>Cas de paludisme confirmés (2023)</option>
+<option>Historique cas 2020-2022</option>
+</select>
+</label>
+</div>
+</div>
+</div>
+<!-- Section 2: Model Choice -->
+<div class="mb-8">
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-4">2. Choix du Modèle</h2>
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="model_choice" type="radio" value="xgboost"/>
+<div class="flex h-full flex-col items-center justify-center rounded-xl border-2 border-primary bg-primary/10 p-5 text-gray-700 dark:text-white peer-checked:border-primary peer-checked:bg-primary/10">
+<span class="material-symbols-outlined text-4xl text-primary">model_training</span>
+<p class="mt-2 font-bold">XGBoost</p>
+<p class="text-xs text-gray-500 dark:text-gray-400 text-center">Gradient Boosting optimisé</p>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="model_choice" type="radio" value="lightgbm"/>
+<div class="flex h-full flex-col items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark p-5 text-gray-700 dark:text-gray-300 peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-gray-700 dark:peer-checked:text-white">
+<span class="material-symbols-outlined text-4xl text-gray-400 peer-checked:text-primary">speed</span>
+<p class="mt-2 font-bold">LightGBM</p>
+<p class="text-xs text-gray-500 dark:text-gray-400 text-center">Gradient Boosting rapide</p>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="model_choice" type="radio" value="rnn"/>
+<div class="flex h-full flex-col items-center justify-center rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-background-dark p-5 text-gray-700 dark:text-gray-300 peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:text-gray-700 dark:peer-checked:text-white">
+<span class="material-symbols-outlined text-4xl text-gray-400 peer-checked:text-primary">timeline</span>
+<p class="mt-2 font-bold">RNN</p>
+<p class="text-xs text-gray-500 dark:text-gray-400 text-center">Réseau de neurones récurrent</p>
+</div>
+</label>
+</div>
+</div>
+<!-- Section 3: Prediction Results -->
+<div>
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-4">3. Résultats de la Prédiction</h2>
+<div class="flex flex-col gap-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark p-6">
+<button class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-primary/90">
+<span class="material-symbols-outlined">play_arrow</span>
+                            Lancer la Prédiction
+                        </button>
+<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+<div class="flex flex-col items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/50 p-4 text-center">
+<p class="text-sm font-medium text-orange-600 dark:text-orange-300">Score de Risque Global</p>
+<p class="text-3xl font-bold text-orange-700 dark:text-orange-200">Modéré</p>
+<div class="mt-2 h-2 w-full rounded-full bg-orange-200 dark:bg-orange-800">
+<div class="h-2 w-2/3 rounded-full bg-orange-500"></div>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/50 p-4 text-center">
+<p class="text-sm font-medium text-green-600 dark:text-green-300">Prob. Augmentation (7 jours)</p>
+<p class="text-3xl font-bold text-green-700 dark:text-green-200">15%</p>
+<div class="mt-2 h-2 w-full rounded-full bg-green-200 dark:bg-green-800">
+<div class="h-2 w-[15%] rounded-full bg-green-500"></div>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/50 p-4 text-center">
+<p class="text-sm font-medium text-red-600 dark:text-red-300">Prob. Augmentation (30 jours)</p>
+<p class="text-3xl font-bold text-red-700 dark:text-red-200">75%</p>
+<div class="mt-2 h-2 w-full rounded-full bg-red-200 dark:bg-red-800">
+<div class="h-2 w-3/4 rounded-full bg-red-500"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

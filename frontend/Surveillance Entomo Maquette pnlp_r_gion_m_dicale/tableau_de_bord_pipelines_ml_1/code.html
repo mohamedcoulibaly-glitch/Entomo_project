@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tableau de Bord MLOps</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111418",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-[#1C2127]">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center px-2 py-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBCFDXPfXOkgK7DgMqrhJuB3xsptjSJF6qwH8sbSFvnGHa6otrsRvhCc0539o15i2dH4FHHBWgFQwOSpax1xGmxeCuFGr6M3ScTC6Hj_-L4iM_voVP6hKK8bUHZm-S4s9vrMWleYMLdiGITB4IhWSEODVzhpd3K8TOFqRU5tHkUJ3p79dgOurAfNG_lWiEndAVZu4Tcjd9z5lh4Ym39-svRneIOUa9miqVOlae2vIeSGmUChY2VBY3lRWHavV8DfuEbHnHT3nl2kQ");'></div>
+<div class="flex flex-col">
+<h1 class="text-gray-900 dark:text-white text-base font-medium leading-normal">Dr. Awa Gueye</h1>
+<p class="text-gray-500 dark:text-[#9dabb9] text-sm font-normal leading-normal">Data Scientist</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">dashboard</span>
+<p class="text-sm font-medium leading-normal">Tableau de bord</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">database</span>
+<p class="text-sm font-medium leading-normal">Collecte de données</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary text-white" href="#">
+<span class="material-symbols-outlined text-white">account_tree</span>
+<p class="text-sm font-medium leading-normal">Pipelines MLOps</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Registre de modèles</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">settings</span>
+<p class="text-sm font-medium leading-normal">Paramètres</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">menu_book</span>
+<p class="text-sm font-medium leading-normal">Documentation</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-500 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-gray-500 dark:text-white">logout</span>
+<p class="text-sm font-medium leading-normal">Déconnexion</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6 lg:p-10">
+<div class="max-w-7xl mx-auto">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-4 items-center mb-8">
+<div class="flex flex-col gap-2">
+<h1 class="text-gray-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Tableau de Bord des Pipelines MLOps</h1>
+<p class="text-gray-500 dark:text-[#9dabb9] text-base font-normal leading-normal">Supervisez et gérez les pipelines automatisés de réentraînement des modèles.</p>
+</div>
+<button class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer rounded-lg h-11 px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined">add</span>
+<span class="truncate">Déclencher un nouveau pipeline</span>
+</button>
+</div>
+<!-- Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-[#1C2127] border border-gray-200 dark:border-[#3b4754]">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Pipelines en cours</p>
+<p class="text-gray-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">2</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-[#1C2127] border border-gray-200 dark:border-[#3b4754]">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Terminés aujourd'hui</p>
+<p class="text-gray-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">14</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-[#1C2127] border border-gray-200 dark:border-[#3b4754]">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Échecs (24h)</p>
+<p class="text-red-500 dark:text-red-400 tracking-tight text-3xl font-bold leading-tight">1</p>
+</div>
+</div>
+<!-- Tabs & Table Section -->
+<div class="bg-white dark:bg-[#1C2127] rounded-lg border border-gray-200 dark:border-[#3b4754]">
+<!-- Tabs -->
+<div class="pb-3 px-4">
+<div class="flex border-b border-gray-200 dark:border-[#3b4754] gap-8">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-primary pb-[13px] pt-4" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Tous les pipelines</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-primary dark:hover:text-white" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Planifiés</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-primary dark:hover:text-white" href="#">
+<p class="text-sm font-bold leading-normal tracking-[0.015em]">Historique</p>
+</a>
+</div>
+</div>
+<!-- Table -->
+<div class="px-4 py-3 @container">
+<div class="flex overflow-hidden">
+<table class="w-full text-left">
+<thead class="border-b border-gray-200 dark:border-gray-700">
+<tr>
+<th class="px-4 py-3 text-gray-600 dark:text-white w-2/6 text-sm font-medium leading-normal">Nom du pipeline</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">Statut</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">Dernière exécution</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">Modèle Prod.</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">Précision</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal">Score F1</th>
+<th class="px-4 py-3 text-gray-600 dark:text-white text-sm font-medium leading-normal text-right">Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-gray-200 dark:border-[#3b4754] hover:bg-gray-50 dark:hover:bg-white/5">
+<td class="h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Hebdomadaire - Anopheles gambiae</td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 rounded-full py-1 px-3 text-xs font-medium bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400">
+<span class="size-2 rounded-full bg-green-500"></span> Succès
+                                            </div>
+</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">2023-10-26 02:00</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">v2.3.1</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">98.5%</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">0.96</td>
+<td class="h-[72px] px-4 py-2 text-right">
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-xl">description</span>
+</button>
+</td>
+</tr>
+<tr class="border-b border-gray-200 dark:border-[#3b4754] hover:bg-gray-50 dark:hover:bg-white/5">
+<td class="h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Quotidien - Culex quinquefasciatus</td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 rounded-full py-1 px-3 text-xs font-medium bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400">
+<span class="size-2 rounded-full bg-blue-500"></span> En cours
+                                            </div>
+</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">2023-10-27 01:15</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">v1.9.0</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">97.2%</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">0.94</td>
+<td class="h-[72px] px-4 py-2 text-right">
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-xl">description</span>
+</button>
+</td>
+</tr>
+<tr class="border-b border-gray-200 dark:border-[#3b4754] hover:bg-gray-50 dark:hover:bg-white/5">
+<td class="h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Mensuel - Modèle global</td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 rounded-full py-1 px-3 text-xs font-medium bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400">
+<span class="size-2 rounded-full bg-red-500"></span> Échec
+                                            </div>
+</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">2023-10-26 18:30</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">v4.1.0</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">N/A</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">N/A</td>
+<td class="h-[72px] px-4 py-2 text-right">
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-xl">description</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-white/5">
+<td class="h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">À la demande - Aedes aegypti</td>
+<td class="h-[72px] px-4 py-2">
+<div class="inline-flex items-center gap-2 rounded-full py-1 px-3 text-xs font-medium bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400">
+<span class="size-2 rounded-full bg-green-500"></span> Succès
+                                            </div>
+</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">2023-10-25 11:45</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">v1.2.5</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">99.1%</td>
+<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">0.98</td>
+<td class="h-[72px] px-4 py-2 text-right">
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-xl">description</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

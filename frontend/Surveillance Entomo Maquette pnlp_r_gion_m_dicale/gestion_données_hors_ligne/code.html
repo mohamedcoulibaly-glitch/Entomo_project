@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestion de la Synchronisation des Données Hors Ligne</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+              "status-conflict": "#D32F2F",
+              "status-modified": "#FFA000",
+              "status-new": "#388E3C",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex min-h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex h-screen w-64 flex-col justify-between border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 sticky top-0">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar of Dr. Awa Gueye" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDOYbxbM4OlYqapEgb4oF61pkXy3CKqrV5xpj0rA_pY7PgO3erfp4JHWGpNqHavbN6gYzrT0XiXadmgFIap6gmkmVmmOgq1fsmkf__sht7y8rELTUNTI0FrhhTv-kBVejOBmblQKbUfOc2uKdTRSYBIu9Dz-yNSApBNd9wpoTSZ5671Y21jLKSMAGAMgK7U9WCw7oQTxjvsmeoUbu1mjaOEylcQymtxo819jGcwWv5vXNti8G87nooBApWE8DBhCQMmPOohXO__tg");'></div>
+<div class="flex flex-col">
+<h1 class="text-[#111418] dark:text-white text-base font-medium leading-normal">Pr. Saliou Ndiaye</h1>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">Entomologiste</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Tableau de bord</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">map</span>
+<p class="text-sm font-medium leading-normal">Collecte Terrain</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Analyse</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">sync</span>
+<p class="text-sm font-medium leading-normal">Synchronisation</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Paramètres</p>
+</a>
+</nav>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Nouvelle Collecte</span>
+</button>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6 lg:p-8">
+<div class="mx-auto max-w-7xl">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-3 mb-6">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-[#111418] dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Données hors ligne en attente de synchronisation</p>
+<p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">15 nouveaux, 4 modifiés, 2 en conflit</p>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+<!-- ToolBar -->
+<div class="flex flex-wrap justify-between gap-2 p-4 border-b border-gray-200 dark:border-gray-700">
+<div class="flex gap-2 items-center">
+<button class="p-2 text-[#111418] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 text-[#111418] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
+<span class="material-symbols-outlined">sort</span>
+</button>
+<div class="flex items-center gap-2 pl-2">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+</span>
+<span class="text-sm text-gray-600 dark:text-gray-400">En ligne</span>
+</div>
+</div>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-primary hover:bg-primary/90 text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4">
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1">cloud_sync</span>
+<span class="truncate">Tout Synchroniser</span>
+</button>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left">
+<thead class="text-xs text-[#111418] dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-800">
+<tr>
+<th class="p-4" scope="col"><input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary dark:focus:ring-offset-gray-800" type="checkbox"/></th>
+<th class="px-6 py-3" scope="col">Statut</th>
+<th class="px-6 py-3" scope="col">Type de Donnée</th>
+<th class="px-6 py-3" scope="col">Identifiant</th>
+<th class="px-6 py-3" scope="col">Date de Modification</th>
+<th class="px-6 py-3 text-right" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary dark:focus:ring-offset-gray-900" type="checkbox"/></td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-conflict/10 text-status-conflict">Conflit</span></td>
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">Collecte Moustiquaire</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">SN-DAK-2023-001</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">2023-10-26 14:30</td>
+<td class="px-6 py-4 text-right"><a class="font-medium text-primary hover:underline" href="#">Résoudre</a></td>
+</tr>
+<tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary dark:focus:ring-offset-gray-900" type="checkbox"/></td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-new/10 text-status-new">Nouveau</span></td>
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">Fiche Gîte Larvaire</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">SN-TH-2023-105</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">2023-10-26 11:15</td>
+<td class="px-6 py-4 text-right"><a class="font-medium text-primary hover:underline" href="#">Prévisualiser</a></td>
+</tr>
+<tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary dark:focus:ring-offset-gray-900" type="checkbox"/></td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-modified/10 text-status-modified">Modifié</span></td>
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">Collecte Moustiquaire</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">SN-DAK-2023-002</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">2023-10-25 09:00</td>
+<td class="px-6 py-4 text-right"><a class="font-medium text-primary hover:underline" href="#">Prévisualiser</a></td>
+</tr>
+<tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary dark:focus:ring-offset-gray-900" type="checkbox"/></td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-new/10 text-status-new">Nouveau</span></td>
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">Fiche Gîte Larvaire</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">SN-KED-2023-042</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">2023-10-25 08:30</td>
+<td class="px-6 py-4 text-right"><a class="font-medium text-primary hover:underline" href="#">Prévisualiser</a></td>
+</tr>
+<tr class="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
+<td class="w-4 p-4"><input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary dark:focus:ring-offset-gray-900" type="checkbox"/></td>
+<td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-status-conflict/10 text-status-conflict">Conflit</span></td>
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">Fiche Gîte Larvaire</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">SN-DAK-2023-099</td>
+<td class="px-6 py-4 text-gray-500 dark:text-gray-400">2023-10-24 16:45</td>
+<td class="px-6 py-4 text-right"><a class="font-medium text-primary hover:underline" href="#">Résoudre</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<nav aria-label="Table navigation" class="flex items-center justify-between p-4">
+<span class="text-sm font-normal text-gray-500 dark:text-gray-400">Showing <span class="font-semibold text-gray-900 dark:text-white">1-5</span> of <span class="font-semibold text-gray-900 dark:text-white">21</span></span>
+<ul class="inline-flex items-center -space-x-px">
+<li>
+<a class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-l-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-white" href="#">
+<span class="material-symbols-outlined text-base">chevron_left</span>
+</a>
+</li>
+<li><a class="flex items-center justify-center px-3 h-8 leading-tight text-primary bg-primary/10 border border-primary hover:bg-primary/20 hover:text-primary-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="#">1</a></li>
+<li><a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-white" href="#">2</a></li>
+<li><a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-white" href="#">3</a></li>
+<li><span class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700">...</span></li>
+<li><a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-white" href="#">5</a></li>
+<li>
+<a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-r-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-white" href="#">
+<span class="material-symbols-outlined text-base">chevron_right</span>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</main>
+</div>
+</body></html>

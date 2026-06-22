@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Surveillance de l'activité des utilisateurs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex flex-row min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-64 bg-white dark:bg-background-dark dark:border-r dark:border-gray-700 shrink-0">
+<div class="flex h-full min-h-[700px] flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center px-3 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDgLG1CC-NOJ_I71jcdW7Sq86xK13Bkke7ybLGoNX774GaWYoA-VNwQSDFHLRG17Ao-RNkUcoZKXXP5jkG5IPu61-tLLTFqyTUfg_YCaupTNhTAZhNVP7_b3Hj6CBCAn-CtFJ5-d5xp8PjZrSppqtDTGtA2ECdZcN-i9MzwTSk_CKhP9EtRue8dTmd9VOBIUUrzngam9khkubwIU2VgEFrpHU1eNOkonrVzLvA9pQKI17U9epX9MhQsEjjFX_xT1YCiFBZtXpwm2A");'></div>
+<div class="flex flex-col">
+<h1 class="text-[#111418] dark:text-white text-base font-medium leading-normal">Dr. A. Fall</h1>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">Administrateur</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Tableau de bord</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">biotech</span>
+<p class="text-sm font-medium leading-normal">Gestion Spécimens</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Analyse &amp; Rapports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary" href="#">
+<span class="material-symbols-outlined fill">group</span>
+<p class="text-sm font-medium leading-normal">Gestion Utilisateurs</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Configurations</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<p class="text-sm font-medium leading-normal">Aide</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Déconnexion</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6 lg:p-10">
+<div class="layout-content-container flex flex-col flex-1">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-3 mb-8">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-[#111418] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Surveillance de l'activité des utilisateurs</p>
+<p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">Suivez les actions et les connexions sur la plateforme en temps réel.</p>
+</div>
+</div>
+<!-- Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Connexions réussies (24h)</p>
+<p class="text-[#111418] dark:text-white tracking-light text-3xl font-bold leading-tight">1,204</p>
+<p class="text-green-600 text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+5.2%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Connexions échouées (24h)</p>
+<p class="text-[#111418] dark:text-white tracking-light text-3xl font-bold leading-tight">12</p>
+<p class="text-yellow-600 text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+1.8%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Total actions (24h)</p>
+<p class="text-[#111418] dark:text-white tracking-light text-3xl font-bold leading-tight">5,678</p>
+<p class="text-green-600 text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+8.1%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Alertes actives</p>
+<p class="text-red-500 tracking-light text-3xl font-bold leading-tight">3</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">horizontal_rule</span>stable</p>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+<!-- SectionHeader & ToolBar -->
+<div class="flex flex-wrap justify-between items-center gap-4 p-4 border-b border-gray-200 dark:border-gray-700">
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Journal d'activité</h3>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg text-[#617589] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+<button class="p-2 rounded-lg text-[#617589] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined">person</span>
+</button>
+<button class="p-2 rounded-lg text-[#617589] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-primary text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4">
+<span class="material-symbols-outlined fill text-lg">download</span>
+<span class="truncate">Exporter en CSV</span>
+</button>
+</div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+<tr>
+<th class="px-6 py-3" scope="col">Horodatage</th>
+<th class="px-6 py-3" scope="col">Utilisateur</th>
+<th class="px-6 py-3" scope="col">Type d'action</th>
+<th class="px-6 py-3" scope="col">Description</th>
+<th class="px-6 py-3" scope="col">Adresse IP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 14:32</td>
+<td class="px-6 py-4">Dr. A. Fall</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-2 text-green-700 dark:text-green-400">
+<span class="material-symbols-outlined text-base">check_circle</span>Validation
+                                            </span>
+</td>
+<td class="px-6 py-4">ID Spécimen: SEN-DAK-2023-10-10-045</td>
+<td class="px-6 py-4">208.80.152.201</td>
+</tr>
+<tr class="bg-gray-50/50 dark:bg-gray-900/50 border-b dark:border-gray-700">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 14:28</td>
+<td class="px-6 py-4">admin@sante.sn</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-2 text-blue-700 dark:text-blue-400">
+<span class="material-symbols-outlined text-base">download</span>Export
+                                            </span>
+</td>
+<td class="px-6 py-4">Export mensuel - District de Thiès</td>
+<td class="px-6 py-4">192.158.1.38</td>
+</tr>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 14:25</td>
+<td class="px-6 py-4">user.test</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
+<span class="material-symbols-outlined text-base">warning</span>Échec Connexion
+                                            </span>
+</td>
+<td class="px-6 py-4">Tentative depuis IP: 192.168.1.10</td>
+<td class="px-6 py-4">192.168.1.10</td>
+</tr>
+<tr class="bg-gray-50/50 dark:bg-gray-900/50 border-b dark:border-gray-700">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 13:55</td>
+<td class="px-6 py-4">Dr. B. Gaye</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-2 text-blue-700 dark:text-blue-400">
+<span class="material-symbols-outlined text-base">add_circle</span>Création
+                                            </span>
+</td>
+<td class="px-6 py-4">Nouvel utilisateur: t.diop</td>
+<td class="px-6 py-4">208.80.152.201</td>
+</tr>
+<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 13:12</td>
+<td class="px-6 py-4">Dr. A. Fall</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-2 text-red-700 dark:text-red-400">
+<span class="material-symbols-outlined text-base">cancel</span>Suppression
+                                            </span>
+</td>
+<td class="px-6 py-4">Spécimen supprimé: SEN-DAK-2023-10-09-012</td>
+<td class="px-6 py-4">208.80.152.201</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex justify-between items-center p-4">
+<span class="text-sm text-gray-700 dark:text-gray-400">
+                                Affichage de <span class="font-semibold text-gray-900 dark:text-white">1</span>-<span class="font-semibold text-gray-900 dark:text-white">5</span> sur <span class="font-semibold text-gray-900 dark:text-white">100</span>
+</span>
+<div class="inline-flex -space-x-px text-sm h-8">
+<a class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="#">Précédent</a>
+<a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="#">Suivant</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

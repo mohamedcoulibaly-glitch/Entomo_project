@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ento-App Data Transfer Preview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+              "green-status": "#28a745",
+              "orange-status": "#fd7e14",
+              "red-status": "#dc3545",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<!-- TopNavBar Component -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/80 backdrop-blur-sm px-4 sm:px-6 lg:px-10 py-3">
+<div class="flex items-center gap-4 text-gray-900 dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill-rule="evenodd"></path>
+<path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold tracking-[-0.015em]">Ento-App Afrique</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end items-center gap-8">
+<nav class="flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary dark:hover:text-primary" href="#">Dashboard</a>
+<a class="text-sm font-medium hover:text-primary dark:hover:text-primary" href="#">Data Collection</a>
+<a class="text-primary dark:text-primary text-sm font-semibold" href="#">Ento-App Integration</a>
+<a class="text-sm font-medium hover:text-primary dark:hover:text-primary" href="#">Reports</a>
+</nav>
+<div class="flex items-center gap-2">
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-xl">settings</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDvRZQ6guaYKZtS6gotHNxS2ODq9JN6RP1KVgdHXoQA1lYE6qsi1UTLMClReSKPPZOS75C7vcJP_nIS7nu5oTRmmi7g64GLYdqp43DMDgKDcfWcyfxfxOLqXXRyAZKVHKX21YJmCcw2UXMdr9RtjXn9vswna2Hwg_K9g7tAF1ypVS74cNlWvGlTQ3M7ma0lAsGgA6_vQJrV2ZFMPpIWF4TiwGYzql4SbXgy0Sugh8FVcSOitNOlzgSXCSFblORmbfOBmyF-GkcofQ");'></div>
+</div>
+</div>
+</header>
+<main class="layout-container flex h-full grow flex-col">
+<div class="px-4 sm:px-6 lg:px-10 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col w-full max-w-6xl flex-1 gap-8">
+<!-- PageHeading Component -->
+<div class="flex flex-wrap justify-between gap-4 items-center">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-gray-900 dark:text-white text-3xl font-black tracking-[-0.033em]">DHIS2 Data Transfer: Preview &amp; Validation</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal">Review, validate, and approve aggregated entomological data before its final push to the DHIS2 platform.</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 text-sm font-bold gap-2">
+<span class="material-symbols-outlined text-lg">calendar_month</span>
+<span class="truncate">Select Date Range</span>
+</button>
+</div>
+<!-- SectionHeader for Stats -->
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold tracking-[-0.015em] pt-5">Summary of Aggregated Indicators</h2>
+<!-- Stats Component -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<p class="text-base font-medium text-gray-600 dark:text-gray-300">Total Mosquitoes Collected</p>
+<p class="tracking-light text-3xl font-bold text-gray-900 dark:text-white">1,245</p>
+<p class="text-green-status text-base font-medium">+5.2%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<p class="text-base font-medium text-gray-600 dark:text-gray-300">Anopheles Density Rate</p>
+<p class="tracking-light text-3xl font-bold text-gray-900 dark:text-white">8.5%</p>
+<p class="text-red-status text-base font-medium">-1.1%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<p class="text-base font-medium text-gray-600 dark:text-gray-300">Parity Rate</p>
+<p class="tracking-light text-3xl font-bold text-gray-900 dark:text-white">65%</p>
+<p class="text-green-status text-base font-medium">+2.0%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<p class="text-base font-medium text-gray-600 dark:text-gray-300">Infection Rate (Sporozoite)</p>
+<p class="tracking-light text-3xl font-bold text-gray-900 dark:text-white">2.1%</p>
+<p class="text-green-status text-base font-medium">+0.3%</p>
+</div>
+</div>
+<!-- SectionHeader for Data Table -->
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold tracking-[-0.015em] pt-5">Detailed Data for DHIS2 Transfer</h2>
+<!-- Data Table -->
+<div class="w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+<thead class="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700">
+<tr>
+<th class="px-6 py-3" scope="col">Indicator Name</th>
+<th class="px-6 py-3" scope="col">District</th>
+<th class="px-6 py-3" scope="col">Health Post</th>
+<th class="px-6 py-3 text-right" scope="col">Value</th>
+<th class="px-6 py-3" scope="col">DHIS2 Period</th>
+<th class="px-6 py-3 text-center" scope="col">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Anopheles Density</th>
+<td class="px-6 py-4">Dakar</td>
+<td class="px-6 py-4">Medina</td>
+<td class="px-6 py-4 text-right">12.3%</td>
+<td class="px-6 py-4">2023Q4</td>
+<td class="px-6 py-4 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ready</span></td>
+</tr>
+<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Sporozoite Index</th>
+<td class="px-6 py-4">Thiès</td>
+<td class="px-6 py-4">Pout</td>
+<td class="px-6 py-4 text-right">1.8%</td>
+<td class="px-6 py-4">2023Q4</td>
+<td class="px-6 py-4 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ready</span></td>
+</tr>
+<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Parity Rate</th>
+<td class="px-6 py-4">Kaolack</td>
+<td class="px-6 py-4">Nioro</td>
+<td class="px-6 py-4 text-right">58%</td>
+<td class="px-6 py-4">2023Q4</td>
+<td class="px-6 py-4 text-center"><span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"><span class="material-symbols-outlined text-sm">warning</span>Needs Review</span></td>
+</tr>
+<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Total Collected</th>
+<td class="px-6 py-4">Ziguinchor</td>
+<td class="px-6 py-4">Bignona</td>
+<td class="px-6 py-4 text-right">312</td>
+<td class="px-6 py-4">2023Q4</td>
+<td class="px-6 py-4 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ready</span></td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
+<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Anopheles Density</th>
+<td class="px-6 py-4">Saint-Louis</td>
+<td class="px-6 py-4">Richard Toll</td>
+<td class="px-6 py-4 text-right">5.5%</td>
+<td class="px-6 py-4">2023Q4</td>
+<td class="px-6 py-4 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ready</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- ButtonGroup Component (Action Toolbar) -->
+<div class="flex justify-stretch border-t border-gray-200 dark:border-gray-700 mt-4 pt-6">
+<div class="flex flex-1 gap-3 flex-wrap justify-end">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold gap-2">
+<span class="material-symbols-outlined text-lg">download</span>
+<span class="truncate">Export as CSV</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold gap-2">
+<span class="material-symbols-outlined text-lg">flag</span>
+<span class="truncate">Flag for Review</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold gap-2">
+<span class="material-symbols-outlined text-lg">send</span>
+<span class="truncate">Validate and Push to DHIS2</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

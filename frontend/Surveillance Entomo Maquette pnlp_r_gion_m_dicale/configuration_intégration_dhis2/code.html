@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configuration DHIS2 - Ento-App Afrique</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex min-h-screen w-full flex-col group/design-root">
+<div class="flex flex-1">
+<!-- SideNavBar -->
+<div class="hidden lg:flex flex-col w-64 bg-white dark:bg-background-dark dark:border-r dark:border-gray-700">
+<div class="flex flex-col gap-4 p-4 sticky top-0">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Application logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC1tmRLte-aPKHjP3TmtSTTr1n8Qifra0S6XGR-ZrFTwWBQHnKf5Zbw4-SHPHjEIU5BIPa0zfsFI-JLj783pvKCSbeVxFSUh1xcpbJJmHEpVdTJFr3O_7rfzJWfILGfr3ZSfSboGPr0Yr3AdJmIzWMRXUXK7GkIYfodLzODA4pqhGzycBQjQ6X5DBQhgyj8VWSY5fLYadcbA0LwMhy2o7AggPRLkwQwQDv8xfmUhtJ_9gN_7QV6gE4i_2b_FcOw0eU0bGg3KpH97g");'></div>
+<div class="flex flex-col">
+<h1 class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal">Ento-App Afrique</h1>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">Surveillance Intelligente</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+<p class="text-sm font-medium leading-normal">Tableau de bord</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-2xl">edit_note</span>
+<p class="text-sm font-medium leading-normal">Collecte de données</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-2xl">pie_chart</span>
+<p class="text-sm font-medium leading-normal">Analyse</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-2xl">map</span>
+<p class="text-sm font-medium leading-normal">Cartographie</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">settings</span>
+<p class="text-sm font-medium leading-normal">Paramètres</p>
+</a>
+</div>
+</div>
+<div class="flex flex-col gap-1 mt-auto p-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-2xl">help_outline</span>
+<p class="text-sm font-medium leading-normal">Aide</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-[#617589] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-2xl">logout</span>
+<p class="text-sm font-medium leading-normal">Déconnexion</p>
+</a>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 p-4 sm:p-6 lg:p-10">
+<div class="max-w-4xl mx-auto">
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between gap-3 mb-8">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-[#111418] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Configuration de l'Intégration DHIS2</p>
+<p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">Connectez et synchronisez les données entomologiques avec votre instance DHIS2 nationale.</p>
+</div>
+</div>
+<!-- Section 1: Connection -->
+<div class="bg-white dark:bg-gray-800/50 rounded-xl p-6 mb-8 border border-gray-200 dark:border-gray-700">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-1">1. Paramètres de Connexion DHIS2</h2>
+<p class="text-[#617589] dark:text-gray-400 text-sm mb-6">Saisissez les informations de votre instance pour établir la connexion.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="md:col-span-2">
+<label class="flex flex-col w-full">
+<p class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal pb-2">URL de l'instance DHIS2</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-900 focus:border-primary h-14 placeholder:text-[#617589] p-[15px] text-base font-normal leading-normal" placeholder="https://dhis2.sante.gov.sn/api" value=""/>
+</label>
+</div>
+<label class="flex flex-col w-full">
+<p class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal pb-2">Nom d'utilisateur</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-900 focus:border-primary h-14 placeholder:text-[#617589] p-[15px] text-base font-normal leading-normal" placeholder="Votre nom d'utilisateur" value=""/>
+</label>
+<label class="flex flex-col w-full">
+<p class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal pb-2">Mot de passe / Token API</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-900 focus:border-primary h-14 placeholder:text-[#617589] p-[15px] text-base font-normal leading-normal" placeholder="•••••••••••••••" type="password" value=""/>
+</label>
+</div>
+<div class="flex items-center gap-4 mt-6">
+<button class="flex items-center justify-center gap-2 h-11 px-6 text-base font-medium tracking-wide text-white transition duration-200 rounded-lg bg-primary hover:bg-primary/90 focus:shadow-outline focus:outline-none">Tester la connexion</button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+<p class="text-green-600 dark:text-green-400 text-sm font-medium">Connecté</p>
+</div>
+</div>
+</div>
+<!-- Section 2: Mapping -->
+<div class="bg-white dark:bg-gray-800/50 rounded-xl p-6 mb-8 border border-gray-200 dark:border-gray-700">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-1">2. Mappage des Indicateurs Entomologiques</h2>
+<p class="text-[#617589] dark:text-gray-400 text-sm mb-6">Associez chaque indice local à son indicateur correspondant dans DHIS2.</p>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="border-b border-gray-200 dark:border-gray-700">
+<tr>
+<th class="p-3 text-sm font-medium text-[#617589] dark:text-gray-400">Indice Entomologique (Source)</th>
+<th class="p-3 text-sm font-medium text-[#617589] dark:text-gray-400">Indicateur DHIS2 (Destination)</th>
+<th class="w-12 p-3"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-gray-200 dark:border-gray-700">
+<td class="p-3 text-[#111418] dark:text-white font-medium">Densité Anopheles sp.</td>
+<td class="p-3">
+<select class="form-select w-full rounded-lg text-[#111418] dark:text-white border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 focus:border-primary focus:ring-primary/50">
+<option selected="">Sélectionner un indicateur...</option>
+<option>ENTO - Densité anophélienne par piège</option>
+<option>MAL - Cas confirmés</option>
+</select>
+</td>
+<td class="p-3 text-center">
+<button class="text-gray-400 hover:text-red-500 dark:hover:text-red-400"><span class="material-symbols-outlined text-xl">delete</span></button>
+</td>
+</tr>
+<tr class="border-b border-gray-200 dark:border-gray-700">
+<td class="p-3 text-[#111418] dark:text-white font-medium">Taux d'infection Plasmodium</td>
+<td class="p-3">
+<select class="form-select w-full rounded-lg text-[#111418] dark:text-white border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 focus:border-primary focus:ring-primary/50">
+<option>Sélectionner un indicateur...</option>
+<option selected="">ENTO - Taux d'inoculation sporozoïtique</option>
+<option>LAB - Taux de positivité</option>
+</select>
+</td>
+<td class="p-3 text-center">
+<button class="text-gray-400 hover:text-red-500 dark:hover:text-red-400"><span class="material-symbols-outlined text-xl">delete</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<button class="mt-4 flex items-center gap-2 h-10 px-4 text-sm font-medium tracking-wide text-primary transition duration-200 rounded-lg bg-primary/10 hover:bg-primary/20 focus:shadow-outline focus:outline-none dark:text-primary-300 dark:bg-primary/20 dark:hover:bg-primary/30">
+<span class="material-symbols-outlined text-xl">add</span>
+                            Ajouter une règle de mappage
+                        </button>
+</div>
+<!-- Section 3: Scheduling -->
+<div class="bg-white dark:bg-gray-800/50 rounded-xl p-6 mb-8 border border-gray-200 dark:border-gray-700">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-1">3. Planification de la Synchronisation</h2>
+<p class="text-[#617589] dark:text-gray-400 text-sm mb-6">Définissez la fréquence à laquelle les données sont envoyées à DHIS2.</p>
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
+<div>
+<p class="font-medium text-[#111418] dark:text-white">Activer la synchronisation automatique</p>
+<p class="text-sm text-[#617589] dark:text-gray-400">Les données seront envoyées automatiquement selon la fréquence définie.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<label class="flex flex-col w-full max-w-sm">
+<p class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal pb-2">Fréquence de la synchronisation</p>
+<select class="form-select flex w-full min-w-0 flex-1 rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-900 focus:border-primary h-14 placeholder:text-[#617589] p-[15px] text-base font-normal leading-normal">
+<option>Quotidien (à 02:00)</option>
+<option selected="">Hebdomadaire (chaque lundi à 03:00)</option>
+<option>Mensuel (le 1er du mois à 04:00)</option>
+</select>
+</label>
+</div>
+</div>
+<!-- Save actions -->
+<div class="flex justify-end gap-3 mt-10 pb-10">
+<button class="flex items-center justify-center h-11 px-6 text-base font-medium tracking-wide text-gray-700 dark:text-gray-300 transition duration-200 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 focus:shadow-outline focus:outline-none">Annuler</button>
+<button class="flex items-center justify-center h-11 px-6 text-base font-medium tracking-wide text-white transition duration-200 rounded-lg bg-primary hover:bg-primary/90 focus:shadow-outline focus:outline-none">Sauvegarder la configuration</button>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

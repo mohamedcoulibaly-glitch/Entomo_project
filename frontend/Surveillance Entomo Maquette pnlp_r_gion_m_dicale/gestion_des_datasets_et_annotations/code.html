@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestion des Datasets Annotés</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#005A8D",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+              "accent": "#FF7A00"
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-6 lg:px-10 py-3 bg-white dark:bg-background-dark">
+<div class="flex items-center gap-4 text-gray-900 dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_330)">
+<path clip-rule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fill-rule="evenodd"></path>
+</g>
+<defs>
+<clippath id="clip0_6_330"><rect fill="white" height="48" width="48"></rect></clippath>
+</defs>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Ento-App Afrique MLOps</h2>
+</div>
+<div class="flex flex-1 justify-end items-center gap-6">
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="#">Tableau de Bord</a>
+<a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="#">Modèles</a>
+<a class="text-primary dark:text-primary text-sm font-bold leading-normal border-b-2 border-primary pb-1" href="#">Jeux de Données</a>
+</nav>
+<div class="flex items-center gap-2">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-background-light dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-background-light dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuClA6OpYqt_dSZboFI7ed97_aOWeSR0iJdlnOSsSu_U9y7G3qD00Nfr-RXxHY10XIdJj-iP9BLEgGe5LQ_g0z8mwHrlBFV2PBL2ucLsVbA_5kJlDQhxKRUmlL6ptvNbuEadvGXzJco5DNTIHLKMZNnQ0Kqmo8vJN2pdjMXFiZopN_LQIPZ2UZF6e3cOYTFE1srGf1c_lNbeBkmNL3u_Gk573oF49b0iTddct5KYS_tBftERegVixf32vM6CUnG6YVYR5T76NUgxfg");'></div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="px-4 sm:px-6 lg:px-10 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col w-full max-w-7xl flex-1">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between items-center gap-4 py-4">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-gray-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Gestion des Datasets Annotés</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Parcourez, gérez et versionnez tous les jeux de données d'images entomologiques.</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-accent hover:bg-orange-600 text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2">
+<span class="material-symbols-outlined text-xl">add</span>
+<span class="truncate">Nouveau Jeu de Données</span>
+</button>
+</div>
+<!-- Toolbar & Filters -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 border-y border-gray-200 dark:border-gray-700">
+<div class="flex flex-wrap items-center gap-3">
+<div class="relative flex-1 min-w-[200px] md:flex-auto">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Rechercher par nom..." type="search"/>
+</div>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-4">
+<p class="text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Source</p>
+<span class="material-symbols-outlined text-lg text-gray-500">expand_more</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-4">
+<p class="text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Statut: Tous</p>
+<span class="material-symbols-outlined text-lg text-gray-500">expand_more</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-4">
+<p class="text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Date</p>
+<span class="material-symbols-outlined text-lg text-gray-500">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Table -->
+<div class="py-3 @container">
+<div class="flex overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<table class="w-full text-left">
+<thead class="bg-gray-50 dark:bg-gray-900/50">
+<tr class="border-b border-gray-200 dark:border-gray-700">
+<th class="table-col-1 px-4 py-3 text-left text-gray-600 dark:text-gray-300 text-xs font-medium uppercase tracking-wider">Nom du Dataset</th>
+<th class="table-col-2 px-4 py-3 text-left text-gray-600 dark:text-gray-300 text-xs font-medium uppercase tracking-wider">Version</th>
+<th class="table-col-3 px-4 py-3 text-left text-gray-600 dark:text-gray-300 text-xs font-medium uppercase tracking-wider">Modifié le</th>
+<th class="table-col-4 px-4 py-3 text-left text-gray-600 dark:text-gray-300 text-xs font-medium uppercase tracking-wider">Source Annotations</th>
+<th class="table-col-5 px-4 py-3 text-left text-gray-600 dark:text-gray-300 text-xs font-medium uppercase tracking-wider">Images</th>
+<th class="table-col-6 px-4 py-3 text-left text-gray-600 dark:text-gray-300 text-xs font-medium uppercase tracking-wider">Statut</th>
+<th class="table-col-7 px-4 py-3 text-left text-gray-600 dark:text-gray-300 text-xs font-medium uppercase tracking-wider">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<td class="table-col-1 h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Dakar_Region_Q3_2023_v2</td>
+<td class="table-col-2 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm font-mono">v2.1.0</td>
+<td class="table-col-3 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">2023-10-15</td>
+<td class="table-col-4 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">Modèle v1.2 + Dr. Faye</td>
+<td class="table-col-5 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">15,230</td>
+<td class="table-col-6 h-[72px] px-4 py-2 text-sm">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">Validé</span>
+</td>
+<td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
+<a class="text-primary hover:underline" href="#">Voir Détails</a>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<td class="table-col-1 h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Thies_Coastal_Q3_2023</td>
+<td class="table-col-2 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm font-mono">v1.0.0</td>
+<td class="table-col-3 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">2023-09-28</td>
+<td class="table-col-4 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">Modèle v1.1</td>
+<td class="table-col-5 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">8,904</td>
+<td class="table-col-6 h-[72px] px-4 py-2 text-sm">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300">En Révision</span>
+</td>
+<td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
+<a class="text-primary hover:underline" href="#">Voir Détails</a>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<td class="table-col-1 h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Kedougou_Field_Q2_2023</td>
+<td class="table-col-2 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm font-mono">v3.5.1</td>
+<td class="table-col-3 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">2023-09-12</td>
+<td class="table-col-4 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">Équipe Manuelle</td>
+<td class="table-col-5 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">21,450</td>
+<td class="table-col-6 h-[72px] px-4 py-2 text-sm">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">Validé</span>
+</td>
+<td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
+<a class="text-primary hover:underline" href="#">Voir Détails</a>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<td class="table-col-1 h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Saint_Louis_Delta_Q2_2023</td>
+<td class="table-col-2 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm font-mono">v1.2.0</td>
+<td class="table-col-3 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">2023-08-20</td>
+<td class="table-col-4 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">Modèle v1.0 + Dr. Diop</td>
+<td class="table-col-5 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">11,788</td>
+<td class="table-col-6 h-[72px] px-4 py-2 text-sm">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">Validé</span>
+</td>
+<td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
+<a class="text-primary hover:underline" href="#">Voir Détails</a>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<td class="table-col-1 h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Ziguinchor_Wet_Season_2023</td>
+<td class="table-col-2 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm font-mono">v0.8.0</td>
+<td class="table-col-3 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">2023-08-05</td>
+<td class="table-col-4 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">Modèle v0.9</td>
+<td class="table-col-5 h-[72px] px-4 py-2 text-gray-500 dark:text-gray-400 text-sm">9,521</td>
+<td class="table-col-6 h-[72px] px-4 py-2 text-sm">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300">Erreur</span>
+</td>
+<td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
+<a class="text-primary hover:underline" href="#">Voir Détails</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<style>
+                            @container(max-width:1024px){.table-col-4{display: none;}}
+                            @container(max-width:860px){.table-col-3{display: none;}.table-col-5{display: none;}}
+                            @container(max-width:640px){.table-col-2{display: none;}.table-col-6{display: none;}}
+                            @container(max-width:480px){.table-col-7{display: none;}}
+                          </style>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

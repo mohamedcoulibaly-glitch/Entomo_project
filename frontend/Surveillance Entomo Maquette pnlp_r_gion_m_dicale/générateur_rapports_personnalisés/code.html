@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Génération de Rapports Personnalisés</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-gray-200">
+<div class="flex h-screen">
+<!-- SideNavBar -->
+<aside class="flex w-64 flex-col border-r border-gray-200 bg-white dark:border-gray-700 dark:bg-background-dark">
+<div class="flex flex-col gap-4 p-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Application logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCZMSqwAGU4EimjeF5lnGRsKdwCmddEOZKQFD1nuyqlWBJmJmUpUlDM51BdWI6nOcMvyLoXFZWcWYZf2PJh07L_hh7hTL7KLdM2kTyoSh41JPvbZ0BsxaR-xY2Uaqaund8cL3XlFJUxr1tdjosPONXGI8NWMT0H-UBBe0JlVzk28OKnMem4rfaDkzHygVtIPZRKfnCU6N2qmoARLINsWEocrX4zLHP9o2QXwwrtaignl8uJP_ZecXHpZ74Sgh6BOJ3VEdjE5kJpLA");'></div>
+<div class="flex flex-col">
+<h1 class="text-[#111418] dark:text-white text-base font-medium leading-normal">Ento-App Afrique</h1>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">Surveillance Entomologique</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Tableau de Bord</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<p class="text-sm font-medium leading-normal">Collecte de Données</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">pie_chart</span>
+<p class="text-sm font-medium leading-normal">Analyse</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-white" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+<p class="text-sm font-medium leading-normal">Génération de Rapports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<p class="text-sm font-medium leading-normal">Administration</p>
+</a>
+</nav>
+</div>
+<div class="mt-auto flex flex-col gap-4 p-4">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90">
+<span class="truncate">Nouvelle Collecte</span>
+</button>
+<div class="flex flex-col gap-1 border-t border-gray-200 dark:border-gray-700 pt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<p class="text-sm font-medium leading-normal">Aide</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#111418] dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Déconnexion</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto">
+<div class="p-8">
+<!-- PageHeading -->
+<div class="flex flex-wrap justify-between gap-3 mb-8">
+<div class="flex min-w-72 flex-col gap-2">
+<h1 class="text-[#111418] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Génération de Rapports Personnalisés</h1>
+<p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">Configurez, prévisualisez et exportez vos rapports de surveillance entomologique.</p>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<!-- Left Panel: Configuration -->
+<div class="col-span-12 lg:col-span-3">
+<div class="bg-white dark:bg-background-dark rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-6">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Configurer votre rapport</h2>
+<!-- Période -->
+<div>
+<h3 class="font-semibold mb-3 dark:text-gray-200">Période</h3>
+<div class="relative">
+<input class="w-full h-10 pl-10 pr-4 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary" readonly="" type="text" value="05 Juin 2024 - 07 Juillet 2024"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">calendar_today</span>
+</div>
+</div>
+<!-- Indicateurs -->
+<div>
+<h3 class="font-semibold mb-2 dark:text-gray-200">Indicateurs OMS</h3>
+<div class="space-y-2 text-sm" style="--checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(255,255,255)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');">
+<label class="flex items-center gap-x-3 py-1">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-300 dark:focus:border-gray-600 focus:outline-none" type="checkbox"/>
+<p class="text-[#111418] dark:text-gray-300">Densité anophélienne</p>
+</label>
+<label class="flex items-center gap-x-3 py-1">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-300 dark:focus:border-gray-600 focus:outline-none" type="checkbox"/>
+<p class="text-[#111418] dark:text-gray-300">Taux de piqûre humaine</p>
+</label>
+<label class="flex items-center gap-x-3 py-1">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-300 dark:focus:border-gray-600 focus:outline-none" type="checkbox"/>
+<p class="text-[#111418] dark:text-gray-300">Taux de sporozoïtes</p>
+</label>
+</div>
+</div>
+<!-- Filtres -->
+<div>
+<h3 class="font-semibold mb-3 dark:text-gray-200">Filtres Géographiques</h3>
+<div class="space-y-4">
+<div class="relative">
+<select class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary">
+<option>Toutes les régions</option>
+<option>Dakar</option>
+<option>Thiès</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+</div>
+<div class="relative">
+<select class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary">
+<option>Tous les districts</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Format de sortie -->
+<div>
+<h3 class="font-semibold mb-3 dark:text-gray-200">Format de sortie</h3>
+<div class="relative">
+<select class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary">
+<option>PDF</option>
+<option>CSV</option>
+<option>Excel</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Center Panel: Preview -->
+<div class="col-span-12 lg:col-span-6">
+<div class="bg-white dark:bg-background-dark rounded-xl border border-gray-200 dark:border-gray-700 p-6 h-full">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Aperçu du rapport : Juin - Juillet 2024</h2>
+<div class="space-y-6">
+<div class="h-64 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+<img class="object-cover w-full h-full rounded-lg" data-alt="Carte du Sénégal avec points de données" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOZXhFqcoOKA4_L-PKfiWC3bqKCNKTD4LSMgxnXaCwC9ilWhslx_ZHQrurlnVsQNLNy189L7N-3skTg-priaHDEJga0IwwnnmsNI-wQTt1zW1yWzj6zK6Jn9AiJsvzSsVnvH6M65LZ0ocWvEIVE7ssAUSMTxAWvA3yQXY2xLU_PUOjCGRB2Fj6hDSeoaBhJRzsXhMM5YPb-NBjLg1z4ZKBwUv_YD6vkM8sl1g4u0l2cDab4xBPa-UishVvzaH2BmTtihQDLi9WUA"/>
+</div>
+<div class="h-64 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+<img class="object-cover w-full h-full rounded-lg" data-alt="Graphique en barres montrant l'évolution des indicateurs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0wGAbpgrxC8brjjPFhoJckqW0SWHikksOv1WwlZllLZLALjhuYF8JiSxGV7yVwWzNdHZop59qqkeCFw42-dhZ6YGSNYxZhKBVsX0lohrxpd6gFttfqIgKIYC3QtWkZRkkBuEWl9EvqrCL_r7gW9xnQ0oisbngdVyWHGZG3Z-k9Y4oOlLc38RF7gcSDu1ukf4KROUN1-zCimA5hBvNsAhH3qaEB75Y8lG1f_Yf_ly3MAqoRZr77vi1rQ6rNvjDW8GvW-Ax1HpF1A"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Panel: Actions -->
+<div class="col-span-12 lg:col-span-3">
+<div class="bg-white dark:bg-background-dark rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-6 sticky top-8">
+<div>
+<h3 class="font-semibold mb-3 dark:text-gray-200">Génération</h3>
+<button class="w-full flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90">
+<span class="material-symbols-outlined mr-2">download</span>
+<span class="truncate">Générer le rapport</span>
+</button>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+<h3 class="font-semibold mb-3 dark:text-gray-200">Planification</h3>
+<p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Configurez des rapports récurrents pour une livraison automatique.</p>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="report-name">Nom du rapport</label>
+<input class="w-full h-10 px-4 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary" id="report-name" placeholder="Rapport Mensuel - Dakar" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="report-email">Email du destinataire</label>
+<input class="w-full h-10 px-4 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary" id="report-email" placeholder="exemple@sante.sn" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="report-frequency">Fréquence</label>
+<div class="relative">
+<select class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary" id="report-frequency">
+<option>Hebdomadaire</option>
+<option>Mensuel</option>
+<option>Trimestriel</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
+</div>
+</div>
+<button class="w-full flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-primary/20 dark:bg-primary/30 text-primary dark:text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/30 dark:hover:bg-primary/40">
+<span class="material-symbols-outlined mr-2">event</span>
+<span class="truncate">Enregistrer et Planifier</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

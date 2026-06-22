@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestion des Rôles et Permissions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#137fec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+    .material-symbols-outlined.fill {
+        font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex h-screen w-full">
+<!-- SideNavBar -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-background-dark dark:border-r dark:border-gray-700/50">
+<div class="flex h-full flex-col p-4">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Application logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCDUw-uxrIAbfh2FVEQLqSoX4-22hm-lWxC_Y0xj0TD5QKbD1cDo9jLF_NNCagQ6dGAQTVdV5CSDPCnsXtafi4ajAxifi_B1rypuoimKSEhy5JrKrUQPCWrfbwfKpxllfd8g9JNrcE1mNtMgplxGRh7GdgrA9FNPn04tjFi5gW7HN0wgqAe8WNTSfk5kXZldmPo6cMMZYU7bpiWo7MtlwtKSw4hWz20JuAJdrDwQIuV8Mi6v-jCEaHAcPHoiAPlk4_U21ooGFtJMg");'></div>
+<div class="flex flex-col">
+<h1 class="text-[#111418] dark:text-white text-base font-bold leading-normal">Ento-App Afrique</h1>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">Surveillance</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-8">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Tableau de Bord</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">map</span>
+<p class="text-sm font-medium leading-normal">Collecte Terrain</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">biotech</span>
+<p class="text-sm font-medium leading-normal">Analyse Labo</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Utilisateurs</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary dark:bg-primary/20" href="#">
+<span class="material-symbols-outlined fill">shield_person</span>
+<p class="text-sm font-medium leading-normal">Rôles &amp; Permissions</p>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Paramètres</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined">help_center</span>
+<p class="text-sm font-medium leading-normal">Aide</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto">
+<div class="p-8">
+<!-- PageHeading -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<p class="text-[#111418] dark:text-white text-3xl font-bold leading-tight">Gestion des Rôles et Permissions</p>
+<p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">Définissez les accès et les actions pour chaque type d'utilisateur.</p>
+</div>
+<button class="flex min-w-[84px] items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined">add</span>
+<span class="truncate">Ajouter un nouveau rôle</span>
+</button>
+</div>
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Roles List Column -->
+<div class="lg:col-span-1">
+<!-- SectionHeader -->
+<h2 class="text-[#111418] dark:text-white text-xl font-bold leading-tight px-4 pb-3">Liste des Rôles</h2>
+<div class="flex flex-col gap-2">
+<!-- ListItem (Active) -->
+<div class="flex cursor-pointer items-center gap-4 rounded-lg bg-primary/10 dark:bg-primary/20 border border-primary/50 dark:border-primary/70 px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-primary flex items-center justify-center rounded-lg bg-white dark:bg-background-dark shrink-0 size-12">
+<span class="material-symbols-outlined text-3xl">science</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-primary text-base font-semibold leading-normal line-clamp-1">Laborantin / Entomologiste de référence</p>
+<p class="text-primary/80 text-sm font-normal leading-normal line-clamp-2">3 modules activés</p>
+</div>
+</div>
+</div>
+<!-- ListItem -->
+<div class="flex cursor-pointer items-center gap-4 rounded-lg bg-white dark:bg-background-dark/50 hover:bg-gray-50 dark:hover:bg-white/5 px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-[#111418] dark:text-white flex items-center justify-center rounded-lg bg-background-light dark:bg-white/10 shrink-0 size-12">
+<span class="material-symbols-outlined text-3xl">health_and_safety</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#111418] dark:text-white text-base font-medium leading-normal line-clamp-1">Agent de santé / Entomologiste de district</p>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">2 modules activés</p>
+</div>
+</div>
+</div>
+<!-- ListItem -->
+<div class="flex cursor-pointer items-center gap-4 rounded-lg bg-white dark:bg-background-dark/50 hover:bg-gray-50 dark:hover:bg-white/5 px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-[#111418] dark:text-white flex items-center justify-center rounded-lg bg-background-light dark:bg-white/10 shrink-0 size-12">
+<span class="material-symbols-outlined text-3xl">person_search</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#111418] dark:text-white text-base font-medium leading-normal line-clamp-1">Chercheur / PhD</p>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">4 modules activés</p>
+</div>
+</div>
+</div>
+<!-- ListItem -->
+<div class="flex cursor-pointer items-center gap-4 rounded-lg bg-white dark:bg-background-dark/50 hover:bg-gray-50 dark:hover:bg-white/5 px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-[#111418] dark:text-white flex items-center justify-center rounded-lg bg-background-light dark:bg-white/10 shrink-0 size-12">
+<span class="material-symbols-outlined text-3xl">admin_panel_settings</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-[#111418] dark:text-white text-base font-medium leading-normal line-clamp-1">Administrateur</p>
+<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">Accès total</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Permissions Details Column -->
+<div class="lg:col-span-2">
+<div class="bg-white dark:bg-background-dark/50 p-6 rounded-xl">
+<h3 class="text-xl font-bold text-[#111418] dark:text-white">Permissions pour "Laborantin / Entomologiste"</h3>
+<p class="text-sm text-[#617589] dark:text-gray-400 mt-1">Gère la validation des spécimens et l'analyse des données de laboratoire.</p>
+<div class="mt-6 overflow-x-auto">
+<table class="w-full text-left">
+<thead class="border-b border-gray-200 dark:border-gray-700">
+<tr>
+<th class="p-3 text-sm font-semibold text-[#617589] dark:text-gray-400">Module</th>
+<th class="p-3 text-sm font-semibold text-center text-[#617589] dark:text-gray-400">Voir</th>
+<th class="p-3 text-sm font-semibold text-center text-[#617589] dark:text-gray-400">Créer</th>
+<th class="p-3 text-sm font-semibold text-center text-[#617589] dark:text-gray-400">Modifier</th>
+<th class="p-3 text-sm font-semibold text-center text-[#617589] dark:text-gray-400">Valider</th>
+<th class="p-3 text-sm font-semibold text-center text-[#617589] dark:text-gray-400">Exporter</th>
+</tr>
+</thead>
+<tbody>
+<!-- Module Row -->
+<tr class="border-b border-gray-200 dark:border-gray-700">
+<td class="p-3 font-medium text-[#111418] dark:text-white">Collecte Terrain</td>
+<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+</tr>
+<!-- Module Row -->
+<tr class="border-b border-gray-200 dark:border-gray-700">
+<td class="p-3 font-medium text-[#111418] dark:text-white">Analyse Labo</td>
+<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+</tr>
+<!-- Module Row -->
+<tr class="border-b border-gray-200 dark:border-gray-700">
+<td class="p-3 font-medium text-[#111418] dark:text-white">Tableaux de Bord</td>
+<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+</tr>
+<!-- Module Row -->
+<tr>
+<td class="p-3 font-medium text-[#111418] dark:text-white">Gestion Utilisateurs</td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-8 flex justify-end gap-3">
+<button class="flex min-w-[84px] items-center justify-center gap-2 rounded-lg h-10 px-4 bg-transparent text-red-600 dark:text-red-500 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-red-500/10 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+<span>Supprimer le rôle</span>
+</button>
+<button class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-gray-200 dark:bg-white/10 text-[#111418] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">
+                    Annuler
+                 </button>
+<button class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+                    Enregistrer
+                 </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

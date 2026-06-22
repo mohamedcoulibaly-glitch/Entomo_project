@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Atelier de Machine Learning</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex min-h-screen w-full">
+<aside class="flex h-screen w-64 flex-col justify-between border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111418] p-4 sticky top-0">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBvhALdpvJhwRoUqZ35Q2WjXdR7wTwrpxKdeg4XAE-m395hlT6NhbfAdqtOCBpGhd46p8LGpEF3OG4ltEOmvSgo0ZPRm_SnEoAHpc8PEsl3Ifjo1DzYRAj07tePbzL78RHy3OOwnd0Cdp8M6H4Q_eNblS4Ktc_tcfWOj8NA8a4c1bP9pROBBV54rec9WqJlnE2K5WtAEuAe4FPn0-dtS4V0QlVew3yPlbEHIAg5jWrw-AiGrjxjyVcmPcvVlA4sdAc0PdQoz501Jw");'></div>
+<div class="flex flex-col">
+<h1 class="text-gray-900 dark:text-white text-base font-medium leading-normal">M. Kara Samb</h1>
+<p class="text-gray-500 dark:text-[#9dabb9] text-sm font-normal leading-normal">Data Scientist</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-gray-600 dark:text-white">dashboard</span>
+<p class="text-gray-900 dark:text-white text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-[#283039]" href="#">
+<span class="material-symbols-outlined text-primary dark:text-white">model_training</span>
+<p class="text-primary dark:text-white text-sm font-medium leading-normal">Model Training</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-gray-600 dark:text-white">dataset</span>
+<p class="text-gray-900 dark:text-white text-sm font-medium leading-normal">Datasets</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-gray-600 dark:text-white">rocket_launch</span>
+<p class="text-gray-900 dark:text-white text-sm font-medium leading-normal">Deployment</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Nouveau Modèle</span>
+</button>
+<div class="flex flex-col gap-1 border-t border-gray-200 dark:border-gray-800 pt-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-gray-600 dark:text-white">settings</span>
+<p class="text-gray-900 dark:text-white text-sm font-medium leading-normal">Settings</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" href="#">
+<span class="material-symbols-outlined text-gray-600 dark:text-white">logout</span>
+<p class="text-gray-900 dark:text-white text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</div>
+</aside>
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-wrap justify-between gap-3 pb-8">
+<div class="flex min-w-72 flex-col gap-3">
+<p class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Atelier de Machine Learning</p>
+<p class="text-gray-500 dark:text-[#9dabb9] text-base font-normal leading-normal">Configurer, entraîner et évaluer les modèles de détection.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-x-2 overflow-hidden rounded-lg h-10 px-4 border border-gray-300 dark:border-[#3b4754] bg-transparent text-gray-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="material-symbols-outlined">stop_circle</span>
+<span class="truncate">Arrêter</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-x-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="material-symbols-outlined">play_circle</span>
+<span class="truncate">Lancer l'entraînement</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-1 flex flex-col gap-6">
+<div class="bg-white dark:bg-[#111418] rounded-xl border border-gray-200 dark:border-[#283039]">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] px-5 py-4 border-b border-gray-200 dark:border-[#283039]">Configuration du Modèle</h2>
+<div class="p-5 flex flex-col gap-4">
+<label class="flex flex-col w-full">
+<p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Projet/Modèle</p>
+<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3 text-base font-normal leading-normal">
+<option>MosquitoNet-v3</option>
+<option>Anopheles-Detector-2024</option>
+<option>Créer un nouveau modèle</option>
+</select>
+</label>
+<label class="flex flex-col w-full">
+<p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Description du Modèle</p>
+<textarea class="form-textarea flex w-full min-w-0 resize-y overflow-hidden rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary min-h-24 p-3 text-base font-normal leading-normal placeholder-gray-400 dark:placeholder:text-[#9dabb9]">Modèle de détection d'espèces basé sur YOLOv8.</textarea>
+</label>
+<label class="flex flex-col w-full">
+<p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Architecture</p>
+<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3 text-base font-normal leading-normal">
+<option>YOLOv8</option>
+<option>ResNet50</option>
+<option>EfficientNet</option>
+</select>
+</label>
+</div>
+</div>
+<div class="bg-white dark:bg-[#111418] rounded-xl border border-gray-200 dark:border-[#283039]">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] px-5 py-4 border-b border-gray-200 dark:border-[#283039]">Paramètres d'Entraînement</h2>
+<div class="p-5 grid grid-cols-2 gap-4">
+<label class="flex flex-col">
+<p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Époques</p>
+<input class="form-input flex w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3" type="number" value="50"/>
+</label>
+<label class="flex flex-col">
+<p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Batch Size</p>
+<input class="form-input flex w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3" type="number" value="32"/>
+</label>
+<label class="flex flex-col col-span-2">
+<p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Learning Rate</p>
+<input class="form-input flex w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3" type="text" value="0.001"/>
+</label>
+</div>
+</div>
+</div>
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="bg-white dark:bg-[#111418] rounded-xl border border-gray-200 dark:border-[#283039]">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] px-5 py-4 border-b border-gray-200 dark:border-[#283039]">Suivi de l'Entraînement</h2>
+<div class="p-5">
+<img class="w-full h-auto rounded-lg object-cover" data-alt="A line graph showing training and validation accuracy and loss over epochs. The accuracy lines are trending upwards, while the loss lines are trending downwards, indicating successful model training." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIvzp6HE3u9mpvVWX6q-yIUAL6qAYSzJKkQ_rylkOoM8dGB4-UGxcJtGE_GPUZPM6xPKSsIxPM5ay0XpwEI_l9eRqjLfk5xMoWe1wDvVu8IUbRmenXE1KuWFJJnizjsprY_ZbEdutDxHf30XOWNLmxhwagRIbrZLNBknX-qlxrteQloE7OlV90V2gL6Xf299iGbLrZOe8NV-uQVMd9Fi7RNCpHlISqcRHciRVSuYtCm9mCvVcGRqqww80GXfMfTHRrr_Hl9eCgIw"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-white dark:bg-[#111418] rounded-xl border border-gray-200 dark:border-[#283039]">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] px-5 py-4 border-b border-gray-200 dark:border-[#283039]">Rapport de Performance</h2>
+<div class="p-5 space-y-3">
+<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">Précision</span> <span class="font-bold text-green-600 dark:text-green-400">98.2%</span></div>
+<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">Rappel</span> <span class="font-bold text-gray-800 dark:text-white">97.5%</span></div>
+<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">F1-Score</span> <span class="font-bold text-gray-800 dark:text-white">97.8%</span></div>
+<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">Perte (Loss)</span> <span class="font-bold text-orange-600 dark:text-orange-400">0.054</span></div>
+</div>
+</div>
+<div class="bg-white dark:bg-[#111418] rounded-xl border border-gray-200 dark:border-[#283039]">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] px-5 py-4 border-b border-gray-200 dark:border-[#283039]">Tester sur une Image</h2>
+<div class="p-5">
+<div class="flex items-center justify-center w-full">
+<label class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-600" for="dropzone-file">
+<div class="flex flex-col items-center justify-center pt-5 pb-6">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400">upload_file</span>
+<p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Cliquez pour uploader</span> ou glissez-déposez</p>
+</div>
+<input class="hidden" id="dropzone-file" type="file"/>
+</label>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-[#111418] rounded-xl border border-gray-200 dark:border-[#283039]">
+<div class="flex flex-wrap items-center justify-between gap-4 px-5 py-4 border-b border-gray-200 dark:border-[#283039]">
+<h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">Galerie du Jeu de Données</h2>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400">filter_alt</span>
+<p class="text-gray-800 dark:text-white text-sm font-medium">Filtres:</p>
+<select class="form-select flex min-w-0 resize-none overflow-hidden rounded-md text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-9 px-3 text-sm font-normal">
+<option>Toutes espèces</option>
+<option>An. gambiae</option>
+<option>An. funestus</option>
+<option>Aedes aegypti</option>
+<option>Culex</option>
+</select>
+<select class="form-select flex min-w-0 resize-none overflow-hidden rounded-md text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-9 px-3 text-sm font-normal">
+<option>Tout sexe</option>
+<option>Mâle</option>
+<option>Femelle</option>
+</select>
+</div>
+</div>
+<div class="p-5">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+<div class="md:col-span-3">
+<div class="relative group aspect-video w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center cursor-zoom-in">
+<img class="w-full h-full object-contain" data-alt="Annotated image of an Aedes aegypti mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAelJFFIZy5KrzALVpxr9XZloaVU3M7AvcQ0ZOyOOKxkKan8oZ4-3aycLyTO8UVOr89VTpGzdBVo4oa88u_9uPf_hdix1uT06xHLhxoeqJMuztCSoOylSBf0fpvKKaN_8Cbp_9-kP-5hoUfAmGvUtwRe2lPTss2jRoXBI5CVmXnEl3W02SyydzrhM-WNOiecjPcut7DXj5Hh1zPwqfvjcYplErSqxxnVPaYrKyKbKNBYCgwccUe-4DwaLmmjq1Dsrh3I3ep2x2wpg"/>
+<div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-5xl">zoom_in</span>
+</div>
+<div class="absolute top-[20%] left-[30%] w-[40%] h-[50%] border-2 border-cyan-400 rounded">
+<div class="absolute -top-6 left-0 bg-cyan-400 text-black text-xs font-bold px-1.5 py-0.5 rounded-sm">Aedes aegypti</div>
+</div>
+</div>
+</div>
+<div class="md:col-span-2">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white">Annotations</h3>
+<div class="mt-2 space-y-2 text-sm">
+<div class="flex justify-between items-center p-2 rounded-md bg-gray-100 dark:bg-gray-800">
+<span class="text-gray-500 dark:text-gray-400">Espèce:</span>
+<span class="font-medium text-gray-800 dark:text-white">Aedes aegypti</span>
+</div>
+<div class="flex justify-between items-center p-2 rounded-md bg-gray-100 dark:bg-gray-800">
+<span class="text-gray-500 dark:text-gray-400">Sexe:</span>
+<span class="font-medium text-gray-800 dark:text-white">Femelle</span>
+</div>
+<div class="flex justify-between items-center p-2 rounded-md bg-gray-100 dark:bg-gray-800">
+<span class="text-gray-500 dark:text-gray-400">Stade:</span>
+<span class="font-medium text-gray-800 dark:text-white">Adulte</span>
+</div>
+<div class="flex justify-between items-center p-2 rounded-md bg-gray-100 dark:bg-gray-800">
+<span class="text-gray-500 dark:text-gray-400">ID Image:</span>
+<span class="font-mono text-xs text-gray-500 dark:text-gray-400">d23e833f</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-6 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of an Anopheles gambiae mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3zbkE3m8fmiCPTm7VCsLn2LVFlsFrwm52Y-SMU0mYdErDNv004Uni72un6p86twU0q6Sk2lkj2-5cdfEVDkZdkT-HPtj-Qlz5lrAOTdbfny-WGDJzzOb8jFZjb5-FRo5S0uQuYPQ_PATj-_l5edu_mvv74H44rinA0ETF_FWJTtOeYc_2YoR53eqldR49C9iiOS1Cv1DVnLbxpBuTUijLmVjyEi7bbf9kgJgY4t7UShYqLJLYLHQqXKgdZ__2KQpEMFuPvvCnIg"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of a Culex mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZbIDmtD-TyQZkoiCSBrzKRD3bJzZDsNZGmbFQIWXchLPQo_tEoQC0kYE9uFjfLYArRuDiEKJHtJOrcyUX-upnLd4yiVI-D3mY-HJ0usPj2Z_fsPbu5uxRdiovpTmuTbeWvmXn4AObfPinZjjjDMCtQ1Og4MLvr46Et5CWTRHCi1JDy48SXc8G-W-BmD4bvLeYZZkvCxrF8VKpaa8Lud-MthdC-gtcaiDXo47JBWIDxLNNlpj9lVF4JNJLpjJiKrXoU2bYD5AZ1g"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-primary transition-all duration-200 cursor-pointer ring-2 ring-primary" data-alt="Annotated image of an Aedes aegypti mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAelJFFIZy5KrzALVpxr9XZloaVU3M7AvcQ0ZOyOOKxkKan8oZ4-3aycLyTO8UVOr89VTpGzdBVo4oa88u_9uPf_hdix1uT06xHLhxoeqJMuztCSoOylSBf0fpvKKaN_8Cbp_9-kP-5hoUfAmGvUtwRe2lPTss2jRoXBI5CVmXnEl3W02SyydzrhM-WNOiecjPcut7DXj5Hh1zPwqfvjcYplErSqxxnVPaYrKyKbKNBYCgwccUe-4DwaLmmjq1Dsrh3I3ep2x2wpg"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of an Anopheles funestus mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA0HxzRV8BOBJf2pUJRS6yhqGW0-_df5XP_JlLyeHE3rzynAL2lHj3siPwN9Xw84VQ2v_k6-tg8ywLqNruvBfTbuQ7iAlcAlUS45toKmHX3y4bCFqQV5DlNnTySd7NY18P4KWxDEPCfK4U3tS8EykQgOs75hMBQqw57RgFJ7zGT4Hb9nFJUrA7H_1wurxtMLvuPlRAK3M0HL2TNJngRuDtk05A_BTjOE24XG7ARpaHBiVDJdzscF4YeAdFUjV0EJJKZUSheLIOhQ"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of a mosquito larva." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAShOA4OjgrlwhETrRJjhBHE0glWhLfChL-loMDcREsMY7Utfgwn3di5_hC_5LRVOGkHjyKOgWZa55SD6IxS-eb-3J2dUoSrhA10FDFDZOtvezRCO1OA1vRq2VvIjwo577tzVfjs6YDCdV7VM_5uUK3u8RlOhnQPnXhA-ALiHnzq0upozhW5DjjqDtn9iUPym_Ln0TOPHYnOBlBhU616xjo3GfEmrJcf5tDgYrxV-moLul6zHNE8wgSG403fgPfv-zn6y7J_VFwQw"/>
+<div class="aspect-square w-full rounded-md bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer text-sm">+986</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

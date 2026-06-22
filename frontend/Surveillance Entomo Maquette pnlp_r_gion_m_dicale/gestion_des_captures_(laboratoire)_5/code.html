@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ento-App- Validation des Spécimens</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        display: ["Public Sans", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111418] dark:text-white/90">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#dbe0e6] dark:border-white/10 bg-white dark:bg-background-dark px-6 py-3 sticky top-0 z-20">
+<div class="flex items-center gap-4 text-[#111418] dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Ento-App Afrique</h2>
+</div>
+<div class="flex flex-1 justify-center items-center gap-9">
+<a class="text-[#617589] dark:text-white/70 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary" href="#">Tableau de bord Ento-App</a>
+<a class="text-primary dark:text-primary text-sm font-bold leading-normal" href="#">Validation Spécimens</a>
+<a class="text-[#617589] dark:text-white/70 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary" href="#">Cartographie</a>
+<a class="text-[#617589] dark:text-white/70 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary" href="#">Rapports</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-background-light dark:bg-white/10 text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAlzi4K8nit0e1rh_1ch3YlbJQrF0itincf2-RMBWhlgWjzSzZfH4uHD9iaZaDcG-gMGsgu1CtjZcBaTZh2aNQwbKChkStJCQdnPST2BVBX3CWEL9TvdSVKG6Hkjvv8pJRdFj9S_b9zYCSOqMNiADqKWCn-5lA32jzI95nqwGgQI71BOfbMtcOs3QkQH4rOSVD6mMvswJOX01JF6EWMuAH8DdTr25g-KjfAsGot8FR7J0jKZ9demnovJL3kXE-Su9FstRsxpyeL7A");'></div>
+</div>
+</header>
+<div class="flex-1 flex flex-row">
+<main class="w-2/3 flex-shrink-0 p-6">
+<div class="flex flex-wrap justify-between gap-3 items-center mb-6">
+<div class="flex min-w-72 flex-col gap-1">
+<p class="text-[#111418] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Validation des Spécimens</p>
+<p class="text-[#617589] dark:text-white/60 text-base font-normal leading-normal">Vérifiez, corrigez et enrichissez les identifications automatiques des spécimens.</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Valider en masse</span>
+</button>
+</div>
+<div class="flex flex-col gap-3 mb-6">
+<details class="flex flex-col rounded-lg bg-white dark:bg-background-dark border border-slate-200 dark:border-white/10 px-4 py-2 group" open="">
+<summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+<p class="text-[#111418] dark:text-white text-sm font-medium leading-normal">Filtres</p>
+<span class="material-symbols-outlined text-[#111418] dark:text-white group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2 pb-4 border-t border-slate-200 dark:border-white/10">
+<div>
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1" for="date-filter">Date de capture</label>
+<input class="w-full h-9 text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-primary focus:ring-primary" id="date-filter" type="date"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1" for="status-filter">Statut</label>
+<select class="w-full h-9 text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-primary focus:ring-primary" id="status-filter">
+<option>Tous</option>
+<option>À valider</option>
+<option>Validé</option>
+<option>Corrigé</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1" for="species-filter">Espèce</label>
+<select class="w-full h-9 text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-primary focus:ring-primary" id="species-filter">
+<option>Toutes</option>
+<option>An. gambiae</option>
+<option>An. funestus</option>
+<option>Ae. aegypti</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1" for="location-filter">Localisation</label>
+<select class="w-full h-9 text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-primary focus:ring-primary" id="location-filter">
+<option>Toutes</option>
+<option>Kédougou</option>
+<option>Dakar</option>
+<option>Thiès</option>
+</select>
+</div>
+</div>
+</details>
+</div>
+<div class="@container">
+<div class="flex overflow-hidden rounded-lg border border-[#dbe0e6] dark:border-white/10 bg-white dark:bg-background-dark">
+<table class="w-full">
+<thead>
+<tr class="bg-background-light dark:bg-white/5">
+<th class="px-4 py-3 text-left text-[#617589] dark:text-white/60 w-16 text-xs font-medium tracking-wider uppercase">Spécimen</th>
+<th class="px-4 py-3 text-left text-[#617589] dark:text-white/60 text-xs font-medium tracking-wider uppercase">ID</th>
+<th class="px-4 py-3 text-left text-[#617589] dark:text-white/60 text-xs font-medium tracking-wider uppercase">Identification IA</th>
+<th class="px-4 py-3 text-left text-[#617589] dark:text-white/60 w-24 text-xs font-medium tracking-wider uppercase">Confiance</th>
+<th class="px-4 py-3 text-left text-[#617589] dark:text-white/60 w-32 text-xs font-medium tracking-wider uppercase">Statut</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-t border-t-[#dbe0e6] dark:border-t-white/10 hover:bg-primary/5 dark:hover:bg-primary/10 cursor-pointer bg-primary/10 dark:bg-primary/20">
+<td class="h-[72px] px-4 py-2 w-16">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-md w-10 h-10" data-alt="Spécimen de moustique An. gambiae" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCcTRK1BzF1Qwa_OyFkNtQpaEgWl8arvNWDuoAHRduex65AZbVMsI3N1LZSQ7Risi1i71NAmJ-nHIKEUq2OjSIsvn63waJKaGLgFD5hECfyeUU0B8TmDUcCnQxGy_j0XuXsJY2PE4P7PYpj_b61kIlFMVr3Tz1RjfMdfwJoqaLG8FqnwPhnSYL65U2uUAGHgWoTEno6eNC16Mw473mfmCF2z_LTU703DG2f8ZuI8fQG3GKZH0dKbUiyapTuv2iCBtEyoIi9M9VD7w");'></div>
+</td>
+<td class="h-[72px] px-4 py-2 text-[#617589] dark:text-white/60 text-sm font-mono leading-normal">SPN-00123</td>
+<td class="h-[72px] px-4 py-2 text-[#111418] dark:text-white text-sm font-medium leading-normal">An. gambiae, Femelle</td>
+<td class="h-[72px] px-4 py-2 w-24 text-[#617589] dark:text-white/60 text-sm font-normal leading-normal">98%</td>
+<td class="h-[72px] px-4 py-2 w-32">
+<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-[#FFC107]/20 text-[#D98A00]">À valider</span>
+</td>
+</tr>
+<tr class="border-t border-t-[#dbe0e6] dark:border-t-white/10 hover:bg-primary/5 dark:hover:bg-primary/10 cursor-pointer">
+<td class="h-[72px] px-4 py-2 w-16">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-md w-10 h-10" data-alt="Spécimen de moustique An. funestus" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBHMyhvmGCFENh-k-1U-irBMgsB9A5PIZTCrqK2jld0MDhIEyMpDoJyTa-FoPAWWUDLNtyE7ELNg2QxhXlWACleoZZrTgQ2bI_QYOz8fmx_eCFJn_mXrK_M-PU7X5kW_4pPU5vp4cLKE3U0Gn8q4uVtOhS04h59-441uxPwHxD6VX8Lz2DVqTt9Jr_7worgtICcI8mlLWfmYt2285WTf9maS4laZNf_6DBEPksX9_vTUaLoO5SMEkemp5ZG57ZEg52r6QQmosp1dA");'></div>
+</td>
+<td class="h-[72px] px-4 py-2 text-[#617589] dark:text-white/60 text-sm font-mono leading-normal">SPN-00124</td>
+<td class="h-[72px] px-4 py-2 text-[#111418] dark:text-white text-sm font-medium leading-normal">An. funestus, Mâle</td>
+<td class="h-[72px] px-4 py-2 w-24 text-[#617589] dark:text-white/60 text-sm font-normal leading-normal">95%</td>
+<td class="h-[72px] px-4 py-2 w-32">
+<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-[#4CAF50]/20 text-[#2E7D32]">Validé</span>
+</td>
+</tr>
+<tr class="border-t border-t-[#dbe0e6] dark:border-t-white/10 hover:bg-primary/5 dark:hover:bg-primary/10 cursor-pointer">
+<td class="h-[72px] px-4 py-2 w-16">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-md w-10 h-10" data-alt="Spécimen de moustique Ae. aegypti" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDzqnRFqZCHssaJt6mxFStkflhQbWOfC8amWZH8JRTNjlz3OKWd3HG-h3dNzVtTkLBAg5-XhWcGQHTqqcrl2vXSlQQHkIww-oNAVEdopq0IX_DOujmNHLLtwU2eleDcBoA-zG02Yc35wtK2P1RUTASZsQMU2HMkKflFHiiPa-kq5PtpWAurORF0te948R0-xcLcooJsJP_9xSTvBl9A99apQmCPC_PucMcXNS-SEsJWTQoTymuzSWn6NX7JKPUOK4YiGi4lT_tG2g");'></div>
+</td>
+<td class="h-[72px] px-4 py-2 text-[#617589] dark:text-white/60 text-sm font-mono leading-normal">SPN-00125</td>
+<td class="h-[72px] px-4 py-2 text-[#111418] dark:text-white text-sm font-medium leading-normal">Ae. aegypti, Femelle</td>
+<td class="h-[72px] px-4 py-2 w-24 text-[#617589] dark:text-white/60 text-sm font-normal leading-normal">89%</td>
+<td class="h-[72px] px-4 py-2 w-32">
+<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-[#D32F2F]/20 text-[#B71C1C]">Corrigé</span>
+</td>
+</tr>
+<tr class="border-t border-t-[#dbe0e6] dark:border-t-white/10 hover:bg-primary/5 dark:hover:bg-primary/10 cursor-pointer">
+<td class="h-[72px] px-4 py-2 w-16">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-md w-10 h-10" data-alt="Spécimen de moustique Cx. quinquefasciatus" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCKTQpcIEXfAW-NdweytPAZoWrjXKTutn0yzzzIOa-MB1SEqu1qGroo1py0oYXFzcQJ750JpFLnfVk7BE-8EfNYpcUSiE2yRggAZlqcfthlPL4v7OPo6oD3_ZcyzN-dImeQiPyue7dpe9lyr1NuO0-wBJ5A0Dy3B-R1zCDnEtQBDvMKLbnKlkwI-9QL5NlgINFd3TuwXiA92_xxTTTNcVUNUpkyHk-o2pXimmY8jL8QEOEz956z_qIIVqH0gep0-uSsM8gBdgwl7w");'></div>
+</td>
+<td class="h-[72px] px-4 py-2 text-[#617589] dark:text-white/60 text-sm font-mono leading-normal">SPN-00126</td>
+<td class="h-[72px] px-4 py-2 text-[#111418] dark:text-white text-sm font-medium leading-normal">Cx. quinquefasciatus, Mâle</td>
+<td class="h-[72px] px-4 py-2 w-24 text-[#617589] dark:text-white/60 text-sm font-normal leading-normal">99%</td>
+<td class="h-[72px] px-4 py-2 w-32">
+<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-[#FFC107]/20 text-[#D98A00]">À valider</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+<aside class="w-1/3 border-l border-slate-200 dark:border-white/10 bg-white dark:bg-background-dark flex-shrink-0">
+<div class="sticky top-[73px] h-[calc(100vh-73px)] flex flex-col p-6">
+<div class="flex-1 flex flex-col gap-6 overflow-y-auto pr-2">
+<div class="flex flex-col gap-2">
+<p class="text-sm text-[#617589] dark:text-white/60">SPN-00123</p>
+<h1 class="text-2xl font-bold text-[#111418] dark:text-white leading-tight">Détails du Spécimen</h1>
+<p class="text-sm font-normal leading-normal text-[#617589] dark:text-white/60">Capturé le 24/07/2024 - Site de Kédougou</p>
+</div>
+<div class="flex flex-col gap-2">
+<h3 class="text-sm font-bold text-[#111418] dark:text-white">Téléchargement de Média</h3>
+<div class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 text-center">
+<span class="material-symbols-outlined text-4xl text-gray-400 dark:text-gray-500">upload_file</span>
+<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Glissez-déposez des images ou des fichiers audio ici, ou</p>
+<label class="mt-4 inline-flex cursor-pointer items-center justify-center rounded-lg h-9 px-3 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]" for="file-upload">
+<span>Sélectionner un fichier</span>
+</label>
+<input class="sr-only" id="file-upload" name="file-upload" type="file"/>
+<p class="mt-2 text-xs text-gray-400 dark:text-gray-500">PNG, JPG, GIF jusqu'à 10MB ou MP3, WAV</p>
+</div>
+</div>
+<div class="relative rounded-lg overflow-hidden group">
+<div class="bg-center bg-no-repeat aspect-video bg-cover" data-alt="Image haute résolution du spécimen SPN-00123" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAcoNrydEh8_fTxs-qJPnwEGy1LDMMLzvMjoVesREJxDCriYxY7O63QsI28kYIWXTNkq_LOzhNs6GpdZiV_XFLtv8Bhh_sm109dic7Nr3ictWiYgjei11ZHdYqOahWcZ6pBC7LQ8O_b2ajsEv2ffcqcK7g9hockx5P2EtSPIXRNKxCn0uRF6G9As7T5ywA9ctYGvYVCvq-BrwYCjqGpXXj-8SM1AvSgW0f2-wZ0Qusb8EyVVZjPylF7vLQBkV7-zHRxeJO0aFAOlg");'></div>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="h-10 w-10 rounded-full bg-white/30 text-white backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex flex-col gap-4 p-4 rounded-lg bg-primary/5 dark:bg-primary/20 border border-primary/20 dark:border-primary/40">
+<div class="flex items-center justify-between">
+<h3 class="text-sm font-bold text-primary dark:text-primary-300 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">smart_toy</span> Identification par l'IA
+                                    </h3>
+<div class="flex items-center gap-2 text-sm font-bold text-primary dark:text-primary-300">
+<span class="material-symbols-outlined text-lg">verified</span>
+<span>Confiance : 98%</span>
+</div>
+</div>
+<p class="text-lg font-medium text-[#111418] dark:text-white">Anopheles gambiae, Femelle</p>
+</div>
+<div class="flex flex-col gap-4">
+<div>
+<h3 class="text-sm font-bold text-[#111418] dark:text-white mb-2">Correction et Validation</h3>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="text-xs font-medium text-gray-500 dark:text-gray-400" for="species-select">Espèce validée</label>
+<select class="mt-1 w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-primary focus:ring-primary" id="species-select">
+<option selected="">Anopheles gambiae</option>
+<option>Anopheles funestus</option>
+<option>Aedes aegypti</option>
+<option>Culex quinquefasciatus</option>
+<option>Autre...</option>
+</select>
+</div>
+<div>
+<label class="text-xs font-medium text-gray-500 dark:text-gray-400" for="gender-select">Sexe validé</label>
+<select class="mt-1 w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-primary focus:ring-primary" id="gender-select">
+<option selected="">Femelle</option>
+<option>Mâle</option>
+</select>
+</div>
+</div>
+<div class="mt-3">
+<label class="text-xs font-medium text-gray-500 dark:text-gray-400" for="comments">Commentaires (optionnel)</label>
+<textarea class="mt-1 w-full text-sm rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-primary focus:ring-primary" id="comments" placeholder="Ex: Spécimen endommagé, identification difficile..." rows="2"></textarea>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary text-sm font-bold">
+<span class="material-symbols-outlined text-base">edit</span>Corriger
+                                    </button>
+<button class="flex-1 flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-green-600 text-white text-sm font-bold">
+<span class="material-symbols-outlined text-base">check_circle</span>Valider
+                                    </button>
+</div>
+</div>
+<div>
+<h3 class="text-sm font-bold text-[#111418] dark:text-white mb-2">Données Biologiques</h3>
+<div class="flex items-center justify-between p-3 rounded-lg bg-background-light dark:bg-white/5">
+<p class="text-sm text-[#111418] dark:text-white/90">Statut d'infection</p>
+<div class="flex gap-2 text-sm">
+<span class="px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700">Non testé</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h3 class="text-sm font-bold text-[#111418] dark:text-white mb-1">Historique des Validations</h3>
+<ul class="space-y-4">
+<li class="relative pl-6 border-l border-slate-200 dark:border-white/20">
+<div class="absolute -left-1.5 top-1 size-3 rounded-full bg-green-500"></div>
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-[#111418] dark:text-white">Validation par Dr. A. Diop</p>
+<p class="text-xs text-[#617589] dark:text-white/60">25/07/2024, 10:15</p>
+</div>
+<p class="text-sm text-[#617589] dark:text-white/70">Espèce et sexe confirmés conformes à l'IA.</p>
+</li>
+<li class="relative pl-6 border-l border-slate-200 dark:border-white/20">
+<div class="absolute -left-1.5 top-1 size-3 rounded-full bg-orange-500"></div>
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-[#111418] dark:text-white">Correction par I. Faye</p>
+<p class="text-xs text-[#617589] dark:text-white/60">24/07/2024, 16:40</p>
+</div>
+<p class="text-sm text-[#617589] dark:text-white/70">Sexe corrigé de "Mâle" à "Femelle". Commentaire : "Erreur évidente de l'IA."</p>
+</li>
+<li class="relative pl-6 border-l border-slate-200 dark:border-white/20">
+<div class="absolute -left-1.5 top-1 size-3 rounded-full bg-blue-500"></div>
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-[#111418] dark:text-white">Identification initiale par IA</p>
+<p class="text-xs text-[#617589] dark:text-white/60">24/07/2024, 14:02</p>
+</div>
+<p class="text-sm text-[#617589] dark:text-white/70">An. gambiae, Mâle (Confiance 98%)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-slate-200 dark:border-white/10">
+<button class="flex w-full min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Ajouter au jeu de données</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</body></html>

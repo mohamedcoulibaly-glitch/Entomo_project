@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tableau de Bord de Surveillance Entomologique</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+        @layer base {
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+              "brand-primary": "#005689",
+              "brand-background": "#F5F5F7",
+              "brand-alert-critical": "#D9534F",
+              "brand-alert-warning": "#F0AD4E",
+              "brand-success": "#078838"
+            },
+            fontFamily: {
+              "display": ["Public Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#111418] dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-6 sm:px-10 py-3 bg-white dark:bg-background-dark">
+<div class="flex items-center gap-4 text-[#111418] dark:text-white">
+<div class="size-6 text-brand-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_543)">
+<path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M7.24189 26.4066C7.31369 26.4411 7.64204 26.5637 8.52504 26.3738C9.59462 26.1438 11.0343 25.5311 12.7183 24.4963C14.7583 23.2426 17.0256 21.4503 19.238 19.238C21.4503 17.0256 23.2426 14.7583 24.4963 12.7183C25.5311 11.0343 26.1438 9.59463 26.3738 8.52504C26.5637 7.64204 26.4411 7.31369 26.4066 7.24189C26.345 7.21246 26.143 7.14535 25.6664 7.1918C24.9745 7.25925 23.9954 7.5498 22.7699 8.14278C20.3369 9.32007 17.3369 11.4915 14.4142 14.4142C11.4915 17.3369 9.32007 20.3369 8.14278 22.7699C7.5498 23.9954 7.25925 24.9745 7.1918 25.6664C7.14534 26.143 7.21246 26.345 7.24189 26.4066ZM29.9001 10.7285C29.4519 12.0322 28.7617 13.4172 27.9042 14.8126C26.465 17.1544 24.4686 19.6641 22.0664 22.0664C19.6641 24.4686 17.1544 26.465 14.8126 27.9042C13.4172 28.7617 12.0322 29.4519 10.7285 29.9001L21.5754 40.747C21.6001 40.7606 21.8995 40.931 22.8729 40.7217C23.9424 40.4916 25.3821 39.879 27.0661 38.8441C29.1062 37.5904 31.3734 35.7982 33.5858 33.5858C35.7982 31.3734 37.5904 29.1062 38.8441 27.0661C39.879 25.3821 40.4916 23.9425 40.7216 22.8729C40.931 21.8995 40.7606 21.6001 40.747 21.5754L29.9001 10.7285ZM29.2403 4.41187L43.5881 18.7597C44.9757 20.1473 44.9743 22.1235 44.6322 23.7139C44.2714 25.3919 43.4158 27.2666 42.252 29.1604C40.8128 31.5022 38.8165 34.012 36.4142 36.4142C34.012 38.8165 31.5022 40.8128 29.1604 42.252C27.2666 43.4158 25.3919 44.2714 23.7139 44.6322C22.1235 44.9743 20.1473 44.9757 18.7597 43.5881L4.41187 29.2403C3.29027 28.1187 3.08209 26.5973 3.21067 25.2783C3.34099 23.9415 3.8369 22.4852 4.54214 21.0277C5.96129 18.0948 8.43335 14.7382 11.5858 11.5858C14.7382 8.43335 18.0948 5.9613 21.0277 4.54214C22.4852 3.8369 23.9415 3.34099 25.2783 3.21067C26.5973 3.08209 28.1187 3.29028 29.2403 4.41187Z" fill="currentColor" fill-rule="evenodd"></path>
+</g>
+<defs><clipPath id="clip0_6_543"><rect fill="white" height="48" width="48"></rect></clipPath></defs>
+</svg>
+</div>
+<h2 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Ento-App Afrique</h2>
+</div>
+<div class="flex flex-1 justify-end gap-2 sm:gap-4">
+<nav class="hidden sm:flex items-center gap-6">
+<a class="text-brand-primary text-sm font-bold leading-normal border-b-2 border-brand-primary pb-1" href="#">Tableau de Bord</a>
+<a class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal hover:text-brand-primary" href="#">Rapports</a>
+<a class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal hover:text-brand-primary" href="#">Interventions</a>
+<a class="text-[#111418] dark:text-gray-300 text-sm font-medium leading-normal hover:text-brand-primary" href="#">Paramètres</a>
+</nav>
+<div class="flex items-center gap-2">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f2f4] dark:bg-gray-700 text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<span class="material-symbols-outlined text-xl">language</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f2f4] dark:bg-gray-700 text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCf4ReoO6DzV9WU-ZhB6goMwdc2JDmBKPIoG2wN42ZesgRlTndCYQd5Y4Q17BXkh-PT52vUi6nUrrgMXPRTv4W1NC1O-LyvBC0xSiOXwz4xygtxx5sZFITOUmL7IoPwQN_P6imrOlzhNEAsmIT3gH3Hi0LhvKCJNtywqPtozvTgNHut3Vb-HCF2otQEsEWNGmh9_cMer8QaFRYhqdLiMZA-XaV7T0-wPYENp_TzGXxiwr-0fQsLdjhjnXPuLk9tB-xqFuoN9iXNPg");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 px-4 sm:px-6 lg:px-10 py-8">
+<div class="flex flex-wrap justify-between gap-4 items-center mb-6">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-[#111418] dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Tableau de Bord de Surveillance Entomologique</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Analyse et suivi des vecteurs du paludisme au Sénégal.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex h-10 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 px-4 text-sm font-bold leading-normal text-[#111418] dark:text-white">
+<span class="material-symbols-outlined text-lg">download</span> Exporter (PDF/CSV)
+                    </button>
+<button class="flex h-10 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-brand-primary px-4 text-sm font-bold leading-normal text-white">
+<span class="material-symbols-outlined text-lg">add_circle</span> Planifier une Intervention
+                    </button>
+</div>
+</div>
+<div class="flex gap-3 py-3 border-b border-t border-gray-200 dark:border-gray-700 mb-6 flex-wrap">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-brand-background dark:bg-gray-700 pl-4 pr-3 text-[#111418] dark:text-gray-200">
+<p class="text-sm font-medium leading-normal">Période: Année en cours</p>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-brand-background dark:bg-gray-700 pl-4 pr-3 text-[#111418] dark:text-gray-200">
+<p class="text-sm font-medium leading-normal">Localisation: Tout le pays</p>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-brand-background dark:bg-gray-700 pl-4 pr-3 text-[#111418] dark:text-gray-200">
+<p class="text-sm font-medium leading-normal">Espèce: Toutes</p>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-brand-background dark:bg-gray-700 pl-4 pr-3 text-[#111418] dark:text-gray-200">
+<p class="text-sm font-medium leading-normal">Environnement: Tous</p>
+<span class="material-symbols-outlined text-lg">expand_more</span>
+</button>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-12 lg:col-span-8">
+<div class="flex flex-col gap-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="flex flex-col gap-2 rounded-xl p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+<p class="text-gray-600 dark:text-gray-400 text-sm font-medium leading-normal">Densité Moyenne Globale</p>
+<p class="text-[#111418] dark:text-white tracking-light text-2xl font-bold leading-tight">15.7</p>
+<p class="text-brand-success text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_upward</span>+2.1%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+<p class="text-gray-600 dark:text-gray-400 text-sm font-medium leading-normal">Alertes Actives</p>
+<p class="text-[#111418] dark:text-white tracking-light text-2xl font-bold leading-tight">3</p>
+<p class="text-brand-alert-warning text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_upward</span>+1 depuis hier</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+<p class="text-gray-600 dark:text-gray-400 text-sm font-medium leading-normal">Espèce Dominante</p>
+<p class="text-[#111418] dark:text-white tracking-light text-2xl font-bold leading-tight">An. gambiae</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal"> </p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+<p class="text-gray-600 dark:text-gray-400 text-sm font-medium leading-normal">Couverture IRS</p>
+<p class="text-[#111418] dark:text-white tracking-light text-2xl font-bold leading-tight">82%</p>
+<p class="text-brand-alert-critical text-sm font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-base">arrow_downward</span>-1.5%</p>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+<div class="flex flex-col gap-4">
+<div class="flex flex-wrap justify-between items-center gap-3">
+<h3 class="text-lg font-bold text-[#111418] dark:text-white">Densité des Vecteurs Paludiques</h3>
+<div class="flex items-center gap-4 text-sm">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-brand-alert-warning"></div>
+<span class="text-gray-600 dark:text-gray-300">Risque modéré</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-brand-alert-critical"></div>
+<span class="text-gray-600 dark:text-gray-300">Risque élevé</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+<div>
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="zone-type">Type de zone</label>
+<select class="w-full h-9 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="zone-type" multiple="">
+<option>Urbaine</option>
+<option>Rurale</option>
+</select>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="stagnant-water">Proximité eaux stagnantes</label>
+<select class="w-full h-9 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="stagnant-water">
+<option>Oui</option>
+<option>Non</option>
+</select>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="weather">Conditions météo</label>
+<select class="w-full h-9 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="weather" multiple="">
+<option>Fortes pluies</option>
+<option>Humidité élevée</option>
+<option>Température &gt; 25°C</option>
+</select>
+</div>
+</div>
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg object-cover relative mt-4" data-alt="Carte du Sénégal avec une heatmap montrant la densité des vecteurs de paludisme" data-location="Sénégal" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAC9RCa5lvSVvkeNVXcFWFLHxwyRNVdwO3-bDTMZWz7HEMHhF-UMR7TqRrZHL57Z5Jnf6J4kv2EnlLMrYEbgtt_MqVXmvSCRqc1ObFrqsaXJiipDBD9xNbHnnlxUCF-Hhw4mzZ8da_sBdBy8qj4a-1x6KP9j5dMjj9GWKNvp5jVG8fixyrjErP_qff9GVssNjbCcCAAzAmEfJkkCYBuW7fHOCcX_U2cI2tDnlUGEnLgX8VYRqiGjFj9KrKIHkHWsxLX2tcNbM4IZA");'>
+<button class="absolute top-[25%] left-[22%] group">
+<span class="material-symbols-outlined text-brand-alert-warning text-3xl drop-shadow-lg" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+<p class="font-bold">Tambacounda</p>
+<p>Risque Modéré</p>
+</div>
+</button>
+<button class="absolute top-[45%] left-[65%] group">
+<span class="material-symbols-outlined text-brand-alert-critical text-3xl drop-shadow-lg" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+<p class="font-bold">Kédougou</p>
+<p>Risque Élevé</p>
+</div>
+</button>
+<button class="absolute top-[60%] left-[40%] group">
+<span class="material-symbols-outlined text-brand-alert-warning text-3xl drop-shadow-lg" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+<p class="font-bold">Kolda</p>
+<p>Risque Modéré</p>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4">
+<div class="flex flex-col gap-6">
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-bold text-[#111418] dark:text-white">Alertes et Actions</h3>
+<button class="text-sm font-semibold text-brand-primary hover:underline">Voir tout</button>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-3 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30">
+<div class="flex items-start gap-3">
+<div class="mt-1 p-1.5 bg-red-100 dark:bg-red-900/40 rounded-full">
+<span class="material-symbols-outlined text-brand-alert-critical !text-base">crisis_alert</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-base text-brand-alert-critical">Alerte Critique</p>
+<p class="font-semibold text-sm text-[#111418] dark:text-white">Hausse de 40% de la densité An. gambiae</p>
+<p class="text-xs text-gray-600 dark:text-gray-400">Kédougou - il y a 2h</p>
+</div>
+</div>
+<div class="flex items-center gap-2 pl-10">
+<button class="flex items-center justify-center gap-2 h-8 px-3 text-xs font-bold leading-normal text-white rounded-md bg-brand-primary hover:bg-brand-primary/90">
+<span class="material-symbols-outlined !text-sm">visibility</span> Voir détails
+                                    </button>
+<button class="flex items-center justify-center gap-2 h-8 px-3 text-xs font-bold leading-normal text-[#111418] dark:text-white bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600">
+<span class="material-symbols-outlined !text-sm">flag</span> Intervenir
+                                    </button>
+</div>
+</div>
+<div class="flex flex-col gap-3 p-4 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-900/30">
+<div class="flex items-start gap-3">
+<div class="mt-1 p-1.5 bg-orange-100 dark:bg-orange-900/40 rounded-full">
+<span class="material-symbols-outlined text-brand-alert-warning !text-base">warning</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-base text-brand-alert-warning">Alerte Modérée</p>
+<p class="font-semibold text-sm text-[#111418] dark:text-white">Nouvelle espèce détectée: An. funestus</p>
+<p class="text-xs text-gray-600 dark:text-gray-400">Tambacounda - il y a 1 jour</p>
+</div>
+</div>
+<div class="flex items-center gap-2 pl-10">
+<button class="flex items-center justify-center gap-2 h-8 px-3 text-xs font-bold leading-normal text-white rounded-md bg-brand-primary hover:bg-brand-primary/90">
+<span class="material-symbols-outlined !text-sm">visibility</span> Voir détails
+                                    </button>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-900/20">
+<span class="material-symbols-outlined text-gray-500 mt-1">info</span>
+<div>
+<p class="font-bold text-sm text-[#111418] dark:text-white">Rapport de résistance aux insecticides</p>
+<p class="text-xs text-gray-600 dark:text-gray-400">Site de Matam - il y a 3 jours</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+<h3 class="text-lg font-bold mb-3 text-[#111418] dark:text-white">Composition des Espèces</h3>
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" data-alt="Diagramme circulaire montrant la composition des espèces de moustiques." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAh7mVThzZPa0WgvMzLQrXxo2UzZgKPcj-dz61jIZfH6tvoRGR1cCM1jUQMzIuGk5m8k04dg7bEseEDEJEyA9Cm5zA1mK0sxX-6z8egqscUxeMzCsbu_0DYmS0QCrGmW_cgJrOmx3AVyqy5rD7i5XTxuamsMJnk9S5R7KVezt6k4GxGm5HU4RO6XS-hSv8c_nZ1IqfyCoyL-R6DgaXzcsVGThSi102CqSGhbu1-Si34nEAL4VS3kOrxK8ce6pvjpDdw-MeE0Gdc1g");'></div>
+</div>
+</div>
+</div>
+<div class="col-span-12">
+<div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+<div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+<h3 class="text-lg font-bold text-[#111418] dark:text-white">Évolution de la Densité des Vecteurs</h3>
+<div class="flex items-center gap-2 p-1 rounded-lg bg-brand-background dark:bg-gray-700">
+<button class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">1S</button>
+<button class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">1M</button>
+<button class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">3M</button>
+<button class="px-3 py-1 text-sm font-semibold rounded-md bg-white dark:bg-gray-600 text-brand-primary dark:text-white shadow-sm">1A</button>
+<button class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">Max</button>
+</div>
+</div>
+<div class="w-full bg-center bg-no-repeat aspect-[2.5/1] bg-cover rounded-lg" data-alt="Graphique en courbe montrant l'évolution de la densité des vecteurs au fil du temps." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA-Jbwdqds5DJEmxGtJY2ro3v4YXCYPIo5vVI0e-cjRb4NBSf4GQje3-NteWcRs-YL-EAPPjUcO071PA_IgFvruNvwg9pWRnhYcVAXclQkFm5_cWdEXTkwW4vYvPWep5nId1zsAYWv6XeDjKc-UV4mEGXerPApPrb1i-vSOy493h8hGmlP-FBEFDZd01WdItAu_ALB9l_Xkugiih5Z3Ojhc5yfHj3_7Vjo4psNll1gfxLLFhzIrnaHdSwTxgFkd7uvbxfyRMAFfAA");'></div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

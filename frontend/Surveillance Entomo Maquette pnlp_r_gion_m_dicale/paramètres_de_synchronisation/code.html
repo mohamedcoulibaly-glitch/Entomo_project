@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configuration de la Synchronisation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "success": "#2E7D32",
+                        "warning": "#FFC107",
+                        "danger": "#D32F2F"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-4 sm:px-6 lg:px-10 py-3">
+<div class="flex items-center gap-4 text-gray-800 dark:text-gray-100">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Ento-App Afrique</h2>
+</div>
+<div class="flex flex-1 justify-end gap-2 sm:gap-4">
+<div class="flex gap-2">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar with an abstract pattern" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBcQlVgefd95BlLUYuirvNQhqeYwmCNSnjn30oFMAL_-yNjJU-4YP2lX_VO-d1P_xuKdErILwQJzj8p5ZTznZpMSxjpYZ_9cjQ0Mgw8LAEugZRntMeZSFdQLk4rgo9uQ9dADYYrHgAgBWXcSqGQAX5pQYZ1qAwFMC6Xik--8zNxbu9IB6Mvrh2Kcva7KNh8WMd3_yko0kioz39TWz8QuRUEPFkbfqF1Hjb0-LbvPDtOToEdjz67eD7hjRDU9fgjpn_s6nWonQeepg");'></div>
+</div>
+</header>
+<main class="flex-1 p-4 sm:p-6 space-y-8">
+<div class="flex flex-wrap justify-between gap-3 px-4 py-2">
+<p class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Configuration de la Synchronisation</p>
+</div>
+<!-- Status Section -->
+<div class="space-y-4">
+<div class="flex items-center gap-4 bg-white dark:bg-background-dark dark:border dark:border-gray-700 rounded-lg shadow-sm px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-success flex items-center justify-center rounded-lg bg-success/20 shrink-0 size-12">
+<span class="material-symbols-outlined !text-2xl">cloud_done</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal line-clamp-1">Dernière synchronisation réussie</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">Aujourd'hui, 10:45</p>
+</div>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center"><div class="size-3 rounded-full bg-success"></div></div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-background-dark dark:border dark:border-gray-700 rounded-lg shadow-sm px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-gray-700 dark:text-gray-300 flex items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-700 shrink-0 size-12">
+<span class="material-symbols-outlined !text-2xl">wifi_off</span>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal line-clamp-1">Statut de la Connexion</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">Hors ligne - Les modifications seront synchronisées à la reconnexion</p>
+</div>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center"><div class="size-3 rounded-full bg-warning"></div></div>
+</div>
+</div>
+</div>
+<!-- Automatic Sync Section -->
+<div class="bg-white dark:bg-background-dark dark:border dark:border-gray-700 rounded-lg shadow-sm">
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-6 pb-3 pt-5 border-b border-gray-200 dark:border-gray-700">Synchronisation Automatique</h2>
+<div class="p-6 space-y-6">
+<div class="p-0 @container">
+<div class="flex flex-1 flex-col items-start justify-between gap-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-5 @[480px]:flex-row @[480px]:items-center">
+<div class="flex flex-col gap-1">
+<p class="text-gray-900 dark:text-white text-base font-bold leading-tight">Activer la synchronisation automatique</p>
+<p class="text-gray-600 dark:text-gray-400 text-base font-normal leading-normal">Les données seront synchronisées en arrière-plan.</p>
+</div>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+<div class="h-full w-[27px] rounded-full bg-white" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 8px, rgba(0, 0, 0, 0.06) 0px 3px 1px;"></div>
+<input checked="" class="invisible absolute" type="checkbox"/>
+</label>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="sync-frequency">Fréquence des tentatives de synchronisation</label>
+<select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-lg" id="sync-frequency" name="sync-frequency">
+<option>Toutes les 30 minutes</option>
+<option selected="">Toutes les heures</option>
+<option>Toutes les 6 heures</option>
+<option>Quotidiennement</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Data to Sync Section -->
+<div class="bg-white dark:bg-background-dark dark:border dark:border-gray-700 rounded-lg shadow-sm">
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-6 pb-3 pt-5 border-b border-gray-200 dark:border-gray-700">Données à Synchroniser</h2>
+<div class="p-6">
+<p class="text-gray-600 dark:text-gray-400 mb-4">Choisissez les types de données à inclure dans la synchronisation.</p>
+<fieldset class="space-y-4">
+<div class="relative flex items-start">
+<div class="flex h-6 items-center">
+<input class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="all-data" name="data-type" type="checkbox"/>
+</div>
+<div class="ml-3 text-sm leading-6">
+<label class="font-medium text-gray-900 dark:text-gray-200" for="all-data">Toutes les données</label>
+</div>
+</div>
+<div class="relative flex items-start">
+<div class="flex h-6 items-center">
+<input checked="" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="new-captures" name="data-type" type="checkbox"/>
+</div>
+<div class="ml-3 text-sm leading-6">
+<label class="font-medium text-gray-900 dark:text-gray-200" for="new-captures">Nouvelles collectes de pièges</label>
+</div>
+</div>
+<div class="relative flex items-start">
+<div class="flex h-6 items-center">
+<input checked="" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="species-analysis" name="data-type" type="checkbox"/>
+</div>
+<div class="ml-3 text-sm leading-6">
+<label class="font-medium text-gray-900 dark:text-gray-200" for="species-analysis">Analyse des espèces</label>
+</div>
+</div>
+<div class="relative flex items-start">
+<div class="flex h-6 items-center">
+<input class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="env-data" name="data-type" type="checkbox"/>
+</div>
+<div class="ml-3 text-sm leading-6">
+<label class="font-medium text-gray-900 dark:text-gray-200" for="env-data">Données environnementales
+</label></div>
+</div>
+<div class="relative flex items-start">
+<div class="flex h-6 items-center">
+<input checked="" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="record-corrections" name="data-type" type="checkbox"/>
+</div>
+<div class="ml-3 text-sm leading-6">
+<label class="font-medium text-gray-900 dark:text-gray-200" for="record-corrections">Corrections des enregistrements</label>
+</div>
+</div>
+</fieldset>
+</div>
+</div>
+<!-- Manual Sync Section -->
+<div class="bg-white dark:bg-background-dark dark:border dark:border-gray-700 rounded-lg shadow-sm">
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-6 pb-3 pt-5 border-b border-gray-200 dark:border-gray-700">Synchronisation Manuelle</h2>
+<div class="p-6 space-y-4">
+<p class="text-gray-600 dark:text-gray-400">Cette action remplacera le calendrier et tentera une synchronisation immédiate.</p>
+<div class="flex flex-col sm:flex-row sm:items-center gap-4">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 disabled:bg-gray-400 disabled:cursor-not-allowed">
+<span>Lancer la Synchronisation Maintenant</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 opacity-50 cursor-not-allowed" disabled="">
+<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+<path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
+</svg>
+<span>Synchronisation en cours...</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</div>
+</div>
+</body></html>

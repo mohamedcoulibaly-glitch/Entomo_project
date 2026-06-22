@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tableau de Bord - Identification Audio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex min-h-screen w-full flex-row">
+<!-- SideNavBar -->
+<aside class="sticky top-0 h-screen w-64 flex-shrink-0 bg-[#111418] p-4 hidden md:flex flex-col">
+<div class="flex h-full min-h-[700px] flex-col justify-between">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Photo de profil de Dr. Awa Gueye" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBkQkAf_QBC7MmB63Ao1iQE5AQrlJLLRs3bFcLLAhZ6Xe8F8aGdh1TKHV4rKbxMHgmM3rmVEMuLhtzDOytolDfGGKCv2nicTmE8-R2LyxPzmyxNfg2OAuEZYmmWrEOV0oOJdL1jJ0A7qsk55Izz_jrG3e_bYld9gVXer-uyvVcZwJB0K5UieJCs5GM-tLbGKyfi2zMYjNU2dnDjMXob0283Kq6cWx0V5SQ9C_Zh9KLYHuGNax8GqkV3D8rOujNyA3OZmAZEq31enQ");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Dr. Awa Gueye</h1>
+<p class="text-[#9dabb9] text-sm font-normal leading-normal">Entomologiste</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#283039] rounded-lg" href="#">
+<span class="material-symbols-outlined text-white text-2xl">dashboard</span>
+<p class="text-white text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#283039] text-white" href="#">
+<span class="material-symbols-outlined text-white text-2xl" style="font-variation-settings: 'FILL' 1;">pie_chart</span>
+<p class="text-white text-sm font-medium leading-normal">Modèles ML</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#283039] rounded-lg" href="#">
+<span class="material-symbols-outlined text-white text-2xl">description</span>
+<p class="text-white text-sm font-medium leading-normal">Rapports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#283039] rounded-lg" href="#">
+<span class="material-symbols-outlined text-white text-2xl">settings</span>
+<p class="text-white text-sm font-medium leading-normal">Paramètres</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#283039] rounded-lg" href="#">
+<span class="material-symbols-outlined text-white text-2xl">help</span>
+<p class="text-white text-sm font-medium leading-normal">Aide</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-white hover:bg-[#283039] rounded-lg" href="#">
+<span class="material-symbols-outlined text-white text-2xl">logout</span>
+<p class="text-white text-sm font-medium leading-normal">Déconnexion</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-6 lg:p-10 overflow-y-auto">
+<div class="mx-auto max-w-7xl">
+<!-- PageHeading -->
+<header class="flex flex-wrap justify-between gap-4 items-center mb-6">
+<div class="flex flex-col gap-2">
+<h1 class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Tableau de Bord - Identification Audio</h1>
+<p class="text-gray-500 dark:text-[#9dabb9] text-base font-normal leading-normal">Surveillance des performances des modèles de détection et classification</p>
+</div>
+</header>
+<!-- Chips -->
+<div class="flex flex-wrap gap-3 mb-8">
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-[#283039] px-3 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<span class="material-symbols-outlined text-gray-600 dark:text-white text-xl">calendar_month</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Période: 30 derniers jours</p>
+<span class="material-symbols-outlined text-gray-600 dark:text-white text-xl">expand_more</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-[#283039] px-3 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<span class="material-symbols-outlined text-gray-600 dark:text-white text-xl">location_on</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Localisation: Toutes</p>
+<span class="material-symbols-outlined text-gray-600 dark:text-white text-xl">expand_more</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-[#283039] px-3 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<span class="material-symbols-outlined text-gray-600 dark:text-white text-xl">bug_report</span>
+<p class="text-gray-700 dark:text-white text-sm font-medium leading-normal">Espèce cible: Toutes</p>
+<span class="material-symbols-outlined text-gray-600 dark:text-white text-xl">expand_more</span>
+</button>
+</div>
+<!-- Section 1: Vue d'Ensemble des Performances -->
+<section class="mb-10">
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Performance Globale des Modèles Audio</h2>
+<!-- Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754]">
+<p class="text-gray-600 dark:text-white text-base font-medium leading-normal">Précision Globale</p>
+<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold leading-tight">92.5%</p>
+<p class="text-green-500 dark:text-[#0bda5b] text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+1.2%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754]">
+<p class="text-gray-600 dark:text-white text-base font-medium leading-normal">Taux de Détection</p>
+<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold leading-tight">98.2%</p>
+<p class="text-red-500 dark:text-[#fa6238] text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_downward</span>-0.3%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754]">
+<p class="text-gray-600 dark:text-white text-base font-medium leading-normal">Échantillons Analysés</p>
+<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold leading-tight">14,789</p>
+<p class="text-green-500 dark:text-[#0bda5b] text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+15%</p>
+</div>
+</div>
+</section>
+<!-- Section 2: Analyse et Validation des Échantillons -->
+<section>
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Échantillons Récents pour Validation</h2>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Samples Table -->
+<div class="xl:col-span-2 bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754] rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left">
+<thead class="bg-gray-50 dark:bg-gray-900/40 text-xs text-gray-700 dark:text-gray-400 uppercase">
+<tr>
+<th class="px-6 py-3" scope="col">ID Échantillon</th>
+<th class="px-6 py-3" scope="col">Date/Heure</th>
+<th class="px-6 py-3" scope="col">Prédiction</th>
+<th class="px-6 py-3" scope="col">Confiance</th>
+<th class="px-6 py-3" scope="col">Statut</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-primary/10 dark:hover:bg-primary/20 cursor-pointer bg-primary/20 dark:bg-primary/30">
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B4</td>
+<td class="px-6 py-4">2024-05-23 11:45</td>
+<td class="px-6 py-4">Anopheles</td>
+<td class="px-6 py-4">98%</td>
+<td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Non validé</span></td>
+</tr>
+<tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B3</td>
+<td class="px-6 py-4">2024-05-23 10:30</td>
+<td class="px-6 py-4">Aedes</td>
+<td class="px-6 py-4">95%</td>
+<td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Validé</span></td>
+</tr>
+<tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B2</td>
+<td class="px-6 py-4">2024-05-23 09:12</td>
+<td class="px-6 py-4">Culex</td>
+<td class="px-6 py-4">89%</td>
+<td class="px-6 py-4"><span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Incorrect</span></td>
+</tr>
+<tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B1</td>
+<td class="px-6 py-4">2024-05-23 08:55</td>
+<td class="px-6 py-4">Présence détectée</td>
+<td class="px-6 py-4">99%</td>
+<td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Validé</span></td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
+<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B0</td>
+<td class="px-6 py-4">2024-05-23 07:40</td>
+<td class="px-6 py-4">Anopheles</td>
+<td class="px-6 py-4">92%</td>
+<td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Non validé</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Details & Validation Panel -->
+<div class="bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754] rounded-xl p-6 flex flex-col gap-6">
+<h3 class="text-gray-900 dark:text-white text-lg font-bold leading-tight">Analyse de l'Échantillon #SN08B4</h3>
+<div>
+<img alt="Spectrogramme de l'enregistrement audio d'un moustique" class="rounded-lg w-full h-auto object-cover border border-gray-200 dark:border-gray-700" data-alt="Spectrogramme de l'enregistrement audio d'un moustique" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAtlzZ1URmXz8_8_sSVcyUH-wyqxP2kCncrvUmKh-ljOKBkIWL29HvYSy68Bw7QifIE-krMJ83VKscp2XFGoooSwaPb5UcIsQTVCxOXDBpdR_Rxi4bHnuY7PcLsAipqUMw9ajXsPPZiyM7pi0H9jepjD4IWkwN3qhNtr4HMTNcI_PCOURQDlb7_4a5k04SDKtk6ZNMpDpmBEaK4IEWb_whijyDea5-qgUk7-ud0meK37ZyEGEZP0I03lUPFr9KBfWjyIJFnSTRiA"/>
+</div>
+<div class="flex items-center gap-4 bg-gray-100 dark:bg-gray-900/50 p-3 rounded-lg">
+<button class="text-gray-700 dark:text-white">
+<span class="material-symbols-outlined text-3xl">play_circle</span>
+</button>
+<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 25%"></div>
+</div>
+<span class="text-xs text-gray-500 dark:text-gray-400">0:03 / 0:12</span>
+</div>
+<div class="text-center">
+<p class="text-sm text-gray-500 dark:text-gray-400">Prédiction du modèle</p>
+<p class="text-xl font-bold text-gray-900 dark:text-white">Anopheles</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">avec 98% de confiance</p>
+</div>
+<div class="flex flex-col gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+<p class="text-sm font-medium text-center text-gray-600 dark:text-gray-300">Valider la prédiction :</p>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex w-full items-center justify-center gap-2 rounded-lg bg-red-500/10 dark:bg-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/20 dark:hover:bg-red-500/30 px-4 py-2 text-sm font-semibold">
+<span class="material-symbols-outlined text-lg">close</span>
+                                        Rejeter
+                                    </button>
+<button class="flex w-full items-center justify-center gap-2 rounded-lg bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/20 dark:hover:bg-green-500/30 px-4 py-2 text-sm font-semibold">
+<span class="material-symbols-outlined text-lg">check</span>
+                                        Confirmer
+                                    </button>
+</div>
+<button class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 px-4 py-2 text-sm font-semibold">
+<span class="material-symbols-outlined text-lg">edit</span>
+                                    Corriger la classification
+                                </button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>
