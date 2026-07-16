@@ -1,0 +1,41 @@
+# Fichiers generes a la racine
+/entomo.db
+/output/
+/uploads/
+/tmp/
+/.pytest_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Environnements virtuels
+.venv/
+venv/
+env/
+
+# Secrets et config locale
+.env
+*.env
+backend/.env
+
+# Bases de donnees SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs et fichiers temporaires
+*.log
+*.pid
+.server_pid
+backend/.server_pid
+
+# Uploads et sorties generees
+backend/uploads/
+output/
+
+# OS
+.DS_Store
+Thumbs.db
