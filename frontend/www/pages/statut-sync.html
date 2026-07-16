@@ -125,6 +125,14 @@
                     <span class="material-symbols-outlined">offline_bolt</span>
                     <span class="text-sm">Données Hors Ligne</span>
                 </a>
+                <a href="interventions.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">healing</span>
+                    <span class="text-sm">Interventions</span>
+                </a>
+                <a href="campagnes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">campaign</span>
+                    <span class="text-sm">Campagnes</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Modèles ML</p>
                 <a href="catalogue-modeles.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -135,6 +143,10 @@
                     <span class="material-symbols-outlined">mic</span>
                     <span class="text-sm">Surveillance Audio</span>
                 </a>
+                <a href="cartographie.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">map</span>
+                    <span class="text-sm">Cartographie</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Rapports & Analyse</p>
                 <a href="generateur-rapports.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -144,6 +156,14 @@
                 <a href="analyse-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="text-sm">Analyse Données</span>
+                </a>
+                <a href="import-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span class="text-sm">Import Données</span>
+                </a>
+                <a href="alertes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">notifications_active</span>
+                    <span class="text-sm">Alertes</span>
                 </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Configuration</p>
@@ -174,6 +194,18 @@
                 <a href="validation-dhis2.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">verified</span>
                     <span class="text-sm">Validation DHIS2</span>
+                </a>
+                <a href="audit-logs.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="text-sm">Journal Audit</span>
+                </a>
+                <a href="parametres-compte.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="text-sm">Paramètres Compte</span>
+                </a>
+                <a href="aide.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="text-sm">Aide</span>
                 </a>
             </nav>
         </aside>
@@ -213,7 +245,7 @@
 <p class="text-status-green dark:text-status-green text-base font-medium leading-normal">Statut : En Ligne</p>
 </div>
 </div>
-<button class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer overflow-hidden rounded-lg h-12 px-6 bg-institutional-blue text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed">
+<button id="btn-launch-sync" type="button" class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer overflow-hidden rounded-lg h-12 px-6 bg-institutional-blue text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed">
 <span class="material-symbols-outlined">sync</span>
 <span class="truncate">Lancer la Synchronisation</span>
 </button>
@@ -225,14 +257,14 @@
 <span class="material-symbols-outlined text-status-green" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
 <p class="text-base font-medium leading-normal">Dernière Synchronisation Réussie</p>
 </div>
-<p class="text-[#111418] dark:text-gray-100 tracking-light text-3xl font-bold leading-tight">14 Juil 2024, 10:30</p>
+<p data-last-sync class="text-[#111418] dark:text-gray-100 tracking-light text-3xl font-bold leading-tight">—</p>
 </div>
 <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800">
 <div class="flex items-center gap-2 text-neutral-gray-text dark:text-gray-400">
 <span class="material-symbols-outlined text-status-yellow" style="font-variation-settings: 'FILL' 1;">upload</span>
 <p class="text-base font-medium leading-normal">Données en Attente d'Envoi</p>
 </div>
-<p class="text-[#111418] dark:text-gray-100 tracking-light text-3xl font-bold leading-tight">152</p>
+<p data-pending class="text-[#111418] dark:text-gray-100 tracking-light text-3xl font-bold leading-tight">0</p>
 </div>
 <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800">
 <div class="flex items-center gap-2 text-neutral-gray-text dark:text-gray-400">
@@ -246,13 +278,18 @@
 <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800 rounded-xl p-6 mb-8">
 <div class="flex flex-col gap-3">
 <div class="flex gap-6 justify-between">
-<p class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal">Synchronisation en cours...</p>
+<p data-sync-status class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal">—</p>
 </div>
 <div class="w-full rounded-full bg-neutral-gray-bg dark:bg-gray-700">
-<div class="h-2 rounded-full bg-institutional-blue" style="width: 65%;"></div>
+<div data-sync-progress class="h-2 rounded-full bg-institutional-blue" style="width: 0%;"></div>
 </div>
-<p class="text-neutral-gray-text dark:text-gray-400 text-sm font-normal leading-normal">Envoi des enregistrements 99 sur 152</p>
+<p class="text-neutral-gray-text dark:text-gray-400 text-sm font-normal leading-normal">—</p>
 </div>
+</div>
+<!-- Sync Log -->
+<div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800 rounded-xl p-6 mb-8">
+<p class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal mb-3">Journal de Synchronisation</p>
+<div data-log-container class="space-y-1 text-xs font-mono max-h-48 overflow-y-auto text-neutral-gray-text dark:text-gray-400"></div>
 </div>
 <!-- Data Conflicts Card -->
 <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800 rounded-xl p-4 @container">
@@ -276,7 +313,7 @@
 <p class="text-status-red dark:text-status-red text-lg font-bold leading-tight tracking-[-0.015em]">3 conflits à résoudre</p>
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 <p class="text-neutral-gray-text dark:text-gray-400 text-base font-normal leading-normal">Certaines données n'ont pas pu être synchronisées automatiquement.</p>
-<button class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer overflow-hidden rounded-lg h-10 px-4 bg-status-red text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90">
+<button id="btn-resolve-conflicts" type="button" class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer overflow-hidden rounded-lg h-10 px-4 bg-status-red text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90">
 <span class="truncate">Résoudre les conflits</span>
 </button>
 </div>

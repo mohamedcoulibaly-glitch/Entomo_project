@@ -125,6 +125,14 @@
                     <span class="material-symbols-outlined">offline_bolt</span>
                     <span class="text-sm">Données Hors Ligne</span>
                 </a>
+                <a href="interventions.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">healing</span>
+                    <span class="text-sm">Interventions</span>
+                </a>
+                <a href="campagnes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">campaign</span>
+                    <span class="text-sm">Campagnes</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Modèles ML</p>
                 <a href="catalogue-modeles.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -135,6 +143,10 @@
                     <span class="material-symbols-outlined">mic</span>
                     <span class="text-sm">Surveillance Audio</span>
                 </a>
+                <a href="cartographie.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">map</span>
+                    <span class="text-sm">Cartographie</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Rapports & Analyse</p>
                 <a href="generateur-rapports.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -144,6 +156,14 @@
                 <a href="analyse-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="text-sm">Analyse Données</span>
+                </a>
+                <a href="import-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span class="text-sm">Import Données</span>
+                </a>
+                <a href="alertes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">notifications_active</span>
+                    <span class="text-sm">Alertes</span>
                 </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Configuration</p>
@@ -174,6 +194,18 @@
                 <a href="validation-dhis2.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">verified</span>
                     <span class="text-sm">Validation DHIS2</span>
+                </a>
+                <a href="audit-logs.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="text-sm">Journal Audit</span>
+                </a>
+                <a href="parametres-compte.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="text-sm">Paramètres Compte</span>
+                </a>
+                <a href="aide.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="text-sm">Aide</span>
                 </a>
             </nav>
         </aside>
@@ -211,7 +243,7 @@
 </div>
 <div class="flex flex-col justify-center">
 <p class="text-gray-900 dark:text-white text-base font-medium leading-normal line-clamp-1">Dernière synchronisation réussie</p>
-<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">Aujourd'hui, 10:45</p>
+<p id="sync-last-date" class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">Aucune synchronisation connue</p>
 </div>
 </div>
 <div class="shrink-0">
@@ -225,7 +257,7 @@
 </div>
 <div class="flex flex-col justify-center">
 <p class="text-gray-900 dark:text-white text-base font-medium leading-normal line-clamp-1">Statut de la Connexion</p>
-<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">Hors ligne - Les modifications seront synchronisées à la reconnexion</p>
+<p id="sync-connection-label" class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">Vérification de la connexion...</p>
 </div>
 </div>
 <div class="shrink-0">
@@ -245,17 +277,17 @@
 </div>
 <label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
 <div class="h-full w-[27px] rounded-full bg-white" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 8px, rgba(0, 0, 0, 0.06) 0px 3px 1px;"></div>
-<input checked="" class="invisible absolute" type="checkbox"/>
+<input id="sync-active" checked="" class="invisible absolute" type="checkbox"/>
 </label>
 </div>
 </div>
 <div>
 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="sync-frequency">Fréquence des tentatives de synchronisation</label>
 <select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-lg" id="sync-frequency" name="sync-frequency">
-<option>Toutes les 30 minutes</option>
-<option selected="">Toutes les heures</option>
-<option>Toutes les 6 heures</option>
-<option>Quotidiennement</option>
+<option value="30">Toutes les 30 minutes</option>
+<option value="60" selected="">Toutes les heures</option>
+<option value="360">Toutes les 6 heures</option>
+<option value="1440">Quotidiennement</option>
 </select>
 </div>
 </div>
@@ -315,10 +347,10 @@
 <div class="p-6 space-y-4">
 <p class="text-gray-600 dark:text-gray-400">Cette action remplacera le calendrier et tentera une synchronisation immédiate.</p>
 <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 disabled:bg-gray-400 disabled:cursor-not-allowed">
+<button id="btn-sync-now" type="button" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 disabled:bg-gray-400 disabled:cursor-not-allowed">
 <span>Lancer la Synchronisation Maintenant</span>
 </button>
-<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 opacity-50 cursor-not-allowed" disabled="">
+<button id="sync-progress-button" class="hidden flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 opacity-50 cursor-not-allowed" disabled="">
 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 <path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>

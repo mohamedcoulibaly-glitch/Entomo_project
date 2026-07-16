@@ -11,7 +11,7 @@ class AnnotationBase(BaseModel):
 
 
 class AnnotationCreate(AnnotationBase):
-    dataset_id: int
+    dataset_id: Optional[int] = None
 
 
 class AnnotationResponse(BaseSchema, AnnotationBase):
@@ -24,6 +24,10 @@ class DatasetBase(BaseModel):
     chemin: Optional[str] = None
     taille: Optional[int] = None
     type: Optional[str] = None
+    version: Optional[str] = None
+    source_annotations: Optional[str] = None
+    images_count: int = 0
+    statut: str = "en_preparation"
     actif: bool = True
     utilisateur_id: Optional[int] = None
 
@@ -38,6 +42,10 @@ class DatasetUpdate(BaseModel):
     chemin: Optional[str] = None
     taille: Optional[int] = None
     type: Optional[str] = None
+    version: Optional[str] = None
+    source_annotations: Optional[str] = None
+    images_count: Optional[int] = None
+    statut: Optional[str] = None
     actif: Optional[bool] = None
 
 

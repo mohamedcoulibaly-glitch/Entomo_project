@@ -1,252 +1,297 @@
-/**
- * gestion-sites.js
- * Gestion des sites sentinelles — comportements interactifs + API backend
- */
 document.addEventListener('DOMContentLoaded', async () => {
-
-  const FALLBACK = [
-    { id: 1, code: 'SITE-KED-01', nom: 'Site Kédougou A',     region: 'Kédougou',    district: 'Kédougou',    type: 'Rural',       actif: true,  coord: '12.5574°N 12.1752°W' },
-    { id: 2, code: 'SITE-TAM-01', nom: 'Site Tambacounda B',  region: 'Tambacounda', district: 'Tambacounda', type: 'Périurbain',  actif: true,  coord: '13.7706°N 13.6673°W' },
-    { id: 3, code: 'SITE-KOL-01', nom: 'Site Kolda C',        region: 'Kolda',       district: 'Kolda',       type: 'Rural',       actif: false, coord: '12.8944°N 14.9508°W' },
-    { id: 4, code: 'SITE-DKR-01', nom: 'Site Dakar D',        region: 'Dakar',       district: 'Pikine',      type: 'Urbain',      actif: true,  coord: '14.6928°N 17.4467°W' },
-    { id: 5, code: 'SITE-STL-01', nom: 'Site Saint-Louis E',  region: 'Saint-Louis', district: 'Saint-Louis', type: 'Urbain',      actif: true,  coord: '16.0179°N 16.4896°W' },
-    { id: 6, code: 'SITE-ZIG-01', nom: 'Site Ziguinchor F',   region: 'Ziguinchor',  district: 'Ziguinchor',  type: 'Rural',       actif: true,  coord: '12.5682°N 16.2719°W' },
-  ];
-
-  function norm(s) {
-    return { ...s, statut: s.actif !== false ? 'Actif' : 'Inactif', coord: s.coordonnees || s.coord || '' };
-  }
-
   let sites = [];
   let editingId = null;
+  let selectedSiteId = null;
+
+  function norm(s) {
+    let region = s.region || '';
+    let district = s.district || '';
+    if (s.localisation && typeof s.localisation === 'object') {
+      region = s.localisation.region || region;
+      district = s.localisation.district || district;
+    }
+    return {
+      ...s,
+      nom: s.nom || s.name || '',
+      code: s.code || '',
+      region,
+      district,
+      type_zone: s.type_zone || s.type || '',
+      environnement: s.environnement || '',
+      statut: s.actif !== false ? 'Actif' : 'Inactif',
+      actif: s.actif !== false,
+      coord: s.coordonnees || s.coord || '',
+    };
+  }
 
   async function loadSites() {
-    if (typeof apiSites !== 'undefined') {
-      const data = await apiSites.list({ limit: 100 });
-      sites = data ? data.map(norm) : FALLBACK.map(norm);
-    } else {
-      sites = FALLBACK.map(norm);
+    try {
+      showLoader();
+      const data = await apiSites.list({ limit: 200 });
+      if (data) sites = data.map(norm);
+      hideLoader();
+    } catch (err) {
+      hideLoader();
+      pushNotification('Erreur lors du chargement des sites', 'error');
     }
     applyFilters();
+    if (sites.length) {
+      selectedSiteId = sites[0].id;
+      loadTimeline(sites[0].id);
+    }
   }
 
   function renderTable(data) {
-    const tbody = document.querySelector('tbody');
+    const tbody = document.querySelector('table tbody');
     if (!tbody) return;
 
     tbody.innerHTML = data.length === 0
-      ? `<tr><td colspan="7" class="text-center py-10 text-gray-400">
+      ? `<tr><td colspan="5" class="text-center py-10 text-gray-400">
            <span class="material-symbols-outlined text-4xl block mb-2">location_off</span>Aucun site trouvé</td></tr>`
       : data.map(s => `
-      <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors" data-id="${s.id}">
-        <td class="px-6 py-4 text-sm font-mono text-brand-primary font-medium">${s.code}</td>
-        <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">${s.nom}</td>
-        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${s.region}</td>
-        <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${s.district}</td>
-        <td class="px-6 py-4">
-          <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold
-            ${s.type==='Rural'?'bg-green-50 text-green-700':''}
-            ${s.type==='Urbain'?'bg-blue-50 text-blue-700':''}
-            ${s.type==='Périurbain'?'bg-purple-50 text-purple-700':''}">
-            ${s.type}
-          </span>
-        </td>
+      <tr class="border-b bg-transparent dark:border-gray-700 hover:bg-gray-300/50 dark:hover:bg-gray-600/20 transition-colors cursor-pointer ${selectedSiteId === s.id ? 'bg-primary/10 dark:bg-primary/20' : ''}" data-id="${s.id}">
+        <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" scope="row">${s.nom}</th>
+        <td class="px-6 py-4">${s.type_zone}</td>
+        <td class="px-6 py-4">${s.region}</td>
         <td class="px-6 py-4">
           <span class="inline-flex rounded-full px-2 text-xs font-semibold leading-5
-            ${s.statut==='Actif'
-              ?'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300'
-              :'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'}">${s.statut}</span>
+            ${s.statut === 'Actif'
+              ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300'
+              : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'}">${s.statut}</span>
         </td>
         <td class="px-6 py-4 text-right">
-          <div class="flex items-center justify-end gap-1">
-            <button class="btn-view p-1 rounded text-gray-500 hover:text-brand-primary hover:bg-gray-100 dark:hover:bg-gray-800" data-id="${s.id}" title="Voir sur carte">
-              <span class="material-symbols-outlined" style="font-size:18px">map</span>
+          <div class="flex gap-4 justify-end">
+            <button class="btn-edit font-medium text-primary hover:underline" data-id="${s.id}">
+              <span class="material-symbols-outlined text-xl">edit</span>
             </button>
-            <button class="btn-edit p-1 rounded text-primary hover:text-primary/80 hover:bg-gray-100 dark:hover:bg-gray-800" data-id="${s.id}" title="Modifier">
-              <span class="material-symbols-outlined" style="font-size:18px">edit</span>
-            </button>
-            <button class="btn-delete p-1 rounded text-red-600 hover:text-red-800 hover:bg-gray-100 dark:hover:bg-gray-800" data-id="${s.id}" title="Supprimer">
-              <span class="material-symbols-outlined" style="font-size:18px">delete</span>
+            <button class="btn-delete font-medium text-red-500 hover:underline" data-id="${s.id}">
+              <span class="material-symbols-outlined text-xl">delete</span>
             </button>
           </div>
         </td>
-      </tr>`).join('');
+        </tr>`).join('');
 
-    tbody.querySelectorAll('.btn-view').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const s = sites.find(x => x.id === parseInt(btn.dataset.id));
-        if (!s) return;
-        openModal(`📍 ${s.nom}`,
-          `<div class="space-y-3 text-sm">
-            <div class="grid grid-cols-2 gap-3">
-              <div><p class="text-gray-500">Code</p><strong>${s.code}</strong></div>
-              <div><p class="text-gray-500">Statut</p><strong>${s.statut}</strong></div>
-              <div><p class="text-gray-500">Région</p><strong>${s.region}</strong></div>
-              <div><p class="text-gray-500">District</p><strong>${s.district}</strong></div>
-              <div><p class="text-gray-500">Type</p><strong>${s.type}</strong></div>
-              <div><p class="text-gray-500">Coordonnées</p><strong class="font-mono text-xs">${s.coord}</strong></div>
-            </div>
-            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 text-center">
-              <span class="material-symbols-outlined text-4xl text-brand-primary block mb-1">satellite_alt</span>
-              <p class="text-xs text-gray-500">Vue cartographique disponible dans le tableau de bord</p>
-            </div>
-          </div>`,
-          { confirmLabel: 'Fermer', cancelLabel: '', onConfirm: () => {} }
-        );
+    initPagination('table tbody', 10);
+
+    tbody.querySelectorAll('tr[data-id]').forEach(row => {
+      row.addEventListener('click', function(e) {
+        if (e.target.closest('button')) return;
+        const id = parseInt(this.dataset.id);
+        selectedSiteId = id;
+        loadTimeline(id);
+        renderTable(sites);
       });
     });
 
     tbody.querySelectorAll('.btn-edit').forEach(btn => {
-      btn.addEventListener('click', () => openSiteModal(parseInt(btn.dataset.id)));
+      btn.addEventListener('click', e => { e.stopPropagation(); openSiteModal(parseInt(btn.dataset.id)); });
     });
 
     tbody.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
         const s = sites.find(x => x.id === parseInt(btn.dataset.id));
         if (!s) return;
         confirmDelete(s.nom, async () => {
-          if (typeof apiSites !== 'undefined') {
-            await apiSites.delete(s.id);
+          try {
+            const res = await apiSites.delete(s.id);
+            if (res !== null) {
+              sites = sites.filter(x => x.id !== s.id);
+              if (selectedSiteId === s.id) {
+                selectedSiteId = sites.length ? sites[0].id : null;
+                if (selectedSiteId) loadTimeline(selectedSiteId);
+              }
+              applyFilters();
+              pushNotification(`Site "${s.nom}" supprimé.`, 'success');
+            }
+          } catch (err) {
+            pushNotification('Erreur lors de la suppression', 'error');
           }
-          sites = sites.filter(x => x.id !== s.id);
-          applyFilters();
-          pushNotification(`Site "${s.nom}" supprimé.`, 'info');
         });
       });
     });
   }
 
-  function openSiteModal(id = null) {
+  async function loadTimeline(siteId) {
+    const timelineContainer = document.querySelector('.flex-grow.space-y-4') || document.querySelector('.overflow-y-auto.pr-2');
+    if (!timelineContainer) return;
+    try {
+      const data = await apiSites.activites(siteId);
+      if (data && data.length) {
+        const colors = ['bg-primary', 'bg-green-500', 'bg-yellow-500', 'bg-red-500', 'bg-purple-500'];
+        timelineContainer.innerHTML = data.map((act, i) => `
+          <div class="relative pl-6">
+            <div class="absolute left-0 top-1 h-full w-0.5 bg-gray-300 dark:bg-gray-700"></div>
+            <div class="absolute left-[-5px] top-1.5 w-3 h-3 rounded-full ${colors[i % colors.length]}"></div>
+            <p class="text-sm font-semibold text-gray-800 dark:text-gray-200">${act.titre || act.type || 'Activité'}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${act.date ? new Date(act.date).toLocaleDateString('fr-FR') : ''}${act.utilisateur ? ' par ' + act.utilisateur : ''}</p>
+            ${act.description ? `<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${act.description}</p>` : ''}
+          </div>`).join('');
+      } else {
+        timelineContainer.innerHTML = `<p class="text-sm text-gray-400 text-center py-4">Aucune activité pour ce site</p>`;
+      }
+    } catch (err) {
+      timelineContainer.innerHTML = `<p class="text-sm text-red-400 text-center py-4">Erreur de chargement des activités</p>`;
+    }
+  }
+
+  async function openSiteModal(id = null) {
     editingId = id;
     const s = id ? sites.find(x => x.id === id) : null;
+
+    // Utiliser les données statiques de référence pour les selects
+    const regions = (typeof REFERENCE_DATA_STATIC !== 'undefined' && REFERENCE_DATA_STATIC.regions)
+      ? REFERENCE_DATA_STATIC.regions
+      : [{ code: 'dakar', label: 'Dakar' }, { code: 'thies', label: 'Thiès' }];
+
+    const typesZones = (typeof REFERENCE_DATA_STATIC !== 'undefined' && REFERENCE_DATA_STATIC.types_zones)
+      ? REFERENCE_DATA_STATIC.types_zones
+      : [{ code: 'urbain', label: 'Urbain' }, { code: 'rural', label: 'Rural' }];
+
+    const environnements = (typeof REFERENCE_DATA_STATIC !== 'undefined' && REFERENCE_DATA_STATIC.environnements)
+      ? REFERENCE_DATA_STATIC.environnements
+      : [{ code: 'interieur', label: 'Intérieur' }, { code: 'exterieur', label: 'Extérieur' }];
 
     const body = `
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Code *</label>
-          <input id="f-code" value="${s?.code||''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
+          <input id="f-code" value="${s?.code || ''}" placeholder="ex: SITE-KDG-01"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nom du site *</label>
-          <input id="f-nom" value="${s?.nom||''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
+          <input id="f-nom" value="${s?.nom || ''}" placeholder="ex: Site Kédougou-1"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Région</label>
-          <input id="f-region" value="${s?.region||''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
+          <select id="f-region" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+            <option value="">-- Sélectionner --</option>
+            ${regions.map(r => `<option value="${r.label}" ${s?.region === r.label ? 'selected' : ''}>${r.label}</option>`).join('')}
+          </select>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">District</label>
-          <input id="f-district" value="${s?.district||''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
+          <input id="f-district" value="${s?.district || ''}" placeholder="ex: Kédougou"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
         </div>
         <div>
-          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Type</label>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Type de zone</label>
           <select id="f-type" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
-            ${['Rural','Urbain','Périurbain'].map(t=>`<option ${s?.type===t?'selected':''}>${t}</option>`).join('')}
+            <option value="">-- Sélectionner --</option>
+            ${typesZones.map(t => `<option value="${t.label}" ${s?.type_zone === t.label ? 'selected' : ''}>${t.label}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Environnement</label>
+          <select id="f-env" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+            <option value="">-- Sélectionner --</option>
+            ${environnements.map(e => `<option value="${e.label}" ${s?.environnement === e.label ? 'selected' : ''}>${e.label}</option>`).join('')}
           </select>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Statut</label>
           <select id="f-statut" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
-            <option ${s?.statut==='Actif'?'selected':''}>Actif</option>
-            <option ${s?.statut==='Inactif'?'selected':''}>Inactif</option>
+            <option ${!s || s.statut === 'Actif' ? 'selected' : ''}>Actif</option>
+            <option ${s?.statut === 'Inactif' ? 'selected' : ''}>Inactif</option>
           </select>
         </div>
-        <div class="col-span-2">
+        <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Coordonnées GPS</label>
-          <input id="f-coord" value="${s?.coord||''}" placeholder="ex: 12.5574°N 12.1752°W"
+          <input id="f-coord" value="${s?.coord || ''}" placeholder="ex: 12.5574°N 12.1752°W"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 font-mono"/>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Notes / Description</label>
+          <textarea id="f-notes" rows="2" placeholder="Informations complémentaires sur le site..."
+            class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 py-2 resize-none">${s?.notes || s?.description || ''}</textarea>
         </div>
       </div>`;
 
-    openModal(id ? `Modifier ${s.nom}` : 'Ajouter un site sentinelle', body, {
+    openModal(id ? `Modifier — ${s.nom}` : 'Ajouter un site sentinelle', body, {
       confirmLabel: id ? 'Enregistrer' : 'Ajouter',
       onConfirm: async () => {
         const code = document.getElementById('f-code')?.value.trim();
-        const nom  = document.getElementById('f-nom')?.value.trim();
+        const nom = document.getElementById('f-nom')?.value.trim();
         if (!code || !nom) { pushNotification('Code et nom obligatoires.', 'error'); return; }
         const data = {
           code, nom,
-          region:      document.getElementById('f-region')?.value.trim(),
-          district:    document.getElementById('f-district')?.value.trim(),
-          type_zone:   document.getElementById('f-type')?.value,
-          actif:       document.getElementById('f-statut')?.value === 'Actif',
-          coordonnees: document.getElementById('f-coord')?.value.trim(),
+          region: document.getElementById('f-region')?.value || '',
+          district: document.getElementById('f-district')?.value.trim() || '',
+          type_zone: document.getElementById('f-type')?.value || '',
+          environnement: document.getElementById('f-env')?.value || '',
+          actif: document.getElementById('f-statut')?.value === 'Actif',
+          coordonnees: document.getElementById('f-coord')?.value.trim() || '',
+          notes: document.getElementById('f-notes')?.value.trim() || '',
         };
-        showLoader();
-        if (editingId) {
-          if (typeof apiSites !== 'undefined') {
-            await apiSites.update(editingId, data);
+        try {
+          showLoader();
+          if (editingId) {
+            const res = await apiSites.update(editingId, data);
+            if (res !== null) {
+              await loadSites();
+              pushNotification(`Site "${nom}" mis à jour.`, 'success');
+            }
+          } else {
+            const res = await apiSites.create(data);
+            if (res !== null) {
+              await loadSites();
+              pushNotification(`Site "${nom}" ajouté.`, 'success');
+            }
           }
-          const idx = sites.findIndex(x => x.id === editingId);
-          sites[idx] = { ...sites[idx], ...data, statut: data.actif ? 'Actif' : 'Inactif', coord: data.coordonnees };
-          pushNotification(`Site "${nom}" mis à jour.`, 'success');
-        } else {
-          let created = null;
-          if (typeof apiSites !== 'undefined') {
-            created = await apiSites.create(data);
-          }
-          const displayData = { ...data, id: created?.id || Date.now(), statut: data.actif ? 'Actif' : 'Inactif', coord: data.coordonnees, type: data.type_zone };
-          sites.unshift(displayData);
-          pushNotification(`Site "${nom}" ajouté.`, 'success');
+          hideLoader();
+        } catch (err) {
+          hideLoader();
+          pushNotification('Erreur lors de la sauvegarde', 'error');
         }
-        hideLoader();
-        applyFilters();
       },
     });
   }
 
-  // Bouton ajouter
-  document.querySelectorAll('button').forEach(btn => {
-    if (btn.textContent.includes('Ajouter') && !btn.classList.contains('btn-edit')) {
-      btn.addEventListener('click', () => openSiteModal());
-    }
-  });
+  // Connexion du bouton "Nouveau Site" — cible d'abord l'id dédié
+  const btnNouveauSite = document.getElementById('btn-nouveau-site');
+  if (btnNouveauSite) {
+    btnNouveauSite.addEventListener('click', () => openSiteModal());
+  } else {
+    // Fallback : recherche par texte
+    document.querySelectorAll('button').forEach(btn => {
+      const t = btn.textContent.trim();
+      if (t.includes('Ajouter un Site') || t.includes('Nouveau Site') || t.includes('Ajouter')) {
+        btn.addEventListener('click', () => openSiteModal());
+      }
+    });
+  }
 
-  const searchInput = document.querySelector('input[placeholder]');
+  const searchInput = document.getElementById('search-sites') || document.querySelector('input[placeholder*="Rechercher"]');
   if (searchInput) searchInput.addEventListener('input', applyFilters);
 
-  let filterType = 'Tous', filterStatut = 'Tous';
+  const regionFilter = document.getElementById('region-filter');
+  const districtFilter = document.getElementById('district-filter');
+  const zoneTypeFilter = document.getElementById('zone-type-filter');
+  const envFilter = document.getElementById('environment-filter');
 
-  document.querySelectorAll('button').forEach(btn => {
-    const p = btn.querySelector('p');
-    if (!p) return;
-    if (p.textContent.startsWith('Type')) {
-      btn.addEventListener('click', () =>
-        showDD(btn, ['Tous','Rural','Urbain','Périurbain'], v => { filterType = v; p.textContent = `Type: ${v}`; applyFilters(); }));
-    }
-    if (p.textContent.startsWith('Statut')) {
-      btn.addEventListener('click', () =>
-        showDD(btn, ['Tous','Actif','Inactif'], v => { filterStatut = v; p.textContent = `Statut: ${v}`; applyFilters(); }));
-    }
+  [regionFilter, districtFilter, zoneTypeFilter, envFilter].forEach(el => {
+    if (el) el.addEventListener('change', applyFilters);
   });
-
-  function showDD(anchor, options, onSelect) {
-    document.querySelectorAll('.filter-dd').forEach(d => d.remove());
-    const dd = document.createElement('div');
-    dd.className = 'filter-dd absolute z-40 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 min-w-[150px] py-1';
-    options.forEach(opt => {
-      const item = document.createElement('button');
-      item.className = 'w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-[#111418] dark:text-gray-200';
-      item.textContent = opt;
-      item.addEventListener('click', () => { onSelect(opt); dd.remove(); });
-      dd.appendChild(item);
-    });
-    anchor.style.position = 'relative';
-    anchor.appendChild(dd);
-    setTimeout(() => document.addEventListener('click', () => dd.remove(), { once: true }), 100);
-  }
 
   function applyFilters() {
     const q = searchInput?.value.toLowerCase().trim() || '';
-    renderTable(sites.filter(s => {
+    const region = regionFilter?.value || '';
+    const district = districtFilter?.value || '';
+    const zoneType = zoneTypeFilter?.value || '';
+    const env = envFilter?.value || '';
+
+    const filtered = sites.filter(s => {
       const matchQ = !q || `${s.nom} ${s.code} ${s.region} ${s.district}`.toLowerCase().includes(q);
-      const matchT = filterType   === 'Tous' || s.type   === filterType;
-      const matchS = filterStatut === 'Tous' || s.statut === filterStatut;
-      return matchQ && matchT && matchS;
-    }));
+      const matchRegion = !region || region === 'Toutes les régions' || s.region.toLowerCase() === region.toLowerCase();
+      const matchDistrict = !district || district === 'Tous les districts' || s.district.toLowerCase() === district.toLowerCase();
+      const matchType = !zoneType || zoneType === 'Tous types' || s.type_zone.toLowerCase() === zoneType.toLowerCase().replace('aine', '');
+      const matchEnv = !env || env === 'Tous environnements' || (s.environnement && s.environnement.toLowerCase() === env.toLowerCase());
+      return matchQ && matchRegion && matchDistrict && matchType && matchEnv;
+    });
+    renderTable(filtered);
   }
 
-  initTableSort('table');
-  loadSites();
-
+  await loadSites();
 });

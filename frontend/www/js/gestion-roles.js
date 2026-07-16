@@ -1,139 +1,197 @@
-/**
- * gestion-roles.js
- * Gestion des rôles et permissions — comportements interactifs + API backend
- */
 document.addEventListener('DOMContentLoaded', async () => {
-
-  const permissions = [
-    'Voir le tableau de bord', 'Gérer les utilisateurs', 'Gérer les captures',
-    'Gérer les sites', 'Synchroniser DHIS2', 'Gérer les modèles ML',
-    'Générer des rapports', 'Administrer la plateforme', 'Accès lecture seule',
-    'Exporter les données', 'Importer des données', 'Gérer les datasets',
-  ];
-
-  let roles = [
-    { id: 1, nom: 'Superviseur National',      description: 'Accès complet à toute la plateforme.',        perms: [0,1,2,3,4,5,6,7,9,10,11], couleur: 'bg-purple-100 text-purple-700' },
-    { id: 2, nom: 'Administrateur Régional',   description: 'Gestion régionale des données.',               perms: [0,2,3,5,6,9,11],           couleur: 'bg-blue-100 text-blue-700' },
-    { id: 3, nom: 'Technicien de laboratoire', description: 'Saisie et gestion des captures.',              perms: [0,2,8,11],                 couleur: 'bg-green-100 text-green-700' },
-    { id: 4, nom: 'Agent de terrain',           description: 'Collecte des données sur le terrain.',         perms: [0,8],                      couleur: 'bg-yellow-100 text-yellow-700' },
-    { id: 5, nom: 'Chercheur',                  description: 'Analyse des données et accès aux modèles ML.', perms: [0,5,6,8,9],               couleur: 'bg-pink-100 text-pink-700' },
-  ];
-
+  let roles = [];
+  let permissions = [];
   let editingId = null;
+  let selectedRoleId = null;
 
-  // Charger les rôles depuis l'API
+  const moduleRows = [
+    { key: 'Collecte Terrain', icon: 'science' },
+    { key: 'Analyse Labo', icon: 'biotech' },
+    { key: 'Tableaux de Bord', icon: 'dashboard' },
+    { key: 'Gestion Utilisateurs', icon: 'people' },
+  ];
+
+  const actionCols = ['Voir', 'Créer', 'Modifier', 'Valider', 'Exporter'];
+
   async function loadRoles() {
-    if (typeof apiRoles !== 'undefined') {
+    try {
+      showLoader();
       const data = await apiRoles.list();
       if (data && data.length) {
         roles = data.map(r => ({
           ...r,
-          perms: r.permissions || [],
-          couleur: r.couleur || 'bg-gray-100 text-gray-700',
+          permissions: r.permissions || r.perms || [],
         }));
       }
+      hideLoader();
+    } catch (err) {
+      hideLoader();
+      pushNotification('Erreur lors du chargement des rôles', 'error');
     }
-    renderRoles(roles);
-  }
-
-  function renderRoles(data) {
-    const container = document.querySelector('.grid') || document.querySelector('[class*="grid"]');
-    const tbody = document.querySelector('tbody');
-
-    // Si présentation en tableau
-    if (tbody) {
-      tbody.innerHTML = data.map(r => `
-        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors" data-id="${r.id}">
-          <td class="px-6 py-4">
-            <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${r.couleur}">${r.nom}</span>
-          </td>
-          <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">${r.description}</td>
-          <td class="px-6 py-4 text-sm text-gray-500">${r.perms.length} permission(s)</td>
-          <td class="px-6 py-4 text-right">
-            <div class="flex items-center justify-end gap-2">
-              <button class="btn-view p-1 rounded text-gray-500 hover:text-brand-primary hover:bg-gray-100 dark:hover:bg-gray-800" data-id="${r.id}" title="Voir permissions">
-                <span class="material-symbols-outlined" style="font-size:18px">visibility</span>
-              </button>
-              <button class="btn-edit p-1 rounded text-primary hover:text-primary/80 hover:bg-gray-100 dark:hover:bg-gray-800" data-id="${r.id}" title="Modifier">
-                <span class="material-symbols-outlined" style="font-size:18px">edit</span>
-              </button>
-              <button class="btn-delete p-1 rounded text-red-600 hover:text-red-800 hover:bg-gray-100 dark:hover:bg-gray-800" data-id="${r.id}" title="Supprimer">
-                <span class="material-symbols-outlined" style="font-size:18px">delete</span>
-              </button>
-            </div>
-          </td>
-        </tr>`).join('');
-
-      attachEvents();
-      return;
-    }
-
-    // Si présentation en cartes
-    if (container) {
-      container.innerHTML = data.map(r => `
-        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow" data-id="${r.id}">
-          <div class="flex items-start justify-between mb-3">
-            <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-bold ${r.couleur}">${r.nom}</span>
-            <div class="flex gap-1">
-              <button class="btn-view p-1 rounded text-gray-400 hover:text-brand-primary hover:bg-gray-100 dark:hover:bg-gray-800" data-id="${r.id}">
-                <span class="material-symbols-outlined" style="font-size:18px">visibility</span>
-              </button>
-              <button class="btn-edit p-1 rounded text-primary/60 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-800" data-id="${r.id}">
-                <span class="material-symbols-outlined" style="font-size:18px">edit</span>
-              </button>
-              <button class="btn-delete p-1 rounded text-red-400 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800" data-id="${r.id}">
-                <span class="material-symbols-outlined" style="font-size:18px">delete</span>
-              </button>
-            </div>
-          </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">${r.description}</p>
-          <div class="flex flex-wrap gap-1">
-            ${r.perms.slice(0,4).map(i=>`<span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded">${permissions[i]}</span>`).join('')}
-            ${r.perms.length > 4 ? `<span class="text-xs text-brand-primary font-medium">+${r.perms.length-4} autres</span>` : ''}
-          </div>
-        </div>`).join('');
-      attachEvents();
+    if (roles.length) {
+      selectedRoleId = roles[0].id;
+      renderRoleList();
+      renderRoleDetail(roles[0]);
+    } else {
+      renderRoleList();
+      renderEmptyDetail();
     }
   }
 
-  function attachEvents() {
-    document.querySelectorAll('.btn-view').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const r = roles.find(x => x.id === parseInt(btn.dataset.id));
-        if (!r) return;
-        openModal(`Permissions — ${r.nom}`,
-          `<div class="space-y-2">
-            ${permissions.map((p, i) => `
-              <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer">
-                <span class="material-symbols-outlined text-base ${r.perms.includes(i)?'text-brand-success':'text-gray-300 dark:text-gray-600'}">
-                  ${r.perms.includes(i)?'check_circle':'cancel'}
-                </span>
-                <span class="text-sm ${r.perms.includes(i)?'text-[#111418] dark:text-white':'text-gray-400 dark:text-gray-500'}">${p}</span>
-              </label>`).join('')}
-          </div>`,
-          { confirmLabel: 'Modifier', cancelLabel: 'Fermer', onConfirm: () => openRoleModal(r.id) }
-        );
+  function renderRoleList() {
+    const container = document.querySelector('.flex.flex-col.gap-2');
+    if (!container) return;
+
+    container.innerHTML = roles.map(r => `
+      <div class="flex cursor-pointer items-center gap-4 rounded-lg px-4 min-h-[72px] py-2 justify-between role-list-item 
+        ${selectedRoleId === r.id
+          ? 'bg-primary/10 dark:bg-primary/20 border border-primary/50 dark:border-primary/70'
+          : 'bg-white dark:bg-background-dark/50 hover:bg-gray-50 dark:hover:bg-white/5'}"
+        data-id="${r.id}">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center justify-center rounded-lg bg-white dark:bg-background-dark shrink-0 size-12 ${selectedRoleId === r.id ? 'text-primary' : 'text-[#111418] dark:text-white'}">
+            <span class="material-symbols-outlined text-3xl">${r.icon || 'admin_panel_settings'}</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-base font-semibold leading-normal line-clamp-1 ${selectedRoleId === r.id ? 'text-primary' : 'text-[#111418] dark:text-white'}">${r.nom}</p>
+            <p class="text-sm font-normal leading-normal line-clamp-2 ${selectedRoleId === r.id ? 'text-primary/80' : 'text-[#617589] dark:text-gray-400'}">
+              ${r.description || `${r.permissions ? r.permissions.length : 0} permission(s)`}
+            </p>
+          </div>
+        </div>
+      </div>`).join('');
+
+    container.querySelectorAll('.role-list-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const id = parseInt(el.dataset.id);
+        const r = roles.find(x => x.id === id);
+        if (r) {
+          selectedRoleId = id;
+          renderRoleList();
+          renderRoleDetail(r);
+        }
       });
     });
+  }
 
-    document.querySelectorAll('.btn-edit').forEach(btn => {
-      btn.addEventListener('click', () => openRoleModal(parseInt(btn.dataset.id)));
-    });
+  function renderRoleDetail(r) {
+    const container = document.querySelector('.lg\\:col-span-2 > div, [class*="lg:col-span-2"] > div');
+    if (!container) return;
 
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const r = roles.find(x => x.id === parseInt(btn.dataset.id));
-        if (!r) return;
-        confirmDelete(r.nom, async () => {
-          if (typeof apiRoles !== 'undefined') {
-            await apiRoles.delete(r.id);
+    const perms = r.permissions || [];
+    const permCount = perms.length;
+    const desc = r.description || `${permCount} permission(s)`;
+
+    container.innerHTML = `
+      <h3 class="text-xl font-bold text-[#111418] dark:text-white">Permissions pour "${r.nom}"</h3>
+      <p class="text-sm text-[#617589] dark:text-gray-400 mt-1">${desc}</p>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="border-b border-gray-200 dark:border-gray-700">
+            <tr>
+              <th class="p-3 text-sm font-semibold text-[#617589] dark:text-gray-400">Module</th>
+              ${actionCols.map(a => `<th class="p-3 text-sm font-semibold text-center text-[#617589] dark:text-gray-400">${a}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${moduleRows.map((mod, modIdx) => `
+              <tr class="${modIdx < moduleRows.length - 1 ? 'border-b border-gray-200 dark:border-gray-700' : ''}">
+                <td class="p-3 font-medium text-[#111418] dark:text-white">${mod.key}</td>
+                ${actionCols.map((col, colIdx) => {
+                  const permKey = `${mod.key.toLowerCase().replace(/ /g, '_')}_${col.toLowerCase()}`;
+                  const checked = perms.includes(permKey) || perms.includes(modIdx * actionCols.length + colIdx);
+                  return `<td class="p-3 text-center">
+                    <input type="checkbox" class="perm-checkbox rounded text-primary focus:ring-primary" 
+                           data-module="${modIdx}" data-action="${colIdx}" ${checked ? 'checked' : ''}/>
+                  </td>`;
+                }).join('')}
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-8 flex justify-end gap-3">
+        <button id="btn-delete-role" class="flex min-w-[84px] items-center justify-center gap-2 rounded-lg h-10 px-4 bg-transparent text-red-600 dark:text-red-500 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-red-500/10 transition-colors">
+          <span class="material-symbols-outlined">delete</span>
+          <span>Supprimer le rôle</span>
+        </button>
+        <button id="btn-cancel-role" class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-gray-200 dark:bg-white/10 text-[#111418] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">
+          Annuler
+        </button>
+        <button id="btn-save-role" class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+          Enregistrer
+        </button>
+      </div>`;
+
+    document.getElementById('btn-delete-role')?.addEventListener('click', () => {
+      confirmDelete(r.nom, async () => {
+        try {
+          const res = await apiRoles.delete(r.id);
+          if (res !== null) {
+            roles = roles.filter(x => x.id !== r.id);
+            if (selectedRoleId === r.id) {
+              selectedRoleId = roles.length ? roles[0].id : null;
+            }
+            renderRoleList();
+            if (selectedRoleId) {
+              const next = roles.find(x => x.id === selectedRoleId);
+              if (next) renderRoleDetail(next);
+              else renderEmptyDetail();
+            } else {
+              renderEmptyDetail();
+            }
+            pushNotification(`Rôle "${r.nom}" supprimé.`, 'success');
           }
-          roles = roles.filter(x => x.id !== r.id);
-          renderRoles(roles);
-          pushNotification(`Rôle "${r.nom}" supprimé.`, 'info');
-        });
+        } catch (err) {
+          pushNotification('Erreur lors de la suppression', 'error');
+        }
       });
     });
+
+    document.getElementById('btn-cancel-role')?.addEventListener('click', () => {
+      const current = roles.find(x => x.id === selectedRoleId);
+      if (current) renderRoleDetail(current);
+    });
+
+    document.getElementById('btn-save-role')?.addEventListener('click', async () => {
+      const checkboxes = document.querySelectorAll('.perm-checkbox');
+      const selectedPerms = [];
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          const modIdx = parseInt(cb.dataset.module);
+          const colIdx = parseInt(cb.dataset.action);
+          const permKey = `${moduleRows[modIdx].key.toLowerCase().replace(/ /g, '_')}_${actionCols[colIdx].toLowerCase()}`;
+          selectedPerms.push(permKey);
+        }
+      });
+      const data = { permissions: selectedPerms };
+      try {
+        showLoader();
+        const res = await apiRoles.update(r.id, data);
+        if (res !== null) {
+          const idx = roles.findIndex(x => x.id === r.id);
+          if (idx >= 0) {
+            roles[idx].permissions = selectedPerms;
+            roles[idx].description = `${selectedPerms.length} permission(s)`;
+          }
+          renderRoleList();
+          pushNotification(`Permissions du rôle "${r.nom}" mises à jour.`, 'success');
+        }
+        hideLoader();
+      } catch (err) {
+        hideLoader();
+        pushNotification('Erreur lors de la sauvegarde', 'error');
+      }
+    });
+  }
+
+  function renderEmptyDetail() {
+    const container = document.querySelector('.lg\\:col-span-2 > div, [class*="lg:col-span-2"] > div');
+    if (!container) return;
+    container.innerHTML = `
+      <div class="text-center py-16">
+        <span class="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-600 mb-4">admin_panel_settings</span>
+        <p class="text-gray-500 dark:text-gray-400 text-lg">Sélectionnez un rôle ou créez-en un nouveau</p>
+      </div>`;
   }
 
   function openRoleModal(id = null) {
@@ -144,24 +202,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       <div class="space-y-4">
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nom du rôle *</label>
-          <input id="f-nom" value="${r?.nom||''}"
+          <input id="f-nom" value="${r?.nom || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Description</label>
-          <input id="f-desc" value="${r?.description||''}"
-            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Permissions</label>
-          <div class="grid grid-cols-1 gap-1 max-h-48 overflow-y-auto">
-            ${permissions.map((p, i) => `
-              <label class="flex items-center gap-2 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-                <input type="checkbox" value="${i}" class="perm-check rounded text-brand-primary"
-                  ${r?.perms.includes(i)?'checked':''}/>
-                <span class="text-sm text-[#111418] dark:text-gray-200">${p}</span>
-              </label>`).join('')}
-          </div>
+          <textarea id="f-desc" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 py-2 h-20 resize-none">${r?.description || ''}</textarea>
         </div>
       </div>`;
 
@@ -170,39 +216,37 @@ document.addEventListener('DOMContentLoaded', async () => {
       onConfirm: async () => {
         const nom = document.getElementById('f-nom')?.value.trim();
         if (!nom) { pushNotification('Le nom du rôle est obligatoire.', 'error'); return; }
-        const perms = Array.from(document.querySelectorAll('.perm-check:checked')).map(c => parseInt(c.value));
-        const data = { nom, description: document.getElementById('f-desc')?.value.trim(), perms };
-
-        showLoader();
-        if (editingId) {
-          if (typeof apiRoles !== 'undefined') {
-            await apiRoles.update(editingId, { nom: data.nom, description: data.description });
+        const description = document.getElementById('f-desc')?.value.trim() || '';
+        const data = { nom, description };
+        try {
+          showLoader();
+          if (editingId) {
+            const res = await apiRoles.update(editingId, data);
+            if (res !== null) {
+              await loadRoles();
+              pushNotification(`Rôle "${nom}" mis à jour.`, 'success');
+            }
+          } else {
+            const res = await apiRoles.create(data);
+            if (res !== null) {
+              await loadRoles();
+              pushNotification(`Rôle "${nom}" créé.`, 'success');
+            }
           }
-          const idx = roles.findIndex(x => x.id === editingId);
-          roles[idx] = { ...roles[idx], ...data };
-          pushNotification(`Rôle "${nom}" mis à jour.`, 'success');
-        } else {
-          let created = null;
-          if (typeof apiRoles !== 'undefined') {
-            created = await apiRoles.create({ nom: data.nom, description: data.description });
-          }
-          data.id = created?.id || Date.now();
-          data.couleur = 'bg-gray-100 text-gray-700';
-          roles.push(data);
-          pushNotification(`Rôle "${nom}" créé.`, 'success');
+          hideLoader();
+        } catch (err) {
+          hideLoader();
+          pushNotification('Erreur lors de la sauvegarde du rôle', 'error');
         }
-        hideLoader();
-        renderRoles(roles);
       },
     });
   }
 
-  // Bouton ajouter
   document.querySelectorAll('button').forEach(btn => {
-    if (btn.textContent.includes('Ajouter') || btn.textContent.includes('Créer')) {
+    if (btn.textContent.includes('Ajouter un nouveau rôle')) {
       btn.addEventListener('click', () => openRoleModal());
     }
   });
 
-  loadRoles();
+  await loadRoles();
 });

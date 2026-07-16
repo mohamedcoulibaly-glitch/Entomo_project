@@ -56,6 +56,9 @@ def delete_dataset(dataset_id: int, db: Session = Depends(get_db), _: User = Dep
 
 @router.get("/{dataset_id}/annotations", response_model=List[AnnotationResponse])
 def list_annotations(dataset_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
+    ds = crud_dataset.get(db, id=dataset_id)
+    if not ds:
+        raise HTTPException(status_code=404, detail="Dataset non trouvé")
     return crud_annotation.get_by_dataset(db, dataset_id=dataset_id)
 
 

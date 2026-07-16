@@ -125,6 +125,14 @@
                     <span class="material-symbols-outlined">offline_bolt</span>
                     <span class="text-sm">Données Hors Ligne</span>
                 </a>
+                <a href="interventions.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">healing</span>
+                    <span class="text-sm">Interventions</span>
+                </a>
+                <a href="campagnes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">campaign</span>
+                    <span class="text-sm">Campagnes</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Modèles ML</p>
                 <a href="catalogue-modeles.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -135,6 +143,10 @@
                     <span class="material-symbols-outlined">mic</span>
                     <span class="text-sm">Surveillance Audio</span>
                 </a>
+                <a href="cartographie.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">map</span>
+                    <span class="text-sm">Cartographie</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Rapports & Analyse</p>
                 <a href="generateur-rapports.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -144,6 +156,14 @@
                 <a href="analyse-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="text-sm">Analyse Données</span>
+                </a>
+                <a href="import-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span class="text-sm">Import Données</span>
+                </a>
+                <a href="alertes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">notifications_active</span>
+                    <span class="text-sm">Alertes</span>
                 </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Configuration</p>
@@ -174,6 +194,18 @@
                 <a href="validation-dhis2.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">verified</span>
                     <span class="text-sm">Validation DHIS2</span>
+                </a>
+                <a href="audit-logs.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="text-sm">Journal Audit</span>
+                </a>
+                <a href="parametres-compte.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="text-sm">Paramètres Compte</span>
+                </a>
+                <a href="aide.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="text-sm">Aide</span>
                 </a>
             </nav>
         </aside>
@@ -206,24 +238,28 @@
 <h1 class="text-gray-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Tableau de Bord des Pipelines MLOps</h1>
 <p class="text-gray-500 dark:text-[#9dabb9] text-base font-normal leading-normal">Supervisez et gérez les pipelines automatisés de réentraînement des modèles.</p>
 </div>
-<button class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer rounded-lg h-11 px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<button data-pipeline-create-btn class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer rounded-lg h-11 px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
 <span class="material-symbols-outlined">add</span>
-<span class="truncate">Déclencher un nouveau pipeline</span>
+<span class="truncate">Nouveau Pipeline</span>
 </button>
 </div>
 <!-- Stats -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
 <div class="flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-[#1C2127] border border-gray-200 dark:border-[#3b4754]">
-<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Pipelines en cours</p>
-<p class="text-gray-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">2</p>
+<p class="text-gray-500 dark:text-[#9dabb9] text-base font-medium leading-normal">Total Pipelines</p>
+<p data-stat="total" class="text-gray-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">0</p>
 </div>
 <div class="flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-[#1C2127] border border-gray-200 dark:border-[#3b4754]">
-<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Terminés aujourd'hui</p>
-<p class="text-gray-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">14</p>
+<p class="text-gray-500 dark:text-[#9dabb9] text-base font-medium leading-normal">En cours</p>
+<p data-stat="running" class="text-gray-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">0</p>
 </div>
 <div class="flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-[#1C2127] border border-gray-200 dark:border-[#3b4754]">
-<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Échecs (24h)</p>
-<p class="text-red-500 dark:text-red-400 tracking-tight text-3xl font-bold leading-tight">1</p>
+<p class="text-gray-500 dark:text-[#9dabb9] text-base font-medium leading-normal">Terminés</p>
+<p data-stat="completed" class="text-gray-900 dark:text-white tracking-tight text-3xl font-bold leading-tight">0</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-6 bg-white dark:bg-[#1C2127] border border-gray-200 dark:border-[#3b4754]">
+<p class="text-gray-500 dark:text-[#9dabb9] text-base font-medium leading-normal">Échecs</p>
+<p data-stat="failed" class="text-red-500 dark:text-red-400 tracking-tight text-3xl font-bold leading-tight">0</p>
 </div>
 </div>
 <!-- Tabs & Table Section -->
@@ -231,15 +267,15 @@
 <!-- Tabs -->
 <div class="pb-3 px-4">
 <div class="flex border-b border-gray-200 dark:border-[#3b4754] gap-8">
-<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-primary pb-[13px] pt-4" href="#">
+<button type="button" data-pipeline-filter="all" class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-primary pb-[13px] pt-4">
 <p class="text-sm font-bold leading-normal tracking-[0.015em]">Tous les pipelines</p>
-</a>
-<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-primary dark:hover:text-white" href="#">
+</button>
+<button type="button" data-pipeline-filter="scheduled" class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-primary dark:hover:text-white">
 <p class="text-sm font-bold leading-normal tracking-[0.015em]">Planifiés</p>
-</a>
-<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-primary dark:hover:text-white" href="#">
+</button>
+<button type="button" data-pipeline-filter="history" class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-primary dark:hover:text-white">
 <p class="text-sm font-bold leading-normal tracking-[0.015em]">Historique</p>
-</a>
+</button>
 </div>
 </div>
 <!-- Table -->
@@ -258,74 +294,6 @@
 </tr>
 </thead>
 <tbody>
-<tr class="border-b border-gray-200 dark:border-[#3b4754] hover:bg-gray-50 dark:hover:bg-white/5">
-<td class="h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Hebdomadaire - Anopheles gambiae</td>
-<td class="h-[72px] px-4 py-2">
-<div class="inline-flex items-center gap-2 rounded-full py-1 px-3 text-xs font-medium bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400">
-<span class="size-2 rounded-full bg-green-500"></span> Succès
-                                            </div>
-</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">2023-10-26 02:00</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">v2.3.1</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">98.5%</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">0.96</td>
-<td class="h-[72px] px-4 py-2 text-right">
-<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400">
-<span class="material-symbols-outlined text-xl">description</span>
-</button>
-</td>
-</tr>
-<tr class="border-b border-gray-200 dark:border-[#3b4754] hover:bg-gray-50 dark:hover:bg-white/5">
-<td class="h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Quotidien - Culex quinquefasciatus</td>
-<td class="h-[72px] px-4 py-2">
-<div class="inline-flex items-center gap-2 rounded-full py-1 px-3 text-xs font-medium bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400">
-<span class="size-2 rounded-full bg-blue-500"></span> En cours
-                                            </div>
-</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">2023-10-27 01:15</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">v1.9.0</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">97.2%</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">0.94</td>
-<td class="h-[72px] px-4 py-2 text-right">
-<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400">
-<span class="material-symbols-outlined text-xl">description</span>
-</button>
-</td>
-</tr>
-<tr class="border-b border-gray-200 dark:border-[#3b4754] hover:bg-gray-50 dark:hover:bg-white/5">
-<td class="h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">Mensuel - Modèle global</td>
-<td class="h-[72px] px-4 py-2">
-<div class="inline-flex items-center gap-2 rounded-full py-1 px-3 text-xs font-medium bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400">
-<span class="size-2 rounded-full bg-red-500"></span> Échec
-                                            </div>
-</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">2023-10-26 18:30</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">v4.1.0</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">N/A</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">N/A</td>
-<td class="h-[72px] px-4 py-2 text-right">
-<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400">
-<span class="material-symbols-outlined text-xl">description</span>
-</button>
-</td>
-</tr>
-<tr class="hover:bg-gray-50 dark:hover:bg-white/5">
-<td class="h-[72px] px-4 py-2 text-gray-900 dark:text-white text-sm font-medium">À la demande - Aedes aegypti</td>
-<td class="h-[72px] px-4 py-2">
-<div class="inline-flex items-center gap-2 rounded-full py-1 px-3 text-xs font-medium bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400">
-<span class="size-2 rounded-full bg-green-500"></span> Succès
-                                            </div>
-</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">2023-10-25 11:45</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">v1.2.5</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">99.1%</td>
-<td class="h-[72px] px-4 py-2 text-gray-500 dark:text-[#9dabb9] text-sm">0.98</td>
-<td class="h-[72px] px-4 py-2 text-right">
-<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400">
-<span class="material-symbols-outlined text-xl">description</span>
-</button>
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -337,10 +305,10 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/api.js"></script>
+    <script src="../js/api.js?v=ml2"></script>
     <script src="../js/core.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/dashboard-pipelines.js"></script>
+    <script src="../js/dashboard-pipelines-1.js?v=ml2"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

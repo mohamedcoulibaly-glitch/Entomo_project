@@ -1,41 +1,45 @@
-/**
- * gestion-utilisateurs.js
- * Comportements interactifs pour la page Gestion des Utilisateurs + API backend
- */
 document.addEventListener('DOMContentLoaded', async () => {
-
-  // ── Données simulées (fallback) ──────────────────────────────────────────────
-  const FALLBACK = [
-    { id: 1, full_name: 'Mouss Dethie Sarr',  email: 'md.sarr@example.com',     role: { nom: 'Agent de terrain' },          region: 'Kédougou', is_active: true },
-    { id: 2, full_name: 'Ousmane Faye',        email: 'ousmane.faye@example.com', role: { nom: 'Technicien de laboratoire' }, region: 'Thiès',    is_active: true },
-    { id: 3, full_name: 'Fatou Ndiaye',        email: 'fatou.ndiaye@example.com', role: { nom: 'Administrateur Régional' },  region: 'Dakar',    is_active: false },
-    { id: 4, full_name: 'Ibrahima Diop',       email: 'i.diop@example.com',       role: { nom: 'Chercheur' },                region: 'Dakar',    is_active: true },
-    { id: 5, full_name: 'Aminata Cissé',       email: 'a.cisse@example.com',      role: { nom: 'Superviseur National' },     region: 'Dakar',    is_active: true },
-  ];
-
-  function norm(u) {
-    return {
-      ...u,
-      nom:    u.full_name || u.nom || u.username || 'N/A',
-      role:   u.role?.nom || u.role || 'N/A',
-      statut: u.is_active !== false ? 'Actif' : 'Inactif',
-    };
-  }
-
   let users = [];
   let editingId = null;
+  let roles = [];
+
+  async function loadRoles() {
+    try {
+      const data = await apiRoles.list();
+      if (data) roles = data;
+    } catch (err) {
+      console.warn('Erreur chargement rôles:', err);
+    }
+  }
 
   async function loadUsers() {
-    if (typeof apiUsers !== 'undefined') {
-      const data = await apiUsers.list({ limit: 100 });
-      users = data ? data.map(norm) : FALLBACK.map(norm);
-    } else {
-      users = FALLBACK.map(norm);
+    try {
+      showLoader();
+      const data = await apiUsers.list({ limit: 200 });
+      if (data) users = data.map(norm);
+      hideLoader();
+    } catch (err) {
+      hideLoader();
+      pushNotification('Erreur lors du chargement des utilisateurs', 'error');
     }
     applyFilters();
   }
 
-  // ── Rendu du tableau ────────────────────────────────────────────────────────
+  function norm(u) {
+    return {
+      ...u,
+      nom: u.full_name || u.nom || u.username || 'N/A',
+      email: u.email || '',
+      role: typeof u.role === 'object' && u.role ? u.role.nom || u.role.name || '' : u.role_nom || u.role || '',
+      role_id: typeof u.role === 'object' && u.role ? u.role.id : u.role_id || null,
+      region: u.region || '',
+      district: u.district || '',
+      etablissement: u.etablissement || u.etablissement_nom || '',
+      statut: u.is_active !== false ? 'Actif' : 'Inactif',
+      is_active: u.is_active !== false,
+    };
+  }
+
   function renderTable(data) {
     const tbody = document.querySelector('tbody');
     if (!tbody) return;
@@ -63,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${u.role}</td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${u.etablissement}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${u.region}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">${u.region}${u.district ? ' / ' + u.district : ''}</td>
         <td class="px-6 py-4 whitespace-nowrap">
           <span class="inline-flex rounded-full px-2 text-xs font-semibold leading-5
             ${u.statut === 'Actif'
@@ -86,12 +90,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             </button>
           </div>
         </td>
-      </tr>`).join('');
+    </tr>`).join('');
+
+    initPagination('tbody', 10);
 
     attachRowEvents();
   }
 
-  // ── Événements sur les lignes ───────────────────────────────────────────────
   function attachRowEvents() {
     document.querySelectorAll('.btn-edit').forEach(btn => {
       btn.addEventListener('click', () => openUserModal(parseInt(btn.dataset.id)));
@@ -102,12 +107,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const u = users.find(x => x.id === parseInt(btn.dataset.id));
         if (!u) return;
         confirmDelete(u.nom, async () => {
-          if (typeof apiUsers !== 'undefined') {
-            await apiUsers.delete(u.id);
+          try {
+            const res = await apiUsers.delete(u.id);
+            if (res !== null) {
+              users = users.filter(x => x.id !== u.id);
+              applyFilters();
+              pushNotification(`Utilisateur "${u.nom}" supprimé.`, 'success');
+            }
+          } catch (err) {
+            pushNotification('Erreur lors de la suppression', 'error');
           }
-          users = users.filter(x => x.id !== u.id);
-          applyFilters();
-          pushNotification(`Utilisateur "${u.nom}" supprimé.`, 'info');
         });
       });
     });
@@ -117,21 +126,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         const u = users.find(x => x.id === parseInt(btn.dataset.id));
         if (!u) return;
         const newActive = u.statut !== 'Actif';
-        if (typeof apiUsers !== 'undefined') {
-          await apiUsers.update(u.id, { is_active: newActive });
+        try {
+          const res = await apiUsers.update(u.id, { is_active: newActive });
+          if (res !== null) {
+            u.is_active = newActive;
+            u.statut = newActive ? 'Actif' : 'Inactif';
+            applyFilters();
+            pushNotification(`Statut de "${u.nom}" changé en ${u.statut}.`, newActive ? 'success' : 'warning');
+          }
+        } catch (err) {
+          pushNotification('Erreur lors du changement de statut', 'error');
         }
-        u.statut = newActive ? 'Actif' : 'Inactif';
-        u.is_active = newActive;
-        applyFilters();
-        pushNotification(`Statut de "${u.nom}" changé en ${u.statut}.`, newActive ? 'success' : 'warning');
       });
     });
   }
 
-  // ── Modale ajout / modification ─────────────────────────────────────────────
   function openUserModal(id = null) {
     editingId = id;
     const u = id ? users.find(x => x.id === id) : null;
+
+    const roleOptions = roles.length
+      ? roles.map(r => `<option value="${r.id}" ${u && (u.role_id === r.id || u.role === r.nom) ? 'selected' : ''}>${r.nom}</option>`).join('')
+      : `<option value="">Sélectionner un rôle</option>`;
 
     const body = `
       <div class="grid grid-cols-1 gap-4">
@@ -151,8 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Rôle</label>
           <select id="f-role" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
                    bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary">
-            ${['Agent de terrain','Technicien de laboratoire','Administrateur Régional','Chercheur','Superviseur National']
-              .map(r => `<option ${u?.role===r?'selected':''}>${r}</option>`).join('')}
+            ${roleOptions}
           </select>
         </div>
         <div>
@@ -162,8 +177,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                    bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
         </div>
         <div>
-          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Région / District</label>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Région</label>
           <input id="f-region" type="text" value="${u?.region || ''}"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">District</label>
+          <input id="f-district" type="text" value="${u?.district || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
                    bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
         </div>
@@ -171,131 +192,124 @@ document.addEventListener('DOMContentLoaded', async () => {
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Statut</label>
           <select id="f-statut" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
                    bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary">
-            <option ${u?.statut==='Actif'?'selected':''}>Actif</option>
-            <option ${u?.statut==='Inactif'?'selected':''}>Inactif</option>
+            <option ${!u || u.statut === 'Actif' ? 'selected' : ''}>Actif</option>
+            <option ${u?.statut === 'Inactif' ? 'selected' : ''}>Inactif</option>
           </select>
         </div>
         <p id="f-error" class="text-red-500 text-xs hidden">Veuillez remplir tous les champs obligatoires.</p>
       </div>`;
 
-    openModal(id ? 'Modifier l\'utilisateur' : 'Ajouter un utilisateur', body, {
+    openModal(id ? "Modifier l'utilisateur" : 'Ajouter un utilisateur', body, {
       confirmLabel: id ? 'Enregistrer' : 'Ajouter',
-      onConfirm: saveUser,
+      onConfirm: async () => {
+        const nom = document.getElementById('f-nom')?.value.trim();
+        const email = document.getElementById('f-email')?.value.trim();
+        if (!nom || !email) {
+          document.getElementById('f-error')?.classList.remove('hidden');
+          return;
+        }
+        const roleSelect = document.getElementById('f-role');
+        const roleId = roleSelect?.value ? parseInt(roleSelect.value) : null;
+        const data = {
+          full_name: nom,
+          email,
+          role_id: roleId || undefined,
+          etablissement: document.getElementById('f-etab')?.value.trim(),
+          region: document.getElementById('f-region')?.value.trim(),
+          district: document.getElementById('f-district')?.value.trim(),
+          is_active: document.getElementById('f-statut')?.value === 'Actif',
+        };
+        try {
+          showLoader();
+          if (editingId) {
+            const res = await apiUsers.update(editingId, data);
+            if (res !== null) {
+              await loadUsers();
+              pushNotification(`Utilisateur "${nom}" modifié avec succès.`, 'success');
+            }
+          } else {
+            const res = await apiUsers.create({ ...data, username: email.split('@')[0], password: 'ChangeMe123!' });
+            if (res !== null) {
+              await loadUsers();
+              pushNotification(`Utilisateur "${nom}" ajouté avec succès.`, 'success');
+            }
+          }
+          hideLoader();
+        } catch (err) {
+          hideLoader();
+          pushNotification('Erreur lors de la sauvegarde', 'error');
+        }
+      },
     });
   }
 
-  function saveUser() {
-    const nom   = document.getElementById('f-nom')?.value.trim();
-    const email = document.getElementById('f-email')?.value.trim();
-    if (!nom || !email) {
-      document.getElementById('f-error')?.classList.remove('hidden');
-      return;
-    }
+  const addBtn = document.querySelector('button:has(> .truncate)');
+  if (addBtn) addBtn.addEventListener('click', () => openUserModal());
 
-    const data = {
-      full_name:     nom,
-      email,
-      role_nom:      document.getElementById('f-role')?.value,
-      etablissement: document.getElementById('f-etab')?.value.trim(),
-      region:        document.getElementById('f-region')?.value.trim(),
-      is_active:     document.getElementById('f-statut')?.value === 'Actif',
-    };
-
-    (async () => {
-      showLoader();
-      if (editingId) {
-        if (typeof apiUsers !== 'undefined') {
-          await apiUsers.update(editingId, data);
-        }
-        const idx = users.findIndex(x => x.id === editingId);
-        users[idx] = { ...users[idx], ...data, nom, statut: data.is_active ? 'Actif' : 'Inactif', role: data.role_nom };
-        pushNotification(`Utilisateur "${nom}" modifié avec succès.`, 'success');
-      } else {
-        let created = null;
-        if (typeof apiUsers !== 'undefined') {
-          created = await apiUsers.create({ ...data, username: email.split('@')[0], password: 'ChangeMe123!' });
-        }
-        users.unshift({ ...data, id: created?.id || Date.now(), nom, statut: data.is_active ? 'Actif' : 'Inactif', role: data.role_nom });
-        pushNotification(`Utilisateur "${nom}" ajouté.`, 'success');
-      }
-      hideLoader();
-      applyFilters();
-    })();
-  }
-
-  // ── Bouton "Ajouter" ────────────────────────────────────────────────────────
-  document.querySelector('button:has(> span.material-symbols-outlined + span)')
-    ?.addEventListener('click', () => openUserModal());
-
-  // Alternative si le sélecteur ci-dessus ne matche pas
   document.querySelectorAll('button').forEach(btn => {
     if (btn.textContent.includes('Ajouter un Utilisateur')) {
       btn.addEventListener('click', () => openUserModal());
     }
   });
 
-  // ── Recherche en temps réel ─────────────────────────────────────────────────
   const searchInput = document.querySelector('input[placeholder*="Rechercher"]');
-  if (searchInput) {
-    searchInput.addEventListener('input', applyFilters);
-  }
 
-  // ── Filtres dropdown (Rôle / Région / Statut) ───────────────────────────────
-  let activeFilters = { role: 'Tous', statut: 'Tous' };
+  const filters = { role: 'Tous', region: 'Toutes', district: 'Tous', statut: 'Tous' };
 
-  const filterButtons = document.querySelectorAll('.flex.flex-wrap.gap-3 button');
-  filterButtons.forEach(btn => {
+  const filterPButtons = document.querySelectorAll('.flex.flex-wrap.gap-3 button, .flex-wrap.gap-3 button');
+  filterPButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      const text = btn.querySelector('p')?.textContent || '';
-      if (text.startsWith('Rôle')) showFilterDropdown(btn, 'role', ['Tous','Agent de terrain','Technicien de laboratoire','Administrateur Régional','Chercheur','Superviseur National']);
-      if (text.startsWith('Statut')) showFilterDropdown(btn, 'statut', ['Tous','Actif','Inactif']);
+      const p = btn.querySelector('p');
+      if (!p) return;
+      const text = p.textContent || '';
+      if (text.startsWith('Rôle')) {
+        const options = ['Tous', ...roles.map(r => r.nom)];
+        showFilterDD(btn, options, val => { filters.role = val; p.textContent = `Rôle: ${val}`; applyFilters(); });
+      } else if (text.startsWith('Région')) {
+        const regions = [...new Set(users.map(u => u.region).filter(Boolean))];
+        showFilterDD(btn, ['Toutes', ...regions], val => { filters.region = val; p.textContent = `Région: ${val}`; applyFilters(); });
+      } else if (text.startsWith('District')) {
+        const districts = [...new Set(users.map(u => u.district).filter(Boolean))];
+        showFilterDD(btn, ['Tous', ...districts], val => { filters.district = val; p.textContent = `District: ${val}`; applyFilters(); });
+      } else if (text.startsWith('Statut')) {
+        showFilterDD(btn, ['Tous', 'Actif', 'Inactif'], val => { filters.statut = val; p.textContent = `Statut: ${val}`; applyFilters(); });
+      }
     });
   });
 
-  function showFilterDropdown(btn, key, options) {
-    document.querySelectorAll('.filter-dropdown').forEach(d => d.remove());
+  function showFilterDD(anchor, options, onSelect) {
+    document.querySelectorAll('.filter-dd').forEach(d => d.remove());
     const dd = document.createElement('div');
-    dd.className = `filter-dropdown absolute z-40 bg-white dark:bg-gray-800 rounded-xl shadow-xl
-                    border border-gray-200 dark:border-gray-700 min-w-[160px] py-1`;
-    dd.style.top  = btn.offsetTop + btn.offsetHeight + 4 + 'px';
-    dd.style.left = btn.offsetLeft + 'px';
-
+    dd.className = 'filter-dd absolute z-40 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 min-w-[160px] py-1';
     options.forEach(opt => {
       const item = document.createElement('button');
-      item.className = `w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700
-                        text-[#111418] dark:text-gray-200 ${activeFilters[key]===opt?'font-bold text-brand-primary':''}`;
+      item.className = 'w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-[#111418] dark:text-gray-200';
       item.textContent = opt;
-      item.addEventListener('click', () => {
-        activeFilters[key] = opt;
-        const label = btn.querySelector('p');
-        if (label) label.textContent = `${key.charAt(0).toUpperCase()+key.slice(1)}: ${opt}`;
-        dd.remove();
-        applyFilters();
-      });
+      item.addEventListener('click', () => { onSelect(opt); dd.remove(); });
       dd.appendChild(item);
     });
-
-    btn.closest('.flex').style.position = 'relative';
-    btn.closest('.flex').appendChild(dd);
+    anchor.style.position = 'relative';
+    anchor.appendChild(dd);
     setTimeout(() => document.addEventListener('click', () => dd.remove(), { once: true }), 100);
   }
 
-  // ── Application de tous les filtres ─────────────────────────────────────────
   function applyFilters() {
     const q = searchInput?.value.toLowerCase().trim() || '';
     let filtered = users.filter(u => {
-      const matchSearch = !q || `${u.nom} ${u.email}`.toLowerCase().includes(q);
-      const matchRole   = activeFilters.role   === 'Tous' || u.role   === activeFilters.role;
-      const matchStatut = activeFilters.statut === 'Tous' || u.statut === activeFilters.statut;
-      return matchSearch && matchRole && matchStatut;
+      const matchSearch = !q || `${u.nom} ${u.email} ${u.role} ${u.region} ${u.etablissement}`.toLowerCase().includes(q);
+      const matchRole = filters.role === 'Tous' || u.role === filters.role;
+      const matchRegion = filters.region === 'Toutes' || u.region === filters.region;
+      const matchDistrict = filters.district === 'Tous' || u.district === filters.district;
+      const matchStatut = filters.statut === 'Tous' || u.statut === filters.statut;
+      return matchSearch && matchRole && matchRegion && matchDistrict && matchStatut;
     });
     renderTable(filtered);
   }
 
-  // ── Tri colonnes ─────────────────────────────────────────────────────────────
+  if (searchInput) searchInput.addEventListener('input', applyFilters);
+
   initTableSort('table');
 
-  // ── Rendu initial ────────────────────────────────────────────────────────────
-  loadUsers();
-
+  await loadRoles();
+  await loadUsers();
 });

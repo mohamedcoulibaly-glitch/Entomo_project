@@ -125,6 +125,14 @@
                     <span class="material-symbols-outlined">offline_bolt</span>
                     <span class="text-sm">Données Hors Ligne</span>
                 </a>
+                <a href="interventions.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">healing</span>
+                    <span class="text-sm">Interventions</span>
+                </a>
+                <a href="campagnes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">campaign</span>
+                    <span class="text-sm">Campagnes</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Modèles ML</p>
                 <a href="catalogue-modeles.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -135,6 +143,10 @@
                     <span class="material-symbols-outlined">mic</span>
                     <span class="text-sm">Surveillance Audio</span>
                 </a>
+                <a href="cartographie.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">map</span>
+                    <span class="text-sm">Cartographie</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Rapports & Analyse</p>
                 <a href="generateur-rapports.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -144,6 +156,14 @@
                 <a href="analyse-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="text-sm">Analyse Données</span>
+                </a>
+                <a href="import-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span class="text-sm">Import Données</span>
+                </a>
+                <a href="alertes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">notifications_active</span>
+                    <span class="text-sm">Alertes</span>
                 </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Configuration</p>
@@ -174,6 +194,18 @@
                 <a href="validation-dhis2.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">verified</span>
                     <span class="text-sm">Validation DHIS2</span>
+                </a>
+                <a href="audit-logs.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="text-sm">Journal Audit</span>
+                </a>
+                <a href="parametres-compte.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="text-sm">Paramètres Compte</span>
+                </a>
+                <a href="aide.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="text-sm">Aide</span>
                 </a>
             </nav>
         </aside>
@@ -232,116 +264,22 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 <div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754]">
 <p class="text-gray-600 dark:text-white text-base font-medium leading-normal">Précision Globale</p>
-<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold leading-tight">92.5%</p>
-<p class="text-green-500 dark:text-[#0bda5b] text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+1.2%</p>
+<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold leading-tight" data-stat="precision">—</p>
 </div>
 <div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754]">
 <p class="text-gray-600 dark:text-white text-base font-medium leading-normal">Taux de Détection</p>
-<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold leading-tight">98.2%</p>
-<p class="text-red-500 dark:text-[#fa6238] text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_downward</span>-0.3%</p>
+<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold leading-tight" data-stat="detection">—</p>
 </div>
 <div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754]">
 <p class="text-gray-600 dark:text-white text-base font-medium leading-normal">Échantillons Analysés</p>
-<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold leading-tight">14,789</p>
-<p class="text-green-500 dark:text-[#0bda5b] text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+15%</p>
+<p class="text-gray-900 dark:text-white tracking-light text-3xl font-bold leading-tight" data-stat="echantillons">—</p>
 </div>
 </div>
 </section>
-<!-- Section 2: Analyse et Validation des Échantillons -->
+<!-- Section 2: Captures Audio Dynamiques -->
 <section>
-<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Échantillons Récents pour Validation</h2>
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-<!-- Samples Table -->
-<div class="xl:col-span-2 bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754] rounded-xl overflow-hidden">
-<div class="overflow-x-auto">
-<table class="w-full text-sm text-left">
-<thead class="bg-gray-50 dark:bg-gray-900/40 text-xs text-gray-700 dark:text-gray-400 uppercase">
-<tr>
-<th class="px-6 py-3" scope="col">ID Échantillon</th>
-<th class="px-6 py-3" scope="col">Date/Heure</th>
-<th class="px-6 py-3" scope="col">Prédiction</th>
-<th class="px-6 py-3" scope="col">Confiance</th>
-<th class="px-6 py-3" scope="col">Statut</th>
-</tr>
-</thead>
-<tbody>
-<tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-primary/10 dark:hover:bg-primary/20 cursor-pointer bg-primary/20 dark:bg-primary/30">
-<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B4</td>
-<td class="px-6 py-4">2024-05-23 11:45</td>
-<td class="px-6 py-4">Anopheles</td>
-<td class="px-6 py-4">98%</td>
-<td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Non validé</span></td>
-</tr>
-<tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
-<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B3</td>
-<td class="px-6 py-4">2024-05-23 10:30</td>
-<td class="px-6 py-4">Aedes</td>
-<td class="px-6 py-4">95%</td>
-<td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Validé</span></td>
-</tr>
-<tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
-<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B2</td>
-<td class="px-6 py-4">2024-05-23 09:12</td>
-<td class="px-6 py-4">Culex</td>
-<td class="px-6 py-4">89%</td>
-<td class="px-6 py-4"><span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Incorrect</span></td>
-</tr>
-<tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
-<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B1</td>
-<td class="px-6 py-4">2024-05-23 08:55</td>
-<td class="px-6 py-4">Présence détectée</td>
-<td class="px-6 py-4">99%</td>
-<td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Validé</span></td>
-</tr>
-<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer">
-<td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">#SN08B0</td>
-<td class="px-6 py-4">2024-05-23 07:40</td>
-<td class="px-6 py-4">Anopheles</td>
-<td class="px-6 py-4">92%</td>
-<td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">Non validé</span></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<!-- Details & Validation Panel -->
-<div class="bg-white dark:bg-[#1A242E] border border-gray-200 dark:border-[#3b4754] rounded-xl p-6 flex flex-col gap-6">
-<h3 class="text-gray-900 dark:text-white text-lg font-bold leading-tight">Analyse de l'Échantillon #SN08B4</h3>
-<div>
-<img alt="Spectrogramme de l'enregistrement audio d'un moustique" class="rounded-lg w-full h-auto object-cover border border-gray-200 dark:border-gray-700" data-alt="Spectrogramme de l'enregistrement audio d'un moustique" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAtlzZ1URmXz8_8_sSVcyUH-wyqxP2kCncrvUmKh-ljOKBkIWL29HvYSy68Bw7QifIE-krMJ83VKscp2XFGoooSwaPb5UcIsQTVCxOXDBpdR_Rxi4bHnuY7PcLsAipqUMw9ajXsPPZiyM7pi0H9jepjD4IWkwN3qhNtr4HMTNcI_PCOURQDlb7_4a5k04SDKtk6ZNMpDpmBEaK4IEWb_whijyDea5-qgUk7-ud0meK37ZyEGEZP0I03lUPFr9KBfWjyIJFnSTRiA"/>
-</div>
-<div class="flex items-center gap-4 bg-gray-100 dark:bg-gray-900/50 p-3 rounded-lg">
-<button class="text-gray-700 dark:text-white">
-<span class="material-symbols-outlined text-3xl">play_circle</span>
-</button>
-<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-<div class="bg-primary h-1.5 rounded-full" style="width: 25%"></div>
-</div>
-<span class="text-xs text-gray-500 dark:text-gray-400">0:03 / 0:12</span>
-</div>
-<div class="text-center">
-<p class="text-sm text-gray-500 dark:text-gray-400">Prédiction du modèle</p>
-<p class="text-xl font-bold text-gray-900 dark:text-white">Anopheles</p>
-<p class="text-sm text-gray-500 dark:text-gray-400">avec 98% de confiance</p>
-</div>
-<div class="flex flex-col gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-<p class="text-sm font-medium text-center text-gray-600 dark:text-gray-300">Valider la prédiction :</p>
-<div class="grid grid-cols-2 gap-3">
-<button class="flex w-full items-center justify-center gap-2 rounded-lg bg-red-500/10 dark:bg-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/20 dark:hover:bg-red-500/30 px-4 py-2 text-sm font-semibold">
-<span class="material-symbols-outlined text-lg">close</span>
-                                        Rejeter
-                                    </button>
-<button class="flex w-full items-center justify-center gap-2 rounded-lg bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/20 dark:hover:bg-green-500/30 px-4 py-2 text-sm font-semibold">
-<span class="material-symbols-outlined text-lg">check</span>
-                                        Confirmer
-                                    </button>
-</div>
-<button class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 px-4 py-2 text-sm font-semibold">
-<span class="material-symbols-outlined text-lg">edit</span>
-                                    Corriger la classification
-                                </button>
-</div>
-</div>
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Captures Audio</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" data-audio-container>
 </div>
 </section>
 </div>

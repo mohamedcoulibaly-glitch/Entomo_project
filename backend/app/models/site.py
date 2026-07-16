@@ -13,24 +13,29 @@ class SiteSentinelle(BaseModel):
     latitude = Column(Float)
     longitude = Column(Float)
     description = Column(Text)
-    zone_type = Column(String(50))            # urbain / rural / périurbain
-    type_environnement = Column(String(100))  # forêt, savane, zone humide…
+    zone_type = Column(String(50))            # urbain / rural / périurbain (nom backend)
+    type_environnement = Column(String(100))  # forêt, savane, zone humide… (nom backend)
+    type_zone = Column(String(50))            # urbain / rural / périurbain (nom frontend)
+    environnement = Column(String(100))       # forêt, savane, zone humide… (nom frontend)
     responsable = Column(String(200))
     contact = Column(String(200))
     actif = Column(Boolean, default=True)
 
+    # Relationships
     captures = relationship("Capture", back_populates="site")
     activites = relationship("SiteActivite", back_populates="site")
+    interventions = relationship("Intervention", back_populates="site", foreign_keys="[Intervention.site_id]")
 
 
 class SiteActivite(BaseModel):
     """Journal d'activité d'un site sentinelle (timeline UI)."""
     __tablename__ = "site_activites"
 
-    site_id = Column(Integer, ForeignKey("sites_sentinelles.id"), nullable=False)
+    site_id = Column(Integer, ForeignKey("sites_sentinelles.id", ondelete="CASCADE"), nullable=False)
     type_activite = Column(String(100), nullable=False)  # capture, maintenance, visite…
     description = Column(Text)
-    utilisateur_id = Column(Integer, ForeignKey("users.id"))
+    utilisateur_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"))
     date_activite = Column(DateTime, nullable=False)
 
     site = relationship("SiteSentinelle", back_populates="activites")
+    utilisateur = relationship("User")

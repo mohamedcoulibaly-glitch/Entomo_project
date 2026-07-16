@@ -125,6 +125,14 @@
                     <span class="material-symbols-outlined">offline_bolt</span>
                     <span class="text-sm">Données Hors Ligne</span>
                 </a>
+                <a href="interventions.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">healing</span>
+                    <span class="text-sm">Interventions</span>
+                </a>
+                <a href="campagnes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">campaign</span>
+                    <span class="text-sm">Campagnes</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Modèles ML</p>
                 <a href="catalogue-modeles.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -135,6 +143,10 @@
                     <span class="material-symbols-outlined">mic</span>
                     <span class="text-sm">Surveillance Audio</span>
                 </a>
+                <a href="cartographie.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">map</span>
+                    <span class="text-sm">Cartographie</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Rapports & Analyse</p>
                 <a href="generateur-rapports.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -144,6 +156,14 @@
                 <a href="analyse-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="text-sm">Analyse Données</span>
+                </a>
+                <a href="import-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span class="text-sm">Import Données</span>
+                </a>
+                <a href="alertes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">notifications_active</span>
+                    <span class="text-sm">Alertes</span>
                 </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Configuration</p>
@@ -175,6 +195,18 @@
                     <span class="material-symbols-outlined">verified</span>
                     <span class="text-sm">Validation DHIS2</span>
                 </a>
+                <a href="audit-logs.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="text-sm">Journal Audit</span>
+                </a>
+                <a href="parametres-compte.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="text-sm">Paramètres Compte</span>
+                </a>
+                <a href="aide.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="text-sm">Aide</span>
+                </a>
             </nav>
         </aside>
 
@@ -205,9 +237,9 @@
 <h1 class="text-gray-900 dark:text-white text-3xl font-bold leading-tight">Gestion des Sites Sentinelles</h1>
 <p class="text-gray-600 dark:text-[#9dabb9] text-base font-normal leading-normal">Créer, visualiser, modifier et archiver les sites de surveillance.</p>
 </div>
-<button class="flex items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<button id="btn-nouveau-site" class="flex items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
 <span class="material-symbols-outlined text-xl">add</span>
-<span class="truncate">Ajouter un Site</span>
+<span class="truncate">Nouveau Site</span>
 </button>
 </header>
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -320,8 +352,8 @@
 <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Actif</span></td>
 <td class="px-6 py-4 text-right">
 <div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="#"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="#"><span class="material-symbols-outlined text-xl">archive</span></a>
+<a class="font-medium text-primary hover:underline" href="details-site.html?id=1"><span class="material-symbols-outlined text-xl">edit</span></a>
+<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=1&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
 </div>
 </td>
 </tr>
@@ -332,8 +364,8 @@
 <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Actif</span></td>
 <td class="px-6 py-4 text-right">
 <div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="#"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="#"><span class="material-symbols-outlined text-xl">archive</span></a>
+<a class="font-medium text-primary hover:underline" href="details-site.html?id=2"><span class="material-symbols-outlined text-xl">edit</span></a>
+<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=2&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
 </div>
 </td>
 </tr>
@@ -344,8 +376,8 @@
 <td class="px-6 py-4"><span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300">Archivé</span></td>
 <td class="px-6 py-4 text-right">
 <div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="#"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="#"><span class="material-symbols-outlined text-xl">archive</span></a>
+<a class="font-medium text-primary hover:underline" href="details-site.html?id=3"><span class="material-symbols-outlined text-xl">edit</span></a>
+<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=3&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
 </div>
 </td>
 </tr>
@@ -356,8 +388,8 @@
 <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Actif</span></td>
 <td class="px-6 py-4 text-right">
 <div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="#"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="#"><span class="material-symbols-outlined text-xl">archive</span></a>
+<a class="font-medium text-primary hover:underline" href="details-site.html?id=4"><span class="material-symbols-outlined text-xl">edit</span></a>
+<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=4&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
 </div>
 </td>
 </tr>
@@ -368,8 +400,8 @@
 <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Actif</span></td>
 <td class="px-6 py-4 text-right">
 <div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="#"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="#"><span class="material-symbols-outlined text-xl">archive</span></a>
+<a class="font-medium text-primary hover:underline" href="details-site.html?id=5"><span class="material-symbols-outlined text-xl">edit</span></a>
+<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=5&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
 </div>
 </td>
 </tr>
@@ -379,10 +411,10 @@
 <nav aria-label="Table navigation" class="flex items-center flex-wrap md:flex-row justify-between pt-4">
 <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Affichage de <span class="font-semibold text-gray-900 dark:text-white">1-5</span> sur <span class="font-semibold text-gray-900 dark:text-white">100</span></span>
 <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
-<li><a class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="#">Précédent</a></li>
-<li><a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="#">1</a></li>
-<li><a class="flex items-center justify-center px-3 h-8 text-primary border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white" href="#">2</a></li>
-<li><a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="#">Suivant</a></li>
+<li><a class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="?page=prev">Précédent</a></li>
+<li><a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="?page=1">1</a></li>
+<li><a class="flex items-center justify-center px-3 h-8 text-primary border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white" href="?page=2">2</a></li>
+<li><a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="?page=next">Suivant</a></li>
 </ul>
 </nav>
 </div>

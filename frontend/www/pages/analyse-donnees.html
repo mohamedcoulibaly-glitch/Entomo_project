@@ -125,6 +125,14 @@
                     <span class="material-symbols-outlined">offline_bolt</span>
                     <span class="text-sm">Données Hors Ligne</span>
                 </a>
+                <a href="interventions.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">healing</span>
+                    <span class="text-sm">Interventions</span>
+                </a>
+                <a href="campagnes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">campaign</span>
+                    <span class="text-sm">Campagnes</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Modèles ML</p>
                 <a href="catalogue-modeles.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -135,6 +143,10 @@
                     <span class="material-symbols-outlined">mic</span>
                     <span class="text-sm">Surveillance Audio</span>
                 </a>
+                <a href="cartographie.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">map</span>
+                    <span class="text-sm">Cartographie</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Rapports & Analyse</p>
                 <a href="generateur-rapports.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -144,6 +156,14 @@
                 <a href="analyse-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="text-sm">Analyse Données</span>
+                </a>
+                <a href="import-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span class="text-sm">Import Données</span>
+                </a>
+                <a href="alertes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">notifications_active</span>
+                    <span class="text-sm">Alertes</span>
                 </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Configuration</p>
@@ -174,6 +194,18 @@
                 <a href="validation-dhis2.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">verified</span>
                     <span class="text-sm">Validation DHIS2</span>
+                </a>
+                <a href="audit-logs.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="text-sm">Journal Audit</span>
+                </a>
+                <a href="parametres-compte.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="text-sm">Paramètres Compte</span>
+                </a>
+                <a href="aide.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="text-sm">Aide</span>
                 </a>
             </nav>
         </aside>
@@ -208,63 +240,74 @@
 </div>
 <div class="w-full">
 <!-- KPI Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div id="analysis-performance" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
 <h3 class="text-text-light-secondary dark:text-dark-secondary text-sm font-medium">Spécimens Collectés</h3>
-<p class="text-3xl font-bold mt-1">1,234,567</p>
+<p data-analysis-stat="specimens" class="text-3xl font-bold mt-1">—</p>
 <p class="text-xs text-green-500 mt-1">+5.2% ce mois-ci</p>
 </div>
 <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
 <h3 class="text-text-light-secondary dark:text-dark-secondary text-sm font-medium">Précision Globale (Modèle)</h3>
-<p class="text-3xl font-bold mt-1">97.8%</p>
+<p data-analysis-stat="precision" class="text-3xl font-bold mt-1">—</p>
 <p class="text-xs text-text-light-secondary dark:text-dark-secondary mt-1">ResNet50 v1.2</p>
 </div>
 <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
 <h3 class="text-text-light-secondary dark:text-dark-secondary text-sm font-medium">Collectes Réalisées</h3>
-<p class="text-3xl font-bold mt-1">8,912</p>
+<p data-analysis-stat="collectes" class="text-3xl font-bold mt-1">—</p>
 <p class="text-xs text-green-500 mt-1">+120 cette semaine</p>
 </div>
 <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
 <h3 class="text-text-light-secondary dark:text-dark-secondary text-sm font-medium">Zones Couvertes</h3>
-<p class="text-3xl font-bold mt-1">45</p>
+<p data-analysis-stat="zones" class="text-3xl font-bold mt-1">—</p>
 <p class="text-xs text-text-light-secondary dark:text-dark-secondary mt-1">Districts Sanitaires</p>
 </div>
 </div>
 <!-- Tabs -->
 <div class="border-b border-border-light dark:border-border-dark">
 <nav aria-label="Tabs" class="flex space-x-8 -mb-px">
-<a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-primary border-primary" href="#">Analyse des Données Brutes</a>
-<a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-text-light-secondary dark:text-dark-secondary border-transparent hover:text-text-light-primary dark:hover:text-dark-primary hover:border-border-light dark:hover:border-border-dark" href="#">Performance des Modèles</a>
-<a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-text-light-secondary dark:text-dark-secondary border-transparent hover:text-text-light-primary dark:hover:text-dark-primary hover:border-border-light dark:hover:border-border-dark" href="#">Analyse Comparative</a>
+<a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-primary border-primary" href="#analysis-raw">Analyse des Données Brutes</a>
+<a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-text-light-secondary dark:text-dark-secondary border-transparent hover:text-text-light-primary dark:hover:text-dark-primary hover:border-border-dark" href="#analysis-performance">Performance des Modèles</a>
+<a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-text-light-secondary dark:text-dark-secondary border-transparent hover:text-text-light-primary dark:hover:text-dark-primary hover:border-border-dark" href="#analysis-charts">Analyse Comparative</a>
 </nav>
 </div>
 <!-- Tab Content -->
 <div class="pt-8">
 <!-- Raw Data Analysis Tab -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div id="analysis-charts" class="grid grid-cols-1 lg:grid-cols-3 gap-6 scroll-mt-6">
 <!-- Distribution Chart -->
 <div class="lg:col-span-2 bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
 <h3 class="text-lg font-bold mb-4">Distribution des Espèces par Région</h3>
-<div class="h-80 bg-background-light dark:bg-background-dark rounded flex items-center justify-center">
-<img class="w-full h-full object-contain" data-alt="A bar chart showing distribution of mosquito species across different regions, with color-coded bars representing Anopheles, Culex, and Aedes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcct8_J0i1vLg7QxEsSYr5QZbWiAqrw3dtd1cbKj2wg4qAqZQhBTQMEeBZ36HTk_AzW-0EBhfcVi7sQO2b3h_i_QjOW1K5fsf-dvpkBxESnFU0V-c04OgSc0utYXjw_ik1qkDVxXlS1epnsksE26n3ZxZacqBhVrKu2aHmE6VQ1jpMQQUqGcFpcwiiM8C0gWjA124DmwVPH7k0CGIrlQa2xXZA2xE9KAqgy4nYk8jV4aByt3dHJd1DE3d_3Vk8e5j3gBJDadPPFg"/>
+<div data-chart class="h-80 bg-background-light dark:bg-background-dark rounded flex items-center justify-center p-4">
+<p class="text-text-light-secondary dark:text-dark-secondary text-sm">Chargement du graphique…</p>
 </div>
 </div>
 <!-- Heatmap -->
 <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
 <h3 class="text-lg font-bold mb-4">Densité Géographique</h3>
-<div class="h-80 bg-background-light dark:bg-background-dark rounded flex items-center justify-center">
-<img class="w-full h-full object-contain" data-alt="A choropleth map of Senegal showing varying color intensities to represent mosquito population density in different administrative regions." data-location="Senegal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCO37R-cbNynQalB-EcoXWkvAWPP60dFS2iGJpqUupUklUjxn8VV7zb2x3OXu-4jRs4JAEgcecwADyPcllWeC3JsGWG2Wa-mM0k4O8flKDhSqdUP7cLylyjTeufxk-z-igHY7_ptstCrtdtWOYFF8vMm4sErQ3qRYrrrViw7E3xpaxIpjR49K0s7AvSUMWRGKVMNgrZAJKPzdlwI__c0zSWnBb3bPhhymcU2WG4RhcJmB-T959TkAvmos7OsDGSY5mD8ZeHeRUOEw"/>
+<div id="analysis-sites-chart" class="h-80 bg-background-light dark:bg-background-dark rounded flex items-center justify-center p-4">
+<p class="text-text-light-secondary dark:text-dark-secondary text-sm">Chargement de la carte…</p>
 </div>
 </div>
 </div>
 <!-- Data Table -->
-<div class="mt-8 bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
-<div class="flex justify-between items-center mb-4">
+<div id="analysis-raw" class="mt-8 bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark scroll-mt-6">
+<div class="flex flex-wrap justify-between items-center gap-3 mb-4">
 <h3 class="text-lg font-bold">Données Brutes Anonymisées</h3>
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-light-secondary dark:text-dark-secondary">search</span>
-<input class="pl-10 w-64 rounded border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Rechercher..." type="text"/>
+<input id="analysis-search" class="pl-10 w-64 rounded border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Espèce, méthode, notes..." type="search"/>
 </div>
+</div>
+<div class="mb-5 grid gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-800/60 sm:grid-cols-2 lg:grid-cols-5">
+<label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Site
+<select id="analysis-site" class="mt-1 w-full rounded-lg border-gray-300 bg-white text-sm dark:border-gray-600 dark:bg-gray-800"><option value="">Tous les sites</option></select></label>
+<label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Statut
+<select id="analysis-status" class="mt-1 w-full rounded-lg border-gray-300 bg-white text-sm dark:border-gray-600 dark:bg-gray-800"><option value="">Tous les statuts</option><option value="a_valider">À valider</option><option value="valide">Validé</option><option value="corrige">Corrigé</option><option value="rejete">Rejeté</option></select></label>
+<label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Du
+<input id="analysis-date-start" type="date" class="mt-1 w-full rounded-lg border-gray-300 bg-white text-sm dark:border-gray-600 dark:bg-gray-800"/></label>
+<label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Au
+<input id="analysis-date-end" type="date" class="mt-1 w-full rounded-lg border-gray-300 bg-white text-sm dark:border-gray-600 dark:bg-gray-800"/></label>
+<div class="flex items-end gap-2"><button id="analysis-reset" type="button" class="h-10 flex-1 rounded-lg border border-gray-300 bg-white px-3 text-sm font-semibold hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700">Réinitialiser</button><button id="analysis-export" type="button" class="h-10 rounded-lg bg-primary px-3 text-sm font-bold text-white"><span class="material-symbols-outlined align-middle text-base">download</span> CSV</button></div>
 </div>
 <div class="overflow-x-auto">
 <table class="w-full text-left text-sm">
@@ -278,48 +321,15 @@
 <th class="px-6 py-3" scope="col">Confiance</th>
 </tr>
 </thead>
-<tbody>
-<tr class="border-b border-border-light dark:border-border-dark">
-<td class="px-6 py-4">SN-DK-24-00123</td>
-<td class="px-6 py-4">2024-08-15</td>
-<td class="px-6 py-4">Dakar</td>
-<td class="px-6 py-4">Anopheles gambiae</td>
-<td class="px-6 py-4">Piège lumineux CDC</td>
-<td class="px-6 py-4"><span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">99.2%</span></td>
-</tr>
-<tr class="border-b border-border-light dark:border-border-dark">
-<td class="px-6 py-4">SN-TH-24-00456</td>
-<td class="px-6 py-4">2024-08-14</td>
-<td class="px-6 py-4">Thiès</td>
-<td class="px-6 py-4">Culex quinquefasciatus</td>
-<td class="px-6 py-4">Pulvérisation intra-domiciliaire</td>
-<td class="px-6 py-4"><span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">98.5%</span></td>
-</tr>
-<tr class="border-b border-border-light dark:border-border-dark">
-<td class="px-6 py-4">SN-SL-24-00789</td>
-<td class="px-6 py-4">2024-08-14</td>
-<td class="px-6 py-4">Saint-Louis</td>
-<td class="px-6 py-4">Aedes aegypti</td>
-<td class="px-6 py-4">Piège lumineux CDC</td>
-<td class="px-6 py-4"><span class="bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">85.1%</span></td>
-</tr>
-<tr class="border-b border-border-light dark:border-border-dark">
-<td class="px-6 py-4">SN-DK-24-00124</td>
-<td class="px-6 py-4">2024-08-13</td>
-<td class="px-6 py-4">Dakar</td>
-<td class="px-6 py-4">Anopheles gambiae</td>
-<td class="px-6 py-4">Capture sur appât humain</td>
-<td class="px-6 py-4"><span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">99.8%</span></td>
-</tr>
-</tbody>
+<tbody></tbody>
 </table>
 </div>
 <nav aria-label="Table navigation" class="flex items-center justify-between pt-4">
 <span class="text-sm font-normal text-text-light-secondary dark:text-dark-secondary">Affichage <span class="font-semibold">1-4</span> sur <span class="font-semibold">1000</span></span>
 <ul class="inline-flex -space-x-px text-sm h-8">
-<li><a class="flex items-center justify-center px-3 h-8 ml-0 leading-tight border rounded-l-lg bg-card-light dark:bg-card-dark border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark" href="#">Précédent</a></li>
-<li><a class="flex items-center justify-center px-3 h-8 leading-tight border bg-card-light dark:bg-card-dark border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark" href="#">1</a></li>
-<li><a class="flex items-center justify-center px-3 h-8 leading-tight border rounded-r-lg bg-card-light dark:bg-card-dark border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark" href="#">Suivant</a></li>
+<li><button type="button" data-analysis-page="prev" class="flex items-center justify-center px-3 h-8 ml-0 leading-tight border rounded-l-lg bg-card-light dark:bg-card-dark border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark">Précédent</button></li>
+<li><span class="flex items-center justify-center px-3 h-8 leading-tight border bg-card-light dark:bg-card-dark border-border-light dark:border-border-dark">1</span></li>
+<li><button type="button" data-analysis-page="next" class="flex items-center justify-center px-3 h-8 leading-tight border rounded-r-lg bg-card-light dark:bg-card-dark border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark">Suivant</button></li>
 </ul>
 </nav>
 </div>

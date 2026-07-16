@@ -12,7 +12,7 @@ class SiteActiviteBase(BaseModel):
 
 
 class SiteActiviteCreate(SiteActiviteBase):
-    site_id: int
+    site_id: Optional[int] = None
 
 
 class SiteActiviteResponse(BaseSchema, SiteActiviteBase):
@@ -29,6 +29,8 @@ class SiteSentinelleBase(BaseModel):
     description: Optional[str] = None
     zone_type: Optional[str] = None
     type_environnement: Optional[str] = None
+    type_zone: Optional[str] = None
+    environnement: Optional[str] = None
     responsable: Optional[str] = None
     contact: Optional[str] = None
     actif: bool = True
@@ -48,6 +50,8 @@ class SiteSentinelleUpdate(BaseModel):
     description: Optional[str] = None
     zone_type: Optional[str] = None
     type_environnement: Optional[str] = None
+    type_zone: Optional[str] = None
+    environnement: Optional[str] = None
     responsable: Optional[str] = None
     contact: Optional[str] = None
     actif: Optional[bool] = None

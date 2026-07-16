@@ -3,6 +3,68 @@
  * Ento-App Afrique
  */
 
+// ─── Route Guard — Vérification d'authentification ─────────────────────────
+(function() {
+  const PUBLIC_PAGES = ['index.html', 'login.html', '404.html', 'aide.html'];
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+  if (PUBLIC_PAGES.includes(currentPage) || currentPage === '') return;
+
+  document.addEventListener('DOMContentLoaded', async function guardCheck() {
+    if (!Auth.isLoggedIn()) {
+      redirectToLogin();
+      return;
+    }
+    try {
+      const user = await apiRequest('GET', '/auth/me', null, false, { silent: true });
+      if (!user || !user.id) {
+        Auth.logout();
+        redirectToLogin();
+        return;
+      }
+      localStorage.setItem('entomo_user', JSON.stringify(user));
+    } catch (err) {
+      Auth.logout();
+      redirectToLogin();
+    }
+  });
+
+  function redirectToLogin() {
+    const currentPath = window.location.pathname.replace(/^\/+/, '');
+    if (currentPath && currentPath !== 'login.html' && currentPath !== '') {
+      sessionStorage.setItem('redirect_after_login', '/' + currentPath);
+    }
+    // Redirige vers le chemin absolu /login.html servi par FastAPI
+    window.location.href = '/login.html';
+  }
+})();
+
+// ─── Fonctions utilitaires de référence ─────────────────────────────────────
+async function loadReferenceData(category) {
+  try {
+    const data = await apiRequest('GET', `/reference/${category}`, null, false, { silent: true });
+    if (data && data.length > 0) return data;
+    // Fallback aux données statiques si disponibles
+    if (typeof REFERENCE_DATA_STATIC !== 'undefined' && REFERENCE_DATA_STATIC[category]) {
+      return REFERENCE_DATA_STATIC[category];
+    }
+    return [];
+  } catch {
+    if (typeof REFERENCE_DATA_STATIC !== 'undefined' && REFERENCE_DATA_STATIC[category]) {
+      return REFERENCE_DATA_STATIC[category];
+    }
+    return [];
+  }
+}
+
+async function populateSelect(selectId, category, defaultOption = 'Tous') {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  const items = await loadReferenceData(category);
+  select.innerHTML = `<option value="">${defaultOption}</option>`
+    + items.map(i => `<option value="${i.code || i.label}">${i.label}</option>`).join('');
+}
+
 // ─── Thème Dark / Light ─────────────────────────────────────────────────────
 function initTheme() {
   const toggle = document.getElementById('theme-toggle');
@@ -139,7 +201,8 @@ function initSessionHeader() {
   })();
 
   // Avatar cliquable → menu profil
-  const avatar = document.querySelector('header [style*="background-image"]') ||
+  const avatar = document.getElementById('header-avatar') ||
+                 document.querySelector('header [style*="background-image"]') ||
                  document.querySelector('header .rounded-full');
   if (avatar) {
     avatar.style.cursor = 'pointer';
@@ -153,8 +216,10 @@ function initSessionHeader() {
   // Afficher initiales si connecté
   if (user && avatar) {
     const initials = (user.full_name || user.username || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-    // Superposer les initiales si l'avatar est un div bg-image
-    if (!avatar.querySelector('.avatar-initials')) {
+    if (avatar.id === 'header-avatar') {
+      avatar.textContent = initials;
+    } else if (!avatar.querySelector('.avatar-initials')) {
+      // Superposer les initiales si l'avatar est un div bg-image (ancien style)
       const span = document.createElement('div');
       span.className = 'avatar-initials w-full h-full rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-bold';
       span.textContent = initials;
@@ -200,13 +265,10 @@ function showSessionMenu(anchor, user) {
   menu.querySelector('#sm-logout')?.addEventListener('click', () => {
     localStorage.removeItem('entomo_token');
     localStorage.removeItem('entomo_user');
+    sessionStorage.removeItem('redirect_after_login');
     menu.remove();
     pushNotification('Déconnecté avec succès.', 'info');
-    setTimeout(() => {
-      const depth = window.location.pathname.split('/').filter(Boolean).length;
-      const base  = depth > 1 ? '../'.repeat(depth - 1) : './';
-      window.location.href = base + 'index.html';
-    }, 1000);
+    setTimeout(() => { window.location.href = '/login.html'; }, 800);
   });
 
   menu.querySelector('#sm-login')?.addEventListener('click', () => {
@@ -216,28 +278,14 @@ function showSessionMenu(anchor, user) {
 
   menu.querySelector('#sm-profile')?.addEventListener('click', () => {
     menu.remove();
-    openModal('Mon profil',
-      `<div class="space-y-3 text-sm">
-        <div class="flex items-center gap-4 mb-4">
-          <div class="w-14 h-14 rounded-full bg-brand-primary text-white flex items-center justify-center text-xl font-bold">
-            ${(user?.full_name || user?.username || '?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
-          </div>
-          <div>
-            <p class="font-bold text-[#111418] dark:text-white">${user?.full_name || user?.username}</p>
-            <p class="text-gray-500">${user?.email || ''}</p>
-          </div>
-        </div>
-        <div><span class="text-gray-500">Rôle :</span> <strong>${user?.role || 'N/A'}</strong></div>
-        <div><span class="text-gray-500">Région :</span> <strong>${user?.region || 'N/A'}</strong></div>
-      </div>`,
-      { confirmLabel: 'Fermer', cancelLabel: '' }
-    );
+    const depth = window.location.pathname.split('/').filter(p => p.endsWith('.html')).length;
+    window.location.href = depth > 0 ? 'profil.html' : 'pages/profil.html';
   });
 
   menu.querySelector('#sm-settings')?.addEventListener('click', () => {
     menu.remove();
     const depth = window.location.pathname.split('/').filter(p => p.endsWith('.html')).length;
-    window.location.href = depth > 0 ? 'param-sync.html' : 'pages/param-sync.html';
+    window.location.href = depth > 0 ? 'parametres-compte.html' : 'pages/parametres-compte.html';
   });
 
   document.addEventListener('click', () => menu.remove(), { once: true });
@@ -396,9 +444,22 @@ function openModal(title, bodyHTML, { onConfirm, confirmLabel = 'Confirmer', con
 
   modal.querySelector('#modal-close').addEventListener('click', closeModal);
   modal.querySelector('#modal-cancel').addEventListener('click', closeModal);
-  modal.querySelector('#modal-confirm').addEventListener('click', () => {
-    if (onConfirm) onConfirm();
-    closeModal();
+  modal.querySelector('#modal-confirm').addEventListener('click', async () => {
+    const confirmButton = modal.querySelector('#modal-confirm');
+    confirmButton.disabled = true;
+    confirmButton.classList.add('opacity-60', 'cursor-wait');
+    try {
+      const result = onConfirm ? await onConfirm() : true;
+      if (result !== false) closeModal();
+    } catch (error) {
+      console.error('[modal] action failed:', error);
+      pushNotification(error?.message || "L'action n'a pas pu être terminée.", 'error');
+    } finally {
+      if (document.body.contains(confirmButton)) {
+        confirmButton.disabled = false;
+        confirmButton.classList.remove('opacity-60', 'cursor-wait');
+      }
+    }
   });
 
   modal.addEventListener('click', e => {
@@ -531,12 +592,49 @@ function hideLoader() {
   document.getElementById('global-loader')?.remove();
 }
 
+// ─── Loader sur bouton (anti-double-clic) ────────────────────────────────────
+function buttonLoading(btn, loading = true) {
+  if (!btn) return;
+  if (loading) {
+    btn._origHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="material-symbols-outlined inline-block animate-spin text-base mr-1">refresh</span> Chargement...`;
+  } else {
+    btn.disabled = false;
+    if (btn._origHtml) btn.innerHTML = btn._origHtml;
+  }
+}
+
+// ─── Charger des données API dans un tableau HTML ────────────────────────────
+async function loadTableFromApi(tbodySelector, apiFn, rowRenderer, onEmpty = null) {
+  const tbody = document.querySelector(tbodySelector);
+  if (!tbody) return;
+  showLoader();
+  try {
+    const data = await apiFn();
+    hideLoader();
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="99" class="text-center py-10 text-gray-400">
+        <span class="material-symbols-outlined text-4xl block mb-2">inbox</span>
+        ${onEmpty || 'Aucune donnée disponible'}</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map(rowRenderer).join('');
+  } catch (err) {
+    hideLoader();
+    tbody.innerHTML = `<tr><td colspan="99" class="text-center py-10 text-red-400">
+      <span class="material-symbols-outlined text-4xl block mb-2">error</span>
+      Erreur lors du chargement des données</td></tr>`;
+  }
+}
+
 // ─── Pagination client-side ──────────────────────────────────────────────────
 function initPagination(tbodySelector, pageSize = 10) {
   const tbody = document.querySelector(tbodySelector);
   if (!tbody) return;
 
-  const paginationEl = document.querySelector('[aria-label="Pagination"]')?.closest('.flex');
+  const paginationRoot = document.querySelector('[aria-label="Pagination"], [aria-label="Table navigation"]');
+  const paginationEl = paginationRoot?.closest('.flex') || paginationRoot;
   if (!paginationEl) return;
 
   let currentPage = 1;
@@ -561,18 +659,28 @@ function initPagination(tbodySelector, pageSize = 10) {
     }
 
     // Reconstruire les boutons de page
-    const nav = paginationEl.querySelector('nav[aria-label="Pagination"]');
+    const nav = paginationEl.querySelector('nav[aria-label="Pagination"], [aria-label="Table navigation"]') || paginationEl;
     if (nav) {
-      const prevBtn = nav.querySelector('a:first-child');
-      const nextBtn = nav.querySelector('a:last-child');
+      const links = Array.from(nav.querySelectorAll('a[href], button[data-page]'));
+      const prevBtn = links[0];
+      const nextBtn = links[links.length - 1];
       if (prevBtn) {
         prevBtn.onclick = e => { e.preventDefault(); if (currentPage > 1) { currentPage--; render(); } };
-        prevBtn.classList.toggle('opacity-40 pointer-events-none', currentPage === 1);
+        prevBtn.classList.toggle('opacity-40', currentPage === 1);
+        prevBtn.classList.toggle('pointer-events-none', currentPage === 1);
       }
       if (nextBtn) {
         nextBtn.onclick = e => { e.preventDefault(); if (currentPage < pages) { currentPage++; render(); } };
-        nextBtn.classList.toggle('opacity-40 pointer-events-none', currentPage === pages);
+        nextBtn.classList.toggle('opacity-40', currentPage === pages);
+        nextBtn.classList.toggle('pointer-events-none', currentPage === pages);
       }
+      links.slice(1, -1).forEach(link => {
+        const page = Number(link.textContent.trim());
+        if (!Number.isInteger(page)) return;
+        link.onclick = event => { event.preventDefault(); currentPage = Math.min(pages, Math.max(1, page)); render(); };
+        link.classList.toggle('bg-brand-primary', page === currentPage);
+        link.classList.toggle('text-white', page === currentPage);
+      });
     }
   }
 
@@ -611,6 +719,19 @@ function initEntryAnimations() {
   });
 }
 
+// ─── Lanceur global de l'application ───────────────────────────────────────
+function initAppLauncher() {
+  if (window.location.pathname.includes('login.html') || window.location.pathname.includes('centre-application.html')) return;
+  if (document.getElementById('app-launcher')) return;
+  const launcher = document.createElement('a');
+  launcher.id = 'app-launcher';
+  launcher.href = '/pages/centre-application.html';
+  launcher.title = "Ouvrir le centre de l'application";
+  launcher.className = 'fixed bottom-5 right-5 z-[9990] inline-flex items-center gap-2 rounded-full bg-brand-primary px-4 py-3 text-sm font-bold text-white shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-brand-primary/30';
+  launcher.innerHTML = '<span class="material-symbols-outlined text-xl">apps</span><span class="hidden sm:inline">Tous les écrans</span>';
+  document.body.appendChild(launcher);
+}
+
 // ─── Initialisation globale ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
@@ -620,4 +741,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initTooltips();
   initEntryAnimations();
   initSessionHeader();
+  initAppLauncher();
 });

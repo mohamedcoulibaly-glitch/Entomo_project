@@ -1,4 +1,5 @@
 from typing import Optional
+from datetime import datetime
 from pydantic import BaseModel, EmailStr, ConfigDict
 from app.schemas.base import BaseSchema
 
@@ -19,6 +20,7 @@ class UserBase(BaseModel):
     telephone: Optional[str] = None
     is_active: bool = True
     role_id: Optional[int] = None
+    last_login: Optional[datetime] = None
 
 
 class UserCreate(UserBase):

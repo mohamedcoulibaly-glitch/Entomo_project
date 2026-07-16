@@ -66,6 +66,17 @@ def captures_par_espece(
     return [{"espece": r.espece, "count": r.count} for r in results]
 
 
+@router.get("/interventions-stats")
+def interventions_stats(db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
+    from app.models.intervention import Intervention
+    from sqlalchemy import func
+    total = db.query(Intervention).count()
+    planifiees = db.query(Intervention).filter(Intervention.statut == "planifiee").count()
+    en_cours = db.query(Intervention).filter(Intervention.statut == "en_cours").count()
+    realisees = db.query(Intervention).filter(Intervention.statut == "realisee").count()
+    return {"total": total, "planifiees": planifiees, "en_cours": en_cours, "realisees": realisees}
+
+
 @router.get("/captures-par-site")
 def captures_par_site(
     db: Session = Depends(get_db),

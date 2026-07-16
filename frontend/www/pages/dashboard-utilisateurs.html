@@ -125,6 +125,14 @@
                     <span class="material-symbols-outlined">offline_bolt</span>
                     <span class="text-sm">Données Hors Ligne</span>
                 </a>
+                <a href="interventions.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">healing</span>
+                    <span class="text-sm">Interventions</span>
+                </a>
+                <a href="campagnes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">campaign</span>
+                    <span class="text-sm">Campagnes</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Modèles ML</p>
                 <a href="catalogue-modeles.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -135,6 +143,10 @@
                     <span class="material-symbols-outlined">mic</span>
                     <span class="text-sm">Surveillance Audio</span>
                 </a>
+                <a href="cartographie.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">map</span>
+                    <span class="text-sm">Cartographie</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Rapports & Analyse</p>
                 <a href="generateur-rapports.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -144,6 +156,14 @@
                 <a href="analyse-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="text-sm">Analyse Données</span>
+                </a>
+                <a href="import-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span class="text-sm">Import Données</span>
+                </a>
+                <a href="alertes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">notifications_active</span>
+                    <span class="text-sm">Alertes</span>
                 </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Configuration</p>
@@ -174,6 +194,18 @@
                 <a href="validation-dhis2.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">verified</span>
                     <span class="text-sm">Validation DHIS2</span>
+                </a>
+                <a href="audit-logs.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="text-sm">Journal Audit</span>
+                </a>
+                <a href="parametres-compte.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="text-sm">Paramètres Compte</span>
+                </a>
+                <a href="aide.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="text-sm">Aide</span>
                 </a>
             </nav>
         </aside>
@@ -208,51 +240,54 @@
 </div>
 </div>
 <!-- Stats -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8" id="stats-grid">
 <div class="flex flex-col gap-2 rounded-xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Connexions réussies (24h)</p>
-<p class="text-[#111418] dark:text-white tracking-light text-3xl font-bold leading-tight">1,204</p>
-<p class="text-green-600 text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+5.2%</p>
-</div>
-<div class="flex flex-col gap-2 rounded-xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Connexions échouées (24h)</p>
-<p class="text-[#111418] dark:text-white tracking-light text-3xl font-bold leading-tight">12</p>
-<p class="text-yellow-600 text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+1.8%</p>
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Total Utilisateurs</p>
+<p class="text-[#111418] dark:text-white tracking-light text-3xl font-bold leading-tight" data-stat="total_users">--</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm" data-stat="total_users_hint">Chargement...</p>
 </div>
 <div class="flex flex-col gap-2 rounded-xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Total actions (24h)</p>
-<p class="text-[#111418] dark:text-white tracking-light text-3xl font-bold leading-tight">5,678</p>
-<p class="text-green-600 text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">arrow_upward</span>+8.1%</p>
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Utilisateurs Actifs</p>
+<p class="text-green-600 tracking-light text-3xl font-bold leading-tight" data-stat="active_users">--</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm" data-stat="active_users_hint"></p>
 </div>
 <div class="flex flex-col gap-2 rounded-xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Alertes actives</p>
-<p class="text-red-500 tracking-light text-3xl font-bold leading-tight">3</p>
-<p class="text-gray-500 dark:text-gray-400 text-base font-medium leading-normal flex items-center gap-1"><span class="material-symbols-outlined text-lg">horizontal_rule</span>stable</p>
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Nouveaux ce mois</p>
+<p class="text-brand-primary tracking-light text-3xl font-bold leading-tight" data-stat="new_this_month">--</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm" data-stat="new_this_month_hint"></p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+<p class="text-[#111418] dark:text-gray-300 text-base font-medium leading-normal">Connectés récemment</p>
+<p class="text-yellow-600 tracking-light text-3xl font-bold leading-tight" data-stat="recently_connected">--</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm" data-stat="recently_connected_hint">dernières 24h</p>
 </div>
 </div>
-<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
-<!-- SectionHeader & ToolBar -->
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl mb-8">
+<!-- Search & Filters -->
 <div class="flex flex-wrap justify-between items-center gap-4 p-4 border-b border-gray-200 dark:border-gray-700">
 <h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Journal d'activité</h3>
-<div class="flex items-center gap-2">
-<button class="p-2 rounded-lg text-[#617589] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-<span class="material-symbols-outlined">calendar_today</span>
-</button>
-<button class="p-2 rounded-lg text-[#617589] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-<span class="material-symbols-outlined">person</span>
-</button>
-<button class="p-2 rounded-lg text-[#617589] dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-<span class="material-symbols-outlined">filter_list</span>
-</button>
-<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-primary text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4">
-<span class="material-symbols-outlined fill text-lg">download</span>
-<span class="truncate">Exporter en CSV</span>
+<div class="flex items-center gap-2 flex-wrap">
+<input type="search" id="search-activity" placeholder="Rechercher..."
+  class="h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 w-48 focus:outline-none focus:ring-2 focus:ring-brand-primary" />
+<select id="filter-action-type" class="h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-2">
+  <option value="toutes">Toutes actions</option>
+  <option value="connexion">Connexion</option>
+  <option value="creation">Création</option>
+  <option value="modification">Modification</option>
+  <option value="suppression">Suppression</option>
+  <option value="export">Export</option>
+  <option value="validation">Validation</option>
+  <option value="echec">Échec</option>
+</select>
+<button id="btn-export-csv" class="flex items-center justify-center rounded-lg h-9 bg-primary text-white gap-1.5 text-sm font-bold px-3">
+<span class="material-symbols-outlined fill text-base">download</span>
+<span class="truncate hidden sm:inline">Exporter CSV</span>
 </button>
 </div>
 </div>
 <!-- Data Table -->
 <div class="overflow-x-auto">
-<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="activity-table">
 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 <tr>
 <th class="px-6 py-3" scope="col">Horodatage</th>
@@ -262,74 +297,69 @@
 <th class="px-6 py-3" scope="col">Adresse IP</th>
 </tr>
 </thead>
-<tbody>
-<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 14:32</td>
-<td class="px-6 py-4">Dr. A. Fall</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-2 text-green-700 dark:text-green-400">
-<span class="material-symbols-outlined text-base">check_circle</span>Validation
-                                            </span>
-</td>
-<td class="px-6 py-4">ID Spécimen: SEN-DAK-2023-10-10-045</td>
-<td class="px-6 py-4">208.80.152.201</td>
-</tr>
-<tr class="bg-gray-50/50 dark:bg-gray-900/50 border-b dark:border-gray-700">
-<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 14:28</td>
-<td class="px-6 py-4">admin@sante.sn</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-2 text-blue-700 dark:text-blue-400">
-<span class="material-symbols-outlined text-base">download</span>Export
-                                            </span>
-</td>
-<td class="px-6 py-4">Export mensuel - District de Thiès</td>
-<td class="px-6 py-4">192.158.1.38</td>
-</tr>
-<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 14:25</td>
-<td class="px-6 py-4">user.test</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
-<span class="material-symbols-outlined text-base">warning</span>Échec Connexion
-                                            </span>
-</td>
-<td class="px-6 py-4">Tentative depuis IP: 192.168.1.10</td>
-<td class="px-6 py-4">192.168.1.10</td>
-</tr>
-<tr class="bg-gray-50/50 dark:bg-gray-900/50 border-b dark:border-gray-700">
-<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 13:55</td>
-<td class="px-6 py-4">Dr. B. Gaye</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-2 text-blue-700 dark:text-blue-400">
-<span class="material-symbols-outlined text-base">add_circle</span>Création
-                                            </span>
-</td>
-<td class="px-6 py-4">Nouvel utilisateur: t.diop</td>
-<td class="px-6 py-4">208.80.152.201</td>
-</tr>
-<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-<td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">10/10/2023 13:12</td>
-<td class="px-6 py-4">Dr. A. Fall</td>
-<td class="px-6 py-4">
-<span class="inline-flex items-center gap-2 text-red-700 dark:text-red-400">
-<span class="material-symbols-outlined text-base">cancel</span>Suppression
-                                            </span>
-</td>
-<td class="px-6 py-4">Spécimen supprimé: SEN-DAK-2023-10-09-012</td>
-<td class="px-6 py-4">208.80.152.201</td>
-</tr>
+<tbody id="activity-tbody">
+<tr><td colspan="5" class="text-center py-10 text-gray-400"><span class="material-symbols-outlined text-4xl block mb-2 animate-spin">progress_activity</span>Chargement...</td></tr>
 </tbody>
 </table>
 </div>
 <!-- Pagination -->
-<div class="flex justify-between items-center p-4">
-<span class="text-sm text-gray-700 dark:text-gray-400">
-                                Affichage de <span class="font-semibold text-gray-900 dark:text-white">1</span>-<span class="font-semibold text-gray-900 dark:text-white">5</span> sur <span class="font-semibold text-gray-900 dark:text-white">100</span>
-</span>
-<div class="inline-flex -space-x-px text-sm h-8">
-<a class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="#">Précédent</a>
-<a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="#">Suivant</a>
+<div class="flex justify-between items-center p-4" id="pagination-bar">
+<span class="text-sm text-gray-700 dark:text-gray-400" id="pagination-info">Chargement...</span>
+<nav aria-label="Pagination" class="inline-flex -space-x-px text-sm h-8" id="pagination-controls">
+<a class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer" id="btn-prev">Précédent</a>
+<a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer" id="btn-next">Suivant</a>
+</nav>
 </div>
+</div>
+
+<!-- Charts & Additional Sections -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+<!-- Role Distribution Chart -->
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] mb-4">Répartition par rôle</h3>
+<div class="relative" style="height:260px">
+  <canvas id="role-chart"></canvas>
+  <div id="role-chart-empty" class="absolute inset-0 flex items-center justify-center text-gray-400 text-sm hidden">Aucune donnée</div>
+</div>
+</div>
+<!-- Activity Timeline -->
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] mb-4">Activité récente</h3>
+<div id="activity-timeline" class="space-y-3 max-h-[260px] overflow-y-auto">
+  <div class="text-center text-gray-400 text-sm py-6"><span class="material-symbols-outlined text-3xl block mb-2 animate-spin">progress_activity</span>Chargement...</div>
+</div>
+</div>
+</div>
+
+<!-- User List (compact) -->
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl">
+<div class="flex flex-wrap justify-between items-center gap-4 p-4 border-b border-gray-200 dark:border-gray-700">
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Liste des utilisateurs</h3>
+<input type="search" id="search-users" placeholder="Rechercher un utilisateur..."
+  class="h-9 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 w-56 focus:outline-none focus:ring-2 focus:ring-brand-primary" />
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="users-table">
+<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+<tr>
+<th class="px-6 py-3" scope="col">Utilisateur</th>
+<th class="px-6 py-3" scope="col">Rôle</th>
+<th class="px-6 py-3" scope="col">Statut</th>
+<th class="px-6 py-3" scope="col">Dernière connexion</th>
+<th class="px-6 py-3" scope="col"></th>
+</tr>
+</thead>
+<tbody id="users-tbody">
+<tr><td colspan="5" class="text-center py-10 text-gray-400"><span class="material-symbols-outlined text-4xl block mb-2 animate-spin">progress_activity</span>Chargement...</td></tr>
+</tbody>
+</table>
+</div>
+<div class="flex justify-between items-center p-4" id="users-pagination-bar">
+<span class="text-sm text-gray-700 dark:text-gray-400" id="users-pagination-info"></span>
+<nav aria-label="Pagination" class="inline-flex -space-x-px text-sm h-8" id="users-pagination-controls">
+<a class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer" id="users-btn-prev">Précédent</a>
+<a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer" id="users-btn-next">Suivant</a>
+</nav>
 </div>
 </div>
 </div>

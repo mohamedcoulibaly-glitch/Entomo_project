@@ -12,7 +12,7 @@ class DHIS2MappingBase(BaseModel):
 
 
 class DHIS2MappingCreate(DHIS2MappingBase):
-    config_id: int
+    config_id: Optional[int] = None
 
 
 class DHIS2MappingResponse(BaseSchema, DHIS2MappingBase):

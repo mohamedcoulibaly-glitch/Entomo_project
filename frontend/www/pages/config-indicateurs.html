@@ -125,6 +125,14 @@
                     <span class="material-symbols-outlined">offline_bolt</span>
                     <span class="text-sm">Données Hors Ligne</span>
                 </a>
+                <a href="interventions.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">healing</span>
+                    <span class="text-sm">Interventions</span>
+                </a>
+                <a href="campagnes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">campaign</span>
+                    <span class="text-sm">Campagnes</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Modèles ML</p>
                 <a href="catalogue-modeles.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -135,6 +143,10 @@
                     <span class="material-symbols-outlined">mic</span>
                     <span class="text-sm">Surveillance Audio</span>
                 </a>
+                <a href="cartographie.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">map</span>
+                    <span class="text-sm">Cartographie</span>
+                </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Rapports & Analyse</p>
                 <a href="generateur-rapports.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
@@ -144,6 +156,14 @@
                 <a href="analyse-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
                     <span class="material-symbols-outlined">analytics</span>
                     <span class="text-sm">Analyse Données</span>
+                </a>
+                <a href="import-donnees.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    <span class="text-sm">Import Données</span>
+                </a>
+                <a href="alertes.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">notifications_active</span>
+                    <span class="text-sm">Alertes</span>
                 </a>
 
                 <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-4 mb-2">Configuration</p>
@@ -175,6 +195,18 @@
                     <span class="material-symbols-outlined">verified</span>
                     <span class="text-sm">Validation DHIS2</span>
                 </a>
+                <a href="audit-logs.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">history</span>
+                    <span class="text-sm">Journal Audit</span>
+                </a>
+                <a href="parametres-compte.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="text-sm">Paramètres Compte</span>
+                </a>
+                <a href="aide.html" class="nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                    <span class="material-symbols-outlined">help</span>
+                    <span class="text-sm">Aide</span>
+                </a>
             </nav>
         </aside>
 
@@ -199,178 +231,139 @@
             </header>
 
             <div class="flex-1 px-4 sm:px-6 lg:px-10 py-8 overflow-y-auto">
-<div class="col-span-12">
-<!-- PageHeading -->
-<div class="flex flex-wrap justify-between gap-3">
-<div class="flex min-w-72 flex-col gap-2">
-<p class="text-[#111418] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Configuration des Indicateurs OMS</p>
-<p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">Mapper les sources de données, définir les formules de calcul et gérer les seuils d'alerte.</p>
-</div>
-</div>
-</div>
-<!-- Left Column: Indicator List -->
-<div class="col-span-12 lg:col-span-3">
-<div class="bg-white dark:bg-background-dark/50 rounded-xl border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
-<!-- SearchBar -->
-<label class="flex flex-col min-w-40 h-12 w-full">
-<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
-<div class="text-[#617589] flex bg-[#f0f2f4] dark:bg-gray-700 items-center justify-center pl-4 rounded-l-lg border-r-0">
-<span class="material-symbols-outlined">search</span>
-</div>
-<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-0 border-none bg-[#f0f2f4] dark:bg-gray-700 focus:border-none h-full placeholder:text-[#617589] dark:placeholder:text-gray-400 px-4 pl-2 text-sm font-normal leading-normal" placeholder="Filtrer les indicateurs..." value=""/>
-</div>
-</label>
-<div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-700 mt-4 overflow-y-auto">
-<!-- ListItem Active -->
-<div class="flex items-center gap-4 bg-primary/10 dark:bg-primary/20 px-4 min-h-[72px] py-2 cursor-pointer border-l-4 border-primary">
-<div class="flex items-center gap-4">
-<div class="text-success flex items-center justify-center rounded-lg bg-success/20 shrink-0 size-12">
-<span class="material-symbols-outlined">check_circle</span>
-</div>
-<div class="flex flex-col justify-center">
-<p class="text-[#111418] dark:text-white text-base font-medium leading-normal line-clamp-1">Taux de piqûres humaines</p>
-<p class="text-success text-sm font-normal leading-normal line-clamp-2">Configuré</p>
-</div>
-</div>
-</div>
-<!-- ListItem Draft -->
-<div class="flex items-center gap-4 bg-white dark:bg-transparent px-4 min-h-[72px] py-2 justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50">
-<div class="flex items-center gap-4">
-<div class="text-warning flex items-center justify-center rounded-lg bg-warning/20 shrink-0 size-12">
-<span class="material-symbols-outlined">edit</span>
-</div>
-<div class="flex flex-col justify-center">
-<p class="text-[#111418] dark:text-white text-base font-medium leading-normal line-clamp-1">Densité anophélienne</p>
-<p class="text-warning text-sm font-normal leading-normal line-clamp-2">Brouillon</p>
-</div>
-</div>
-<div class="shrink-0 text-gray-400">
-<span class="material-symbols-outlined">chevron_right</span>
-</div>
-</div>
-<!-- ListItem Not Configured -->
-<div class="flex items-center gap-4 bg-white dark:bg-transparent px-4 min-h-[72px] py-2 justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50">
-<div class="flex items-center gap-4">
-<div class="text-gray-500 flex items-center justify-center rounded-lg bg-gray-200 dark:bg-gray-700 shrink-0 size-12">
-<span class="material-symbols-outlined">pending</span>
-</div>
-<div class="flex flex-col justify-center">
-<p class="text-[#111418] dark:text-white text-base font-medium leading-normal line-clamp-1">Taux de sporzoïtes</p>
-<p class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal line-clamp-2">Non configuré</p>
-</div>
-</div>
-<div class="shrink-0 text-gray-400">
-<span class="material-symbols-outlined">chevron_right</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Center Column: Configuration Panel -->
-<div class="col-span-12 lg:col-span-6">
-<div class="bg-white dark:bg-background-dark/50 rounded-xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col gap-8 h-full">
-<div>
-<h2 class="text-2xl font-bold text-[#111418] dark:text-white">Taux de piqûres humaines (HBR)</h2>
-<p class="text-[#617589] dark:text-gray-400 mt-1">Nombre moyen de piqûres reçues par une personne en une nuit, dans un lieu donné.</p>
-</div>
-<!-- Data Mapping Section -->
-<div class="flex flex-col gap-4">
-<h3 class="text-lg font-semibold text-[#111418] dark:text-white flex items-center gap-2">Mappage des Données Sources <span class="material-symbols-outlined text-base text-gray-400" title="Sélectionnez les données brutes qui seront utilisées dans le calcul.">info</span></h3>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<div>
-<label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="numerator">Numérateur</label>
-<select class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" id="numerator" name="numerator">
-<option>Nb. moustiques capturés (An. gambiae)</option>
-<option>Nb. moustiques capturés (An. funestus)</option>
-</select>
-</div>
-<div>
-<label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="denominator">Dénominateur</label>
-<select class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" id="denominator" name="denominator">
-<option>Nb. de nuits de capture</option>
-<option>Nb. de personnes-nuit</option>
-</select>
-</div>
-</div>
-</div>
-<!-- Formula Builder Section -->
-<div class="flex flex-col gap-4">
-<h3 class="text-lg font-semibold text-[#111418] dark:text-white">Formule de Calcul</h3>
-<div class="relative">
-<input class="w-full bg-gray-100 dark:bg-gray-700 rounded-md border-gray-300 dark:border-gray-600 font-mono text-sm p-3 focus:ring-primary focus:border-primary" placeholder="ex: ( [Donnée A] / [Donnée B] ) * 100" type="text" value="([Numérateur] / [Dénominateur]) * 1"/>
-<div class="absolute inset-y-0 right-0 pr-3 flex items-center text-success">
-<span class="material-symbols-outlined">verified</span>
-</div>
-</div>
-</div>
-<!-- Alert Thresholds Section -->
-<div class="flex flex-col gap-4">
-<h3 class="text-lg font-semibold text-[#111418] dark:text-white">Seuils d'Alerte</h3>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
-<div class="flex flex-col gap-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300">Bas (&lt;)</label>
-<input class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" type="number" value="10"/>
-</div>
-<div class="flex flex-col gap-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300">Moyen (&lt;)</label>
-<input class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" type="number" value="50"/>
-</div>
-<div class="flex flex-col gap-1">
-<label class="text-sm font-medium text-gray-700 dark:text-gray-300">Élevé (≥)</label>
-<input class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" type="number" value="50"/>
-</div>
-</div>
-</div>
-<!-- Action Bar -->
-<div class="mt-auto pt-6 border-t border-gray-200 dark:border-gray-700 flex justify-end items-center gap-3">
-<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-[#111418] dark:text-white text-sm font-bold">Annuler</button>
-<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold">Enregistrer</button>
-</div>
-</div>
-</div>
-<!-- Right Column: Preview Panel -->
-<div class="col-span-12 lg:col-span-3">
-<div class="bg-white dark:bg-background-dark/50 rounded-xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col gap-6 sticky top-8">
-<h3 class="text-lg font-semibold text-[#111418] dark:text-white">Prévisualisation</h3>
-<div class="text-center flex flex-col items-center gap-2">
-<p class="text-sm text-[#617589] dark:text-gray-400">Valeur simulée</p>
-<p class="text-5xl font-bold text-warning">27.5</p>
-<p class="text-xs text-[#617589] dark:text-gray-400">piqûres/personne/nuit</p>
-</div>
-<div class="w-full">
-<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-<div class="bg-gradient-to-r from-success via-warning to-danger h-2.5 rounded-full" style="width: 100%"></div>
-</div>
-<div class="relative w-full h-4 mt-1">
-<div class="absolute h-full text-center" style="left: 20%;">
-<div class="w-px h-2 bg-gray-400"></div>
-<span class="text-xs text-gray-500">10</span>
-</div>
-<div class="absolute h-full text-center" style="left: 100%; transform: translateX(-50%);">
-<div class="w-px h-2 bg-gray-400"></div>
-<span class="text-xs text-gray-500">50</span>
-</div>
-<!-- Indicator needle -->
-<div class="absolute top-0 h-3 w-3 rounded-full bg-gray-800 dark:bg-white border-2 border-white dark:border-gray-800" style="left: calc(27.5% * (50 / 50)); transform: translateX(-50%);"></div>
-</div>
-<div class="flex justify-between text-xs mt-2">
-<span class="text-success font-medium">Bas</span>
-<span class="text-warning font-medium">Moyen</span>
-<span class="text-danger font-medium">Élevé</span>
-</div>
-</div>
-<div class="mt-4 flex flex-col gap-2 p-3 bg-primary/10 rounded-lg">
-<div class="flex items-center justify-between">
-<span class="text-sm font-medium text-primary dark:text-primary/90">Notifications</span>
-<label class="relative inline-flex items-center cursor-pointer">
-<input checked="" class="sr-only peer" type="checkbox" value=""/>
-<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-</label>
-</div>
-<p class="text-xs text-primary/80 dark:text-primary/70">Les alertes seront envoyées lorsque la valeur calculée dépasse un seuil.</p>
-</div>
-</div>
-</div>
+                <div class="grid grid-cols-12 gap-6">
+                    <div class="col-span-12">
+                        <!-- PageHeading -->
+                        <div class="flex flex-wrap justify-between gap-3">
+                            <div class="flex min-w-72 flex-col gap-2">
+                                <p class="text-[#111418] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Configuration des Indicateurs OMS</p>
+                                <p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">Mapper les sources de données, définir les formules de calcul et gérer les seuils d'alerte.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Left Column: Indicator List -->
+                    <div class="col-span-12 lg:col-span-3">
+                        <div class="bg-white dark:bg-background-dark/50 rounded-xl border border-gray-200 dark:border-gray-700 p-4 h-full flex flex-col">
+                            <!-- SearchBar -->
+                            <label class="flex flex-col min-w-40 h-12 w-full">
+                                <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                                    <div class="text-[#617589] flex bg-[#f0f2f4] dark:bg-gray-700 items-center justify-center pl-4 rounded-l-lg border-r-0">
+                                        <span class="material-symbols-outlined">search</span>
+                                    </div>
+                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-0 border-none bg-[#f0f2f4] dark:bg-gray-700 focus:border-none h-full placeholder:text-[#617589] dark:placeholder:text-gray-400 px-4 pl-2 text-sm font-normal leading-normal" placeholder="Filtrer les indicateurs..." value=""/>
+                                </div>
+                            </label>
+                            <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-700 mt-4 overflow-y-auto">
+                                <!-- Rempli dynamiquement par config-indicateurs.js -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Center Column: Configuration Panel -->
+                    <div class="col-span-12 lg:col-span-6" data-config-panel>
+                        <div class="bg-white dark:bg-background-dark/50 rounded-xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col gap-8 h-full">
+                            <div>
+                                <h2 class="text-2xl font-bold text-[#111418] dark:text-white" id="ind-nom">Taux de piqûres humaines (HBR)</h2>
+                                <p class="text-[#617589] dark:text-gray-400 mt-1" id="ind-desc">Nombre moyen de piqûres reçues par une personne en une nuit, dans un lieu donné.</p>
+                            </div>
+                            <!-- Data Mapping Section -->
+                            <div class="flex flex-col gap-4">
+                                <h3 class="text-lg font-semibold text-[#111418] dark:text-white flex items-center gap-2">Mappage des Données Sources <span class="material-symbols-outlined text-base text-gray-400" title="Sélectionnez les données brutes qui seront utilisées dans le calcul.">info</span></h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="numerator">Numérateur</label>
+                                        <select class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" id="numerator" name="numerator">
+                                            <option>Nb. moustiques capturés (An. gambiae)</option>
+                                            <option>Nb. moustiques capturés (An. funestus)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="denominator">Dénominateur</label>
+                                        <select class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" id="denominator" name="denominator">
+                                            <option>Nb. de nuits de capture</option>
+                                            <option>Nb. de personnes-nuit</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Formula Builder Section -->
+                            <div class="flex flex-col gap-4">
+                                <h3 class="text-lg font-semibold text-[#111418] dark:text-white">Formule de Calcul</h3>
+                                <div class="relative">
+                                    <input id="ind-formule" class="w-full bg-gray-100 dark:bg-gray-700 rounded-md border-gray-300 dark:border-gray-600 font-mono text-sm p-3 focus:ring-primary focus:border-primary" placeholder="ex: ( [Donnée A] / [Donnée B] ) * 100" type="text" value="([Numérateur] / [Dénominateur]) * 1"/>
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-success">
+                                        <span class="material-symbols-outlined">verified</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Alert Thresholds Section -->
+                            <div class="flex flex-col gap-4">
+                                <h3 class="text-lg font-semibold text-[#111418] dark:text-white">Seuils d'Alerte</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                                    <div class="flex flex-col gap-1">
+                                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Bas (&lt;)</label>
+                                        <input id="seuil-bas" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" type="number" value="10"/>
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Moyen (&lt;)</label>
+                                        <input id="seuil-moyen" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" type="number" value="50"/>
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Élevé (≥)</label>
+                                        <input id="seuil-eleve" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" type="number" value="50"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Action Bar -->
+                            <div class="mt-auto pt-6 border-t border-gray-200 dark:border-gray-700 flex justify-end items-center gap-3">
+                                <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-[#111418] dark:text-white text-sm font-bold">Annuler</button>
+                                <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold">Enregistrer</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Column: Preview Panel -->
+                    <div class="col-span-12 lg:col-span-3">
+                        <div class="bg-white dark:bg-background-dark/50 rounded-xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col gap-6 sticky top-8">
+                            <h3 class="text-lg font-semibold text-[#111418] dark:text-white">Prévisualisation</h3>
+                            <div class="text-center flex flex-col items-center gap-2">
+                                <p class="text-sm text-[#617589] dark:text-gray-400">Valeur simulée</p>
+                                <p class="text-5xl font-bold text-warning" data-preview-value>27.5</p>
+                                <p class="text-xs text-[#617589] dark:text-gray-400">piqûres/personne/nuit</p>
+                            </div>
+                            <div class="w-full">
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                    <div class="bg-gradient-to-r from-success via-warning to-danger h-2.5 rounded-full" style="width: 100%"></div>
+                                </div>
+                                <div class="relative w-full h-4 mt-1">
+                                    <div class="absolute h-full text-center" style="left: 20%;">
+                                        <div class="w-px h-2 bg-gray-400"></div>
+                                        <span class="text-xs text-gray-500">10</span>
+                                    </div>
+                                    <div class="absolute h-full text-center" style="left: 100%; transform: translateX(-50%);">
+                                        <div class="w-px h-2 bg-gray-400"></div>
+                                        <span class="text-xs text-gray-500">50</span>
+                                    </div>
+                                    <!-- Indicator needle -->
+                                    <div data-preview-needle class="absolute top-0 h-3 w-3 rounded-full bg-gray-800 dark:bg-white border-2 border-white dark:border-gray-800" style="left: calc(27.5% * (50 / 50)); transform: translateX(-50%);"></div>
+                                </div>
+                                <div class="flex justify-between text-xs mt-2">
+                                    <span class="text-success font-medium">Bas</span>
+                                    <span class="text-warning font-medium">Moyen</span>
+                                    <span class="text-danger font-medium">Élevé</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex flex-col gap-2 p-3 bg-primary/10 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-primary dark:text-primary/90">Notifications</span>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input id="notif-toggle" checked="" class="sr-only peer" type="checkbox" value=""/>
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                                <p class="text-xs text-primary/80 dark:text-primary/70">Les alertes seront envoyées lorsque la valeur calculée dépasse un seuil.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -379,6 +372,7 @@
     <script src="../js/api.js"></script>
     <script src="../js/core.js"></script>
     <script src="../js/pages-generiques.js"></script>
+    <script src="../js/config-indicateurs.js"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

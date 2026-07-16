@@ -12,6 +12,7 @@ class Rapport(BaseModel):
     contenu = Column(Text)
     chemin_fichier = Column(String(500))
     format_fichier = Column(String(20))         # pdf, xlsx, csv
+    statut = Column(String(50), default="brouillon")  # brouillon, en_cours, pret, genere, erreur
     utilisateur_id = Column(Integer, ForeignKey("users.id"))
     date_generation = Column(DateTime)
     periode_debut = Column(DateTime)

@@ -7,11 +7,38 @@
  * - dashboard-sync-dhis2, dashboard-utilisateurs, dashboard-entomo-region5
  */
 document.addEventListener('DOMContentLoaded', () => {
+  const hasDedicatedScript = fileName => Array.from(document.scripts).some(script => (script.src || '').endsWith(`/js/${fileName}`));
+
+  // Les actions principales ouvrent désormais de vraies pages de formulaire.
+  const creationRoutes = [
+    ['#btn-nouvelle-capture', 'nouvelle-capture.html'],
+    ['#btn-nouveau-site', 'nouveau-site.html'],
+    ['#btn-nouvelle-campagne', 'nouvelle-campagne.html'],
+    ['#btn-nouvelle-intervention', 'nouvelle-intervention.html'],
+  ];
+  creationRoutes.forEach(([selector, href]) => {
+    document.querySelector(selector)?.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      window.location.href = href;
+    });
+  });
+  document.querySelectorAll('button').forEach(button => {
+    const text = button.textContent.trim().toLowerCase();
+    const href = text.includes('ajouter un utilisateur') ? 'nouvel-utilisateur.html'
+      : text.includes('nouveau jeu de données') ? 'nouveau-dataset.html' : null;
+    if (!href) return;
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      window.location.href = href;
+    });
+  });
 
   // ═══════════════════════════════════════════════════════════════════════════
   // VALIDATION DHIS2
   // ═══════════════════════════════════════════════════════════════════════════
-  if (document.title.includes('Validation') || window.location.pathname.includes('validation')) {
+  if ((document.title.includes('Validation') || window.location.pathname.includes('validation')) && !hasDedicatedScript('validation-dhis2.js')) {
     document.querySelectorAll('button').forEach(btn => {
       const text = btn.textContent.trim();
 
@@ -83,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // STATUT SYNCHRONISATION
   // ═══════════════════════════════════════════════════════════════════════════
-  if (window.location.pathname.includes('statut-sync') || document.title.includes('Statut')) {
+  if ((window.location.pathname.includes('statut-sync') || document.title.includes('Statut')) && !hasDedicatedScript('statut-sync.js')) {
     // Barre de progression globale animée
     document.querySelectorAll('[class*="h-3"][class*="rounded-full"], [class*="h-2"][class*="rounded-full"]').forEach(container => {
       const bar = container.querySelector('div');
@@ -99,17 +126,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Boutons Forcer sync
     document.querySelectorAll('button').forEach(btn => {
       if (btn.textContent.trim().includes('Forcer') || btn.textContent.trim().includes('Relancer')) {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
           showLoader();
-          setTimeout(() => {
-            hideLoader();
-            pushNotification('Synchronisation forcée démarrée.', 'info');
-            // Simuler une barre qui se remplit
-            document.querySelectorAll('[class*="h-3"] div, [class*="h-2"] div').forEach(bar => {
-              bar.style.transition = 'width 3s ease';
-              bar.style.width = '100%';
-            });
-          }, 1500);
+          try {
+            const res = await apiDhis2.sync(1);
+            if (res) {
+              pushNotification('Synchronisation déclenchée.', 'success');
+              document.querySelectorAll('[class*="h-3"] div, [class*="h-2"] div').forEach(bar => {
+                bar.style.transition = 'width 3s ease';
+                bar.style.width = '100%';
+              });
+            }
+          } catch (err) { pushNotification('Erreur lors de la synchronisation.', 'error'); }
+          hideLoader();
         });
       }
     });
@@ -118,16 +147,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // PARAMÈTRES DE SYNCHRONISATION
   // ═══════════════════════════════════════════════════════════════════════════
-  if (window.location.pathname.includes('param-sync') || document.title.includes('Synchronisation')) {
+  if ((window.location.pathname.includes('param-sync') || document.title.includes('Synchronisation')) && !hasDedicatedScript('param-sync.js')) {
     const saveButtons = document.querySelectorAll('button');
     saveButtons.forEach(btn => {
       if (btn.textContent.includes('Sauvegarder') || btn.textContent.includes('Appliquer')) {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
           showLoader();
-          setTimeout(() => {
-            hideLoader();
+          try {
+            const dhis2Config = await apiDhis2.getConfig();
+            const configId = dhis2Config?.[0]?.id || 1;
+            const freq = document.getElementById('auto_sync_freq')?.value || '30';
+            await apiDhis2.updateConfig(configId, { periode: freq });
             pushNotification('Paramètres de synchronisation sauvegardés.', 'success');
-          }, 1000);
+          } catch (err) { pushNotification('Erreur lors de la sauvegarde.', 'error'); }
+          hideLoader();
         });
       }
     });
@@ -147,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // PARAMÈTRES LINGUISTIQUES
   // ═══════════════════════════════════════════════════════════════════════════
-  if (window.location.pathname.includes('param-langues') || document.title.includes('Langue')) {
+  if ((window.location.pathname.includes('param-langues') || document.title.includes('Langue')) && !hasDedicatedScript('param-langues.js')) {
     document.querySelectorAll('[class*="rounded"][class*="p-"] input[type="radio"]').forEach(radio => {
       radio.addEventListener('change', () => {
         const lang = radio.closest('label')?.textContent?.trim().split('\n')[0] || radio.value;
@@ -155,15 +188,22 @@ document.addEventListener('DOMContentLoaded', () => {
           card.classList.remove('ring-2', 'ring-brand-primary', 'bg-brand-primary/5');
         });
         radio.closest('[class*="rounded"][class*="p-"]')?.classList.add('ring-2', 'ring-brand-primary', 'bg-brand-primary/5');
-        pushNotification(`Langue sélectionnée : ${lang}`, 'info');
       });
     });
 
     document.querySelectorAll('button').forEach(btn => {
       if (btn.textContent.includes('Appliquer') || btn.textContent.includes('Sauvegarder')) {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
           showLoader();
-          setTimeout(() => { hideLoader(); pushNotification('Langue mise à jour.', 'success'); }, 800);
+          try {
+            const selected = document.querySelector('input[type="radio"]:checked');
+            const lang = selected?.value || 'fr';
+            const langues = await apiRequest('GET', '/langues');
+            const target = langues?.find(l => l.code === lang);
+            if (target) await apiRequest('PUT', `/langues/${target.id}`, { active: true });
+            pushNotification('Langue mise à jour.', 'success');
+          } catch (err) { pushNotification('Erreur.', 'error'); }
+          hideLoader();
         });
       }
     });
@@ -172,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // ANALYSE DE DONNÉES
   // ═══════════════════════════════════════════════════════════════════════════
-  if (window.location.pathname.includes('analyse') || document.title.includes('Analyse')) {
+  if ((window.location.pathname.includes('analyse') || document.title.includes('Analyse')) && !hasDedicatedScript('analyse-donnees.js')) {
     // Onglets de visualisation
     const tabs = document.querySelectorAll('[role="tab"], [class*="tab"]');
     const panels = document.querySelectorAll('[role="tabpanel"], [class*="tab-panel"]');
@@ -193,9 +233,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Boutons d'export
     document.querySelectorAll('button').forEach(btn => {
       if (btn.textContent.includes('Exporter') || btn.textContent.includes('Télécharger')) {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
           showLoader();
-          setTimeout(() => { hideLoader(); pushNotification('Données exportées avec succès.', 'success'); }, 1500);
+          try {
+            const captures = await apiCaptures.list({ limit: 5000 });
+            const sites = await apiSites.list({ limit: 500 });
+            const blob = new Blob([JSON.stringify({ captures, sites, exportDate: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `export-entomo-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            pushNotification('Données exportées avec succès.', 'success');
+          } catch (err) { pushNotification('Erreur lors de l\'export.', 'error'); }
+          hideLoader();
         });
       }
     });
@@ -204,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // CONFIG INDICATEURS & MODÈLES RISQUE
   // ═══════════════════════════════════════════════════════════════════════════
-  if (window.location.pathname.includes('config-indicateurs') || window.location.pathname.includes('config-modeles')) {
+  if ((window.location.pathname.includes('config-indicateurs') || window.location.pathname.includes('config-modeles')) && !hasDedicatedScript('config-indicateurs.js') && !hasDedicatedScript('config-modeles-risque.js')) {
     // Drag & drop pour ordonner les indicateurs
     let dragging = null;
     document.querySelectorAll('[draggable="true"]').forEach(item => {
@@ -230,15 +282,15 @@ document.addEventListener('DOMContentLoaded', () => {
             `<div class="space-y-3 text-sm">
               <div>
                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nom de l'indicateur *</label>
-                <input type="text" placeholder="ex: Taux d'infection" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
+                <input id="ind-nom" type="text" placeholder="ex: Taux d'infection" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
               </div>
               <div>
                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Formule / Source</label>
-                <input type="text" placeholder="ex: captures_positives / total_captures * 100" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 font-mono text-xs"/>
+                <input id="ind-formule" type="text" placeholder="ex: captures_positives / total_captures * 100" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 font-mono text-xs"/>
               </div>
               <div>
                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Unité</label>
-                <select class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3">
+                <select id="ind-unite" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3">
                   <option>%</option><option>moustiques/nuit</option><option>nombre</option><option>km²</option>
                 </select>
               </div>
@@ -246,16 +298,35 @@ document.addEventListener('DOMContentLoaded', () => {
             {
               confirmLabel: 'Ajouter',
               confirmClass: 'bg-brand-primary text-white',
-              onConfirm: () => pushNotification('Indicateur ajouté.', 'success'),
+              onConfirm: async () => {
+                const nom = document.getElementById('ind-nom')?.value?.trim();
+                if (!nom) { pushNotification('Nom requis.', 'warning'); return; }
+                try {
+                  const res = await apiRequest('POST', '/indicateurs/', {
+                    nom,
+                    formule: document.getElementById('ind-formule')?.value?.trim() || '',
+                    unite: document.getElementById('ind-unite')?.value || '%',
+                  });
+                  if (res) pushNotification('Indicateur ajouté.', 'success');
+                } catch (err) { pushNotification('Erreur.', 'error'); }
+              },
             }
           );
         });
       }
 
       if (btn.textContent.includes('Sauvegarder') || btn.textContent.includes('Enregistrer')) {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
           showLoader();
-          setTimeout(() => { hideLoader(); pushNotification('Configuration sauvegardée.', 'success'); }, 900);
+          try {
+            const inds = document.querySelectorAll('[data-indicateur-id]');
+            for (const el of inds) {
+              const id = el.dataset.indicateurId;
+              if (id) await apiRequest('PUT', `/indicateurs/${id}`, { statut: 'configure' });
+            }
+            pushNotification('Configuration sauvegardée.', 'success');
+          } catch (err) { pushNotification('Erreur.', 'error'); }
+          hideLoader();
         });
       }
     });
@@ -264,29 +335,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // GESTION HORS LIGNE
   // ═══════════════════════════════════════════════════════════════════════════
-  if (window.location.pathname.includes('hors-ligne') || document.title.includes('Hors ligne')) {
+  if ((window.location.pathname.includes('hors-ligne') || document.title.includes('Hors ligne')) && !hasDedicatedScript('gestion-hors-ligne.js')) {
     document.querySelectorAll('button').forEach(btn => {
       const text = btn.textContent.trim();
 
       if (text.includes('Synchroniser') || text.includes('Envoyer')) {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
           showLoader();
-          setTimeout(() => {
-            hideLoader();
-            pushNotification('Données hors ligne synchronisées avec succès.', 'success');
-            document.querySelectorAll('[class*="rounded-full"][class*="bg-yellow"]').forEach(badge => {
-              badge.classList.remove('bg-yellow-100','text-yellow-800');
-              badge.classList.add('bg-green-100','text-green-800');
-              badge.textContent = 'Synchronisé';
-            });
-          }, 2500);
+          try {
+            const res = await apiDhis2.sync(1);
+            if (res) {
+              pushNotification('Données hors ligne synchronisées avec succès.', 'success');
+              document.querySelectorAll('[class*="rounded-full"][class*="bg-yellow"]').forEach(badge => {
+                badge.classList.remove('bg-yellow-100','text-yellow-800');
+                badge.classList.add('bg-green-100','text-green-800');
+                badge.textContent = 'Synchronisé';
+              });
+            }
+          } catch (err) { pushNotification('Erreur lors de la synchronisation.', 'error'); }
+          hideLoader();
         });
       }
 
       if (text.includes('Supprimer données locales') || text.includes('Effacer cache')) {
         btn.addEventListener('click', () => {
-          confirmDelete('toutes les données hors ligne', () => {
-            pushNotification('Cache local effacé.', 'warning');
+          confirmDelete('toutes les données hors ligne', async () => {
+            try {
+              const res = await apiRequest('DELETE', '/sync/cache');
+              if (res) pushNotification('Cache local effacé.', 'warning');
+            } catch (err) { pushNotification('Erreur.', 'error'); }
           });
         });
       }
@@ -296,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // GESTION MODÈLES VISUELS
   // ═══════════════════════════════════════════════════════════════════════════
-  if (window.location.pathname.includes('modeles-visuels') || document.title.includes('Modèles Visuels')) {
+  if ((window.location.pathname.includes('modeles-visuels') || document.title.includes('Modèles Visuels')) && !hasDedicatedScript('gestion-modeles-visuels.js')) {
     // Lightbox pour les aperçus d'images
     document.querySelectorAll('img[class*="rounded"], [class*="aspect"][class*="bg-cover"]').forEach(img => {
       img.style.cursor = 'zoom-in';
@@ -340,9 +417,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const icon = btn.querySelector('.material-symbols-outlined');
         if (icon) {
           icon.classList.add('animate-spin');
-          setTimeout(() => icon.classList.remove('animate-spin'), 1500);
+          setTimeout(() => icon.classList.remove('animate-spin'), 1000);
         }
-        pushNotification('Données actualisées.', 'success');
+        location.reload();
       });
     }
 
@@ -370,8 +447,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ═══════════════════════════════════════════════════════════════════════════
   // FORMULAIRES — Validation universelle
   // ═══════════════════════════════════════════════════════════════════════════
-  document.querySelectorAll('form').forEach(form => {
-    form.addEventListener('submit', e => {
+  document.querySelectorAll('form.generic-submit-form').forEach(form => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       const required = form.querySelectorAll('[required]');
       let valid = true;
@@ -393,7 +470,14 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (valid) {
         showLoader();
-        setTimeout(() => { hideLoader(); pushNotification('Formulaire soumis avec succès.', 'success'); }, 1200);
+        const formData = new FormData(form);
+        const action = form.action || window.location.pathname;
+        try {
+          const obj = Object.fromEntries(formData.entries());
+          await apiRequest('POST', '/indicateurs/', obj);
+          pushNotification('Formulaire soumis avec succès.', 'success');
+        } catch (err) { pushNotification('Erreur lors de l\'envoi.', 'error'); }
+        hideLoader();
       }
     });
   });

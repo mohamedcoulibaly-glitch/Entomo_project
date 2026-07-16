@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from app.schemas.base import BaseSchema
 
 
@@ -34,6 +34,11 @@ class MLModelUpdate(BaseModel):
     actif: Optional[bool] = None
     deploye: Optional[bool] = None
     contexte_deploiement: Optional[str] = None
+    type_modele: Optional[str] = None
+    architecture: Optional[str] = None
+    chemin: Optional[str] = None
+    taille_mb: Optional[float] = None
+    dataset_id: Optional[int] = None
 
 
 class MLModelResponse(BaseSchema, MLModelBase):
@@ -77,13 +82,23 @@ class ModelPipelineBase(BaseModel):
     type_pipeline: Optional[str] = None
     statut: str = "en_attente"
     ml_model_id: Optional[int] = None
-    progression: int = 0
+    progression: int = Field(default=0, ge=0, le=100)
     logs: Optional[str] = None
     utilisateur_id: Optional[int] = None
 
 
 class ModelPipelineCreate(ModelPipelineBase):
     pass
+
+
+class ModelPipelineUpdate(BaseModel):
+    nom: Optional[str] = None
+    type_pipeline: Optional[str] = None
+    statut: Optional[str] = None
+    ml_model_id: Optional[int] = None
+    progression: Optional[int] = Field(default=None, ge=0, le=100)
+    logs: Optional[str] = None
+    utilisateur_id: Optional[int] = None
 
 
 class ModelPipelineResponse(BaseSchema, ModelPipelineBase):

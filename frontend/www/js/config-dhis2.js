@@ -1,180 +1,155 @@
-/**
- * config-dhis2.js
- * Configuration intégration DHIS2 — comportements interactifs + API backend
- */
 document.addEventListener('DOMContentLoaded', async () => {
+  let currentConfig = null;
 
-  // ── Charger la config depuis l'API ───────────────────────────────────────────
-  async function loadConfig() {
-    if (typeof apiDhis2 === 'undefined') return;
-    const config = await apiDhis2.getConfig();
-    if (!config) return;
-    const map = { 'dhis2-url': config.url, 'dhis2-version': config.api_version,
-                  'dhis2-user': config.username, 'dhis2-org-unit': config.org_unit };
-    Object.entries(map).forEach(([id, val]) => {
-      const el = document.getElementById(id) || document.querySelector(`[name="${id}"]`) || document.querySelector(`input[placeholder*="${id}"]`);
-      if (el && val) el.value = val;
+  const fields = {
+    url: document.getElementById('dhis2-url'),
+    username: document.getElementById('dhis2-user'),
+    password: document.getElementById('dhis2-password'),
+    periode: document.getElementById('dhis2-periode'),
+    actif: document.getElementById('dhis2-active'),
+  };
+
+  function collectConfig() {
+    return {
+      url: fields.url?.value.trim() || '',
+      username: fields.username?.value.trim() || null,
+      password: fields.password?.value || undefined,
+      periode: fields.periode?.value || 'hebdomadaire',
+      actif: fields.actif?.checked !== false,
+    };
+  }
+
+  function validateConfig(data, creating = false) {
+    if (!data.url || !/^https?:\/\//i.test(data.url)) {
+      pushNotification('Saisissez une URL DHIS2 valide (http:// ou https://).', 'warning');
+      fields.url?.focus();
+      return false;
+    }
+    if (creating && !data.password) {
+      pushNotification('Le mot de passe ou token est requis pour la première configuration.', 'warning');
+      fields.password?.focus();
+      return false;
+    }
+    return true;
+  }
+
+  function renderConnectionStatus(ok, message) {
+    const target = document.getElementById('dhis2-connection-status');
+    if (!target) return;
+    target.innerHTML = `<span class="material-symbols-outlined ${ok ? 'text-green-500' : 'text-yellow-500'}">${ok ? 'check_circle' : 'pending'}</span>
+      <p class="${ok ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'} text-sm font-medium">${message}</p>`;
+  }
+
+  function renderMappings(items = []) {
+    const body = document.getElementById('dhis2-mappings-body');
+    if (!body) return;
+    if (!items.length) {
+      body.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-sm text-gray-500">Aucune règle de mappage enregistrée.</td></tr>';
+      return;
+    }
+    body.innerHTML = items.map(item => `
+      <tr class="border-b border-gray-200 dark:border-gray-700" data-id="${item.id}">
+        <td class="p-3 text-[#111418] dark:text-white font-medium">${item.indicateur_local}</td>
+        <td class="p-3 text-sm text-[#111418] dark:text-white">${item.element_dhis2}<span class="ml-2 text-xs text-gray-400">${item.type_donnee || ''}</span></td>
+        <td class="p-3 text-center"><button type="button" class="btn-delete-mapping text-gray-400 hover:text-red-500" title="Supprimer la règle"><span class="material-symbols-outlined text-xl">delete</span></button></td>
+      </tr>`).join('');
+    body.querySelectorAll('.btn-delete-mapping').forEach(button => {
+      button.addEventListener('click', () => {
+        const row = button.closest('tr');
+        const mappingId = Number(row?.dataset.id);
+        confirmDelete('cette règle de mappage', async () => {
+          await apiDhis2.deleteMapping(mappingId);
+          currentConfig.mappings = currentConfig.mappings.filter(item => item.id !== mappingId);
+          renderMappings(currentConfig.mappings);
+          pushNotification('Règle de mappage supprimée.', 'success');
+        });
+      });
     });
   }
 
-  loadConfig();
-
-  // ── Test de connexion ────────────────────────────────────────────────────────
-  document.querySelectorAll('button').forEach(btn => {
-    const text = btn.textContent.trim();
-
-    if (text.includes('Tester') || text.includes('Test de connexion')) {
-      btn.addEventListener('click', async () => {
-        const originalContent = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-base">refresh</span> Test en cours...`;
-
-        let success = false;
-        if (typeof apiDhis2 !== 'undefined') {
-          const res = await apiDhis2.testConnection();
-          success = !!(res && res.success);
-        } else {
-          await new Promise(r => setTimeout(r, 2000));
-          success = Math.random() > 0.3;
-        }
-
-        btn.disabled = false;
-        btn.innerHTML = originalContent;
-          if (success) {
-            openModal('✅ Connexion réussie',
-              `<div class="space-y-3 text-sm">
-                <div class="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                  <span class="material-symbols-outlined text-brand-success text-3xl">check_circle</span>
-                  <div>
-                    <p class="font-bold text-green-700 dark:text-green-300">Connexion DHIS2 établie</p>
-                    <p class="text-gray-500 dark:text-gray-400">Version DHIS2: 2.39.1</p>
-                  </div>
-                </div>
-                <div class="grid grid-cols-2 gap-2 text-xs">
-                  <div class="p-2 bg-gray-50 dark:bg-gray-700 rounded"><p class="text-gray-500">Latence</p><strong>127 ms</strong></div>
-                  <div class="p-2 bg-gray-50 dark:bg-gray-700 rounded"><p class="text-gray-500">Organisation Units</p><strong>14</strong></div>
-                </div>
-              </div>`,
-              { confirmLabel: 'OK', cancelLabel: '', onConfirm: () => pushNotification('DHIS2 connecté avec succès !', 'success') }
-            );
-          } else {
-            openModal('❌ Échec de connexion',
-              `<div class="flex items-start gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                <span class="material-symbols-outlined text-red-500 text-3xl">error</span>
-                <div>
-                  <p class="font-bold text-red-700 dark:text-red-300">Impossible de se connecter</p>
-                  <p class="text-sm text-gray-500 mt-1">Vérifiez l'URL du serveur, les identifiants et que le serveur DHIS2 est accessible.</p>
-                  <p class="text-xs text-gray-400 mt-2 font-mono">Error: ECONNREFUSED 192.168.1.100:8080</p>
-                </div>
-              </div>`,
-              { confirmLabel: 'Vérifier la config', cancelLabel: 'Fermer',
-                onConfirm: () => document.querySelector('input[type="url"], input[placeholder*="http"]')?.focus() }
-            );
-          }
-      });
+  async function loadConfig() {
+    const configs = await apiDhis2.getConfig();
+    currentConfig = Array.isArray(configs) ? configs[0] : configs;
+    if (!currentConfig) {
+      renderConnectionStatus(false, 'Configuration non enregistrée');
+      renderMappings([]);
+      return;
     }
+    fields.url.value = currentConfig.url || '';
+    fields.username.value = currentConfig.username || '';
+    fields.periode.value = currentConfig.periode || 'hebdomadaire';
+    fields.actif.checked = currentConfig.actif !== false;
+    renderConnectionStatus(currentConfig.actif !== false, currentConfig.actif !== false ? 'Configuration active' : 'Configuration désactivée');
+    renderMappings(currentConfig.mappings || []);
+  }
 
-    if (text.includes('Sauvegarder') || text.includes('Enregistrer')) {
-      btn.addEventListener('click', async () => {
-        const data = {};
-        document.querySelectorAll('input, select').forEach(el => {
-          if (el.name || el.id) data[el.name || el.id] = el.value;
+  async function saveConfig(button) {
+    const data = collectConfig();
+    if (!validateConfig(data, !currentConfig)) return null;
+    if (currentConfig && !data.password) delete data.password;
+    buttonLoading(button, true);
+    try {
+      currentConfig = currentConfig
+        ? await apiDhis2.updateConfig(currentConfig.id, data)
+        : await apiDhis2.saveConfig(data);
+      fields.password.value = '';
+      renderMappings(currentConfig.mappings || []);
+      renderConnectionStatus(true, 'Configuration sauvegardée');
+      pushNotification('Configuration DHIS2 sauvegardée dans la base de données.', 'success');
+      return currentConfig;
+    } finally {
+      buttonLoading(button, false);
+    }
+  }
+
+  document.getElementById('btn-save-dhis2')?.addEventListener('click', event => saveConfig(event.currentTarget));
+  document.getElementById('btn-cancel-dhis2')?.addEventListener('click', () => loadConfig());
+  document.getElementById('btn-test-dhis2')?.addEventListener('click', async event => {
+    const data = collectConfig();
+    if (!validateConfig(data, !currentConfig)) return;
+    const saved = await saveConfig(event.currentTarget);
+    if (!saved) return;
+    try {
+      const result = await apiDhis2.sync(saved.id);
+      renderConnectionStatus(true, `API opérationnelle — ${result.nb_enregistrements || 0} enregistrement(s) vérifié(s)`);
+      pushNotification('Connexion backend et configuration DHIS2 vérifiées.', 'success');
+    } catch (error) {
+      renderConnectionStatus(false, 'Échec de la vérification');
+      pushNotification('La configuration est enregistrée, mais la vérification a échoué.', 'error');
+    }
+  });
+
+  document.getElementById('btn-add-mapping')?.addEventListener('click', () => {
+    if (!currentConfig) {
+      pushNotification('Enregistrez d’abord la configuration DHIS2.', 'warning');
+      return;
+    }
+    openModal('Ajouter une règle de mappage', `
+      <div class="space-y-4">
+        <label class="block text-sm font-medium">Indicateur local *<input id="mapping-local" class="mt-1 w-full rounded-lg border-gray-300 dark:bg-gray-700" placeholder="Ex. densite_anopheles"></label>
+        <label class="block text-sm font-medium">Élément DHIS2 *<input id="mapping-dhis2" class="mt-1 w-full rounded-lg border-gray-300 dark:bg-gray-700" placeholder="Ex. ENTO_DENS_001"></label>
+        <label class="block text-sm font-medium">Type de donnée<select id="mapping-type" class="mt-1 w-full rounded-lg border-gray-300 dark:bg-gray-700"><option value="nombre">Nombre</option><option value="pourcentage">Pourcentage</option><option value="taux">Taux</option><option value="texte">Texte</option></select></label>
+      </div>`, {
+      confirmLabel: 'Ajouter',
+      onConfirm: async () => {
+        const indicateur_local = document.getElementById('mapping-local')?.value.trim();
+        const element_dhis2 = document.getElementById('mapping-dhis2')?.value.trim();
+        if (!indicateur_local || !element_dhis2) {
+          pushNotification('Les deux identifiants sont obligatoires.', 'warning');
+          return false;
+        }
+        const mapping = await apiDhis2.addMapping(currentConfig.id, {
+          indicateur_local,
+          element_dhis2,
+          type_donnee: document.getElementById('mapping-type')?.value || 'nombre',
+          actif: true,
         });
-        showLoader();
-        if (typeof apiDhis2 !== 'undefined') {
-          await apiDhis2.saveConfig(data);
-        } else {
-          await new Promise(r => setTimeout(r, 1000));
-        }
-        hideLoader();
-        pushNotification('Configuration DHIS2 sauvegardée.', 'success');
-      });
-    }
-
-    if (text.includes('Synchroniser maintenant') || text.includes('Lancer sync')) {
-      btn.addEventListener('click', () => {
-        openModal('Lancer une synchronisation',
-          `<div class="space-y-3 text-sm">
-            <p>Choisissez le type de synchronisation :</p>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-              <input type="radio" name="sync-type" value="full" checked class="text-brand-primary"/>
-              <span>Synchronisation complète (toutes les données)</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-              <input type="radio" name="sync-type" value="incremental" class="text-brand-primary"/>
-              <span>Synchronisation incrémentale (nouveaux enregistrements)</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
-              <input type="radio" name="sync-type" value="metadata" class="text-brand-primary"/>
-              <span>Métadonnées uniquement</span>
-            </label>
-          </div>`,
-          {
-            confirmLabel: 'Lancer',
-            confirmClass: 'bg-brand-primary text-white',
-            onConfirm: async () => {
-              showLoader();
-              if (typeof apiDhis2 !== 'undefined') {
-                await apiDhis2.sync();
-              } else {
-                await new Promise(r => setTimeout(r, 3000));
-              }
-              hideLoader();
-              pushNotification('Synchronisation DHIS2 terminée avec succès.', 'success');
-            },
-          }
-        );
-      });
-    }
-  });
-
-  // ── Affichage/masquage du mot de passe ──────────────────────────────────────
-  document.querySelectorAll('input[type="password"]').forEach(input => {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'relative';
-    input.parentNode.insertBefore(wrapper, input);
-    wrapper.appendChild(input);
-
-    const toggleBtn = document.createElement('button');
-    toggleBtn.type = 'button';
-    toggleBtn.className = 'absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300';
-    toggleBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px">visibility</span>';
-    wrapper.appendChild(toggleBtn);
-
-    toggleBtn.addEventListener('click', () => {
-      const isHidden = input.type === 'password';
-      input.type = isHidden ? 'text' : 'password';
-      toggleBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:18px">${isHidden ? 'visibility_off' : 'visibility'}</span>`;
+        currentConfig.mappings = [...(currentConfig.mappings || []), mapping];
+        renderMappings(currentConfig.mappings);
+        pushNotification('Règle de mappage enregistrée.', 'success');
+      },
     });
   });
 
-  // ── Validation du formulaire ─────────────────────────────────────────────────
-  document.querySelectorAll('input[type="url"], input[placeholder*="http"]').forEach(urlInput => {
-    urlInput.addEventListener('blur', () => {
-      const val = urlInput.value.trim();
-      if (val && !val.startsWith('http')) {
-        urlInput.classList.add('border-red-500', 'ring-1', 'ring-red-500');
-        let err = urlInput.parentElement.querySelector('.url-error');
-        if (!err) {
-          err = document.createElement('p');
-          err.className = 'url-error text-red-500 text-xs mt-1';
-          err.textContent = 'L\'URL doit commencer par http:// ou https://';
-          urlInput.parentElement.appendChild(err);
-        }
-      } else {
-        urlInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
-        urlInput.parentElement.querySelector('.url-error')?.remove();
-      }
-    });
-  });
-
-  // ── Toggle switches ───────────────────────────────────────────────────────────
-  document.querySelectorAll('input[type="checkbox"][role="switch"], input[type="checkbox"].toggle').forEach(toggle => {
-    toggle.addEventListener('change', () => {
-      const label = toggle.closest('label') || toggle.previousElementSibling;
-      const name  = label?.textContent?.trim().split('\n')[0] || 'Option';
-      pushNotification(`"${name}" ${toggle.checked ? 'activé' : 'désactivé'}.`, 'info');
-    });
-  });
-
+  try { await loadConfig(); } catch (error) { pushNotification('Impossible de charger la configuration DHIS2.', 'error'); }
 });

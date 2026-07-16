@@ -1,5 +1,6 @@
 import os
 import shutil
+from datetime import date, datetime, time
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 from sqlalchemy.orm import Session
@@ -21,6 +22,10 @@ def list_captures(
     limit: int = 100,
     site_id: Optional[int] = Query(None),
     statut: Optional[str] = Query(None),
+    espece: Optional[str] = Query(None),
+    search: Optional[str] = Query(None),
+    date_debut: Optional[date] = Query(None),
+    date_fin: Optional[date] = Query(None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
@@ -30,6 +35,19 @@ def list_captures(
         query = query.filter(Capture.site_id == site_id)
     if statut:
         query = query.filter(Capture.statut == statut)
+    if espece:
+        query = query.filter(Capture.espece.ilike(f"%{espece.strip()}%"))
+    if search:
+        term = f"%{search.strip()}%"
+        query = query.filter(
+            Capture.espece.ilike(term)
+            | Capture.methode_capture.ilike(term)
+            | Capture.notes.ilike(term)
+        )
+    if date_debut:
+        query = query.filter(Capture.date_capture >= datetime.combine(date_debut, time.min))
+    if date_fin:
+        query = query.filter(Capture.date_capture <= datetime.combine(date_fin, time.max))
     return query.order_by(Capture.date_capture.desc()).offset(skip).limit(limit).all()
 
 
@@ -39,6 +57,10 @@ def create_capture(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
+    from app.models.site import SiteSentinelle
+    site = db.query(SiteSentinelle).filter(SiteSentinelle.id == capture_in.site_id).first()
+    if not site:
+        raise HTTPException(status_code=404, detail="Site non trouvé")
     if not capture_in.utilisateur_id:
         capture_in.utilisateur_id = current_user.id
     return crud_capture.create(db, obj_in=capture_in)

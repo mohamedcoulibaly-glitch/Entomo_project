@@ -11,6 +11,10 @@ class Dataset(BaseModel):
     chemin = Column(String(500))
     taille = Column(Integer)
     type = Column(String(100))
+    version = Column(String(50))
+    source_annotations = Column(String(200))
+    images_count = Column(Integer, default=0)
+    statut = Column(String(50), default="en_preparation")  # en_preparation, pret, en_cours, termine, erreur
     utilisateur_id = Column(Integer, ForeignKey("users.id"))
     actif = Column(Boolean, default=True)
     
