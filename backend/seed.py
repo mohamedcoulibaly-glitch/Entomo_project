@@ -1,11 +1,13 @@
 from datetime import datetime, timedelta
 import random
+import sys, os, io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+
 from app.core.security import get_password_hash
 from app.core.crypto import encrypt_secret
 
-# Importez les modèles après avoir changé d'environnement
-import sys
-import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from app.models.user import User
@@ -387,6 +389,19 @@ try:
     
     print("\n6️⃣ Création d'utilisateurs de test")
     test_users_data = [
+        {
+            "email": "labo1@entomo.example.com",
+            "username": "labo1",
+            "full_name": "Technicien Laboratoire",
+            "hashed_password": get_password_hash("Labo@2024"),
+            "etablissement": "Laboratoire Régional de Dakar",
+            "region": "Dakar",
+            "district": "Dakar",
+            "telephone": "+221 77 000 0001",
+            "is_active": True,
+            "is_superuser": False,
+            "role_id": roles_by_name["Laboratoire"].id,
+        },
         {
             "email": "m.dethie@entomo.example.com",
             "username": "mouss.dethie",
