@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
     <meta charset="utf-8" />
@@ -8,8 +8,9 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style type="text/tailwindcss">
+    <link rel="stylesheet" href="../css/tailwind.min.css" />
+    <link rel="stylesheet" href="../css/design-tokens.css" />
+<style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
                 font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24;
@@ -252,33 +253,12 @@
     </div>
 
     <!-- Ento-App Scripts -->
+    <script src="../js/config-boot.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/core.js"></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../js/404.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const loginBtn = document.getElementById('login-header-btn');
-      const avatarEl = document.getElementById('header-avatar');
-      const userData = (() => { try { return JSON.parse(localStorage.getItem('entomo_user') || 'null'); } catch { return null; } })();
-      if (Auth.isLoggedIn() && userData) {
-        if (loginBtn) loginBtn.classList.add('hidden');
-        if (avatarEl) {
-          avatarEl.classList.remove('hidden');
-          const initials = (userData.full_name || userData.username || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-          avatarEl.textContent = initials;
-          avatarEl.title = userData.full_name || userData.username || 'Profil';
-          avatarEl.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (typeof showSessionMenu !== 'undefined') showSessionMenu(this, userData);
-          });
-        }
-      } else {
-        if (loginBtn) loginBtn.classList.remove('hidden');
-        if (avatarEl) avatarEl.classList.add('hidden');
-      }
-    });
-    </script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

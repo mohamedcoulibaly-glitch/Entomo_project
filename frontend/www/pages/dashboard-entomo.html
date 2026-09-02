@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
     <meta charset="utf-8" />
@@ -8,8 +8,9 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style type="text/tailwindcss">
+    <link rel="stylesheet" href="../css/tailwind.min.css" />
+    <link rel="stylesheet" href="../css/design-tokens.css" />
+<style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
                 font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24;
@@ -226,7 +227,7 @@
                     <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f2f4] dark:bg-gray-700 text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
                         <span class="material-symbols-outlined text-xl">notifications</span>
                     </button>
-                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCf4ReoO6DzV9WU-ZhB6goMwdc2JDmBKPIoG2wN42ZesgRlTndCYQd5Y4Q17BXkh-PT52vUi6nUrrgMXPRTv4W1NC1O-LyvBC0xSiOXwz4xygtxx5sZFITOUmL7IoPwQN_P6imrOlzhNEAsmIT3gH3Hi0LhvKCJNtywqPtozvTgNHut3Vb-HCF2otQEsEWNGmh9_cMer8QaFRYhqdLiMZA-XaV7T0-wPYENp_TzGXxiwr-0fQsLdjhjnXPuLk9tB-xqFuoN9iXNPg");'></div>
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" ></div>
                 </div>
             </header>
 
@@ -364,9 +365,15 @@
     </div>
 
     <!-- Ento-App Scripts -->
+    <script src="../js/config-boot.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/core.js"></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
+    <script src="../vendor/chart.js/chart.umd.min.js"></script>
+    <script src="../vendor/leaflet/leaflet.js"></script>
+    <script src="../js/utils/analytics-charts.js"></script>
+    <script src="../js/utils/analytics-maps.js"></script>
     <script src="../js/dashboard-entomo.js"></script>
     <!-- /Ento-App Scripts -->
 </body>

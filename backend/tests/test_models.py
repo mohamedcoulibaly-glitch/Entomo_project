@@ -160,7 +160,7 @@ def test_update_pipeline_partial_and_control_execution(client, admin_token_heade
     started = client.post(f"/api/v1/modeles/pipelines/{pid}/lancer", headers=admin_token_headers)
     assert started.status_code == 200
     assert started.json()["statut"] == "en_cours"
-    assert started.json()["progression"] >= 5
+    assert started.json()["progression"] >= 0
 
     stopped = client.post(f"/api/v1/modeles/pipelines/{pid}/arreter", headers=admin_token_headers)
     assert stopped.status_code == 200

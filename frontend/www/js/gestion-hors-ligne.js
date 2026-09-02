@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initMobileMenu();
 
   updateConnStatus();
-  window.addEventListener('online', updateConnStatus);
+  window.addEventListener('online', () => { updateConnStatus(); loadAll(); });
   window.addEventListener('offline', updateConnStatus);
 
   await loadAll();
@@ -14,6 +14,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('btn-settings')?.addEventListener('click', handleOpenSettings);
   document.getElementById('search-offline')?.addEventListener('input', handleSearchOffline);
   document.getElementById('select-all')?.addEventListener('change', handleSelectAll);
+  document.getElementById('btn-bulk-sync')?.addEventListener('click', handleBulkSync);
+
+  document.getElementById('offline-table-body')?.addEventListener('change', (e) => {
+    if (!e.target.classList.contains('offline-checkbox')) return;
+    const anyChecked = document.querySelectorAll('.offline-checkbox:checked').length > 0;
+    document.getElementById('offline-bulk-actions')?.classList.toggle('hidden', !anyChecked);
+    const selectAll = document.getElementById('select-all');
+    const boxes = document.querySelectorAll('.offline-checkbox');
+    if (selectAll && boxes.length) {
+      selectAll.checked = boxes.length === document.querySelectorAll('.offline-checkbox:checked').length;
+    }
+  });
 });
 
 let _offlineData = [];
@@ -53,13 +65,15 @@ async function loadSyncStatus() {
     const lastSync = status.last_sync || status.derniere_sync || null;
     const pending = status.pending_count ?? status.en_attente ?? 0;
     const synced = status.synced_count ?? status.synchronises ?? 0;
-    const errors = status.error_count ?? status.erreurs ?? 0;
+    const errors = status.queue_error_count ?? status.error_count ?? status.erreurs ?? 0;
+    const conflicts = status.conflict_count ?? 0;
 
     setTextContent('stat-last-sync', formatDate(lastSync));
     setTextContent('stat-last-sync-ago', lastSync ? timeAgo(lastSync) : '');
     setTextContent('stat-pending', pending);
     setTextContent('stat-synced', synced);
     setTextContent('stat-errors', errors);
+    setTextContent('stat-conflicts', conflicts);
   } catch {
     setTextContent('stat-last-sync', '—');
     setTextContent('stat-pending', '0');
@@ -83,18 +97,103 @@ async function loadSyncSettings() {
 
     const prefsSummary = document.getElementById('prefs-summary');
     if (prefsSummary) prefsSummary.classList.remove('hidden');
+
+    if (window.EntomoOfflineSync) {
+      await window.EntomoOfflineSync.loadSettings();
+      window.EntomoOfflineSync.scheduleAutoSync();
+    }
   } catch {
     /* silencieux */
   }
 }
 
+function mapQueueItem(item) {
+  const statut =
+    item.statut === 'conflict' ? 'conflit'
+    : item.statut === 'error' ? 'erreur'
+    : item.statut === 'synced' ? 'synchronise'
+    : 'en_attente';
+  return {
+    id: item.resource_id || item.id,
+    queue_item_id: item.id,
+    type: item.resource_type || 'File serveur',
+    code: item.payload?.code || `QUEUE-${item.id}`,
+    statut,
+    modified_at: item.created_at || item.updated_at,
+    site_nom: item.payload?.site_nom,
+    espece: item.payload?.espece,
+    error_message: item.error_message,
+  };
+}
+
+function mapCaptureItem(capture) {
+  return {
+    id: capture.id,
+    queue_item_id: null,
+    type: capture.type || 'Capture entomologique',
+    code: capture.code || `SPN-${String(capture.id).padStart(5, '0')}`,
+    statut: capture.statut || 'a_valider',
+    modified_at: capture.modified_at || capture.date_capture || capture.updated_at,
+    site_nom: capture.site_nom,
+    espece: capture.espece,
+  };
+}
+
 async function loadPendingData() {
   try {
-    const captures = await apiDhis2.listPending();
-    _offlineData = captures || [];
+    const merged = [];
+    const seen = new Set();
+
+    if (navigator.onLine) {
+      const [captures, queueItems] = await Promise.all([
+        apiDhis2.listPending().catch(() => []),
+        apiSync.listQueue().catch(() => []),
+      ]);
+
+      for (const item of (queueItems || []).filter(q =>
+        q.statut === 'pending' || q.statut === 'error' || q.statut === 'conflict'
+      )) {
+        merged.push(mapQueueItem(item));
+        seen.add(`queue-${item.id}`);
+      }
+
+      for (const capture of captures || []) {
+        if (!seen.has(`capture-${capture.id}`)) {
+          merged.push(mapCaptureItem(capture));
+          seen.add(`capture-${capture.id}`);
+        }
+      }
+    }
+
+    const localItems = typeof OfflineStore !== 'undefined' ? await OfflineStore.list() : [];
+    for (const item of localItems) {
+      merged.push({
+        id: item.resource_id || item.local_id,
+        queue_item_id: null,
+        local_id: item.local_id,
+        type: item.resource_type || 'Capture locale',
+        code: item.payload?.code || `LOCAL-${item.local_id}`,
+        statut: item.statut || 'en_attente',
+        modified_at: item.cached_at,
+        site_nom: item.payload?.site_nom,
+        espece: item.payload?.espece,
+      });
+    }
+
+    _offlineData = merged;
     renderOfflineTable(_offlineData);
   } catch {
-    renderOfflineTable([]);
+    const localItems = typeof OfflineStore !== 'undefined' ? await OfflineStore.list() : [];
+    _offlineData = localItems.map(item => ({
+      id: item.resource_id || item.local_id,
+      queue_item_id: null,
+      local_id: item.local_id,
+      type: item.resource_type || 'Capture locale',
+      code: item.payload?.code || `LOCAL-${item.local_id}`,
+      statut: item.statut || 'en_attente',
+      modified_at: item.cached_at,
+    }));
+    renderOfflineTable(_offlineData);
   }
 }
 
@@ -120,9 +219,10 @@ function renderOfflineTable(data) {
       ? `details-gite.html?id=${d.id}`
       : `details-capture.html?id=${d.id}`;
     const actionLabel = d.statut === 'conflit' ? 'Résoudre' : 'Prévisualiser';
+    const replayId = d.queue_item_id || '';
 
     return `<tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800" data-id="${d.id}">
-      <td class="w-4 p-4"><input class="offline-checkbox h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary" type="checkbox" data-id="${d.id}"/></td>
+      <td class="w-4 p-4"><input class="offline-checkbox h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary" type="checkbox" data-id="${d.id}" data-queue-id="${replayId}"/></td>
       <td class="px-6 py-4">${statusBadge}</td>
       <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">${escapeHtml(dataType)}</td>
       <td class="px-6 py-4 text-gray-500 dark:text-gray-400">${escapeHtml(identifier)}</td>
@@ -137,6 +237,8 @@ function renderOfflineTable(data) {
 function getStatusBadge(statut) {
   const map = {
     conflit: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Conflit</span>',
+    erreur: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">Erreur</span>',
+    synchronise: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Synchronisé</span>',
     nouveau: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">Nouveau</span>',
     modifie: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Modifié</span>',
     a_valider: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">À valider</span>',
@@ -165,6 +267,13 @@ function updatePageSubtitle() {
   }
 }
 
+function hideProgressBar(progressContainer, progressBar, progressPct, progressLabel) {
+  if (progressContainer) progressContainer.classList.add('hidden');
+  if (progressBar) progressBar.style.width = '0%';
+  if (progressPct) progressPct.textContent = '0%';
+  if (progressLabel) progressLabel.textContent = 'Synchronisation en cours...';
+}
+
 async function handleSync() {
   const btn = document.getElementById('btn-sync');
   const progressContainer = document.getElementById('sync-progress-container');
@@ -180,54 +289,77 @@ async function handleSync() {
   if (progressContainer) progressContainer.classList.remove('hidden');
 
   let pct = 0;
-  const progressInterval = setInterval(() => {
-    pct = Math.min(pct + Math.random() * 8, 90);
-    if (progressBar) progressBar.style.width = pct + '%';
-    if (progressPct) progressPct.textContent = Math.round(pct) + '%';
-    if (progressDetail) {
-      const pending = parseInt(document.getElementById('stat-pending')?.textContent) || 0;
-      const processed = Math.round((pct / 100) * pending);
-      progressDetail.textContent = `${processed} / ${pending} éléments traités`;
-    }
-  }, 400);
+  let queueResult = null;
+  let result = null;
 
   try {
-    const res = await apiDhis2.sync();
-    clearInterval(progressInterval);
+    if (navigator.onLine) {
+      const status = await apiDhis2.getStatus();
+      const configId = status?.config_id || 1;
+      result = await apiDhis2.sync(configId);
+      queueResult = await apiSync.processQueue();
+      const processed = queueResult?.processed || 0;
+      const synced = queueResult?.synced || 0;
+      pct = processed > 0 ? Math.round((synced / processed) * 100) : 100;
 
-    if (res) {
-      if (progressBar) progressBar.style.width = '100%';
-      if (progressPct) progressPct.textContent = '100%';
-      if (progressLabel) progressLabel.textContent = 'Synchronisation terminée !';
-      if (progressDetail) progressDetail.textContent = 'Tous les éléments ont été synchronisés avec succès.';
-      pushNotification('Données synchronisées avec succès.', 'success');
+      if (progressBar) progressBar.style.width = `${pct}%`;
+      if (progressPct) progressPct.textContent = `${pct}%`;
+      if (progressLabel) progressLabel.textContent = queueResult?.errors ? 'Synchronisation partielle' : 'Synchronisation terminée !';
+      if (progressDetail) {
+        progressDetail.textContent = `${processed} élément(s) de file traité(s)`;
+      }
+
+      if (result && (!queueResult || queueResult.errors === 0)) {
+        pushNotification('Données synchronisées avec succès.', 'success');
+      } else if (queueResult?.errors > 0) {
+        pushNotification(`${queueResult.errors} erreur(s) lors du traitement de la file.`, 'warning');
+      }
     } else {
-      if (progressLabel) progressLabel.textContent = 'Échec de la synchronisation';
-      if (progressDetail) progressDetail.textContent = 'Une erreur est survenue. Veuillez réessayer.';
-      pushNotification('Erreur lors de la synchronisation.', 'error');
+      pushNotification('Hors ligne : les actions seront synchronisées à la reconnexion.', 'warning');
+      pct = 0;
+      if (progressLabel) progressLabel.textContent = 'En attente de connexion';
     }
-
-    setTimeout(() => {
-      if (progressContainer) progressContainer.classList.add('hidden');
-      if (progressBar) progressBar.style.width = '0%';
-      if (progressPct) progressPct.textContent = '0%';
-      if (progressLabel) progressLabel.textContent = 'Synchronisation en cours...';
-    }, 3000);
   } catch (err) {
-    clearInterval(progressInterval);
-    if (progressLabel) progressLabel.textContent = 'Erreur de connexion';
+    if (progressLabel) progressLabel.textContent = 'Échec de la synchronisation';
     if (progressDetail) progressDetail.textContent = err?.message || 'Impossible de joindre le serveur.';
     pushNotification('Erreur lors de la synchronisation.', 'error');
-
-    setTimeout(() => {
-      if (progressContainer) progressContainer.classList.add('hidden');
-      if (progressBar) progressBar.style.width = '0%';
-    }, 3000);
   }
 
   btn.disabled = false;
   btn.classList.remove('opacity-60', 'cursor-wait');
 
+  await loadAll();
+  setTimeout(() => hideProgressBar(progressContainer, progressBar, progressPct, progressLabel), 2500);
+}
+
+async function handleBulkSync() {
+  const selected = [...document.querySelectorAll('.offline-checkbox:checked')];
+  if (!selected.length) {
+    pushNotification('Sélectionnez au moins un élément.', 'warning');
+    return;
+  }
+
+  let replayed = 0;
+  let needsDhis2Sync = false;
+
+  for (const cb of selected) {
+    const queueId = cb.dataset.queueId;
+    if (queueId) {
+      try {
+        await apiSync.replay(queueId);
+        replayed += 1;
+      } catch { /* continue */ }
+    } else {
+      needsDhis2Sync = true;
+    }
+  }
+
+  if (needsDhis2Sync && navigator.onLine) {
+    await apiDhis2.syncIfReady({ silent: true });
+  }
+
+  pushNotification(`${replayed || selected.length} élément(s) relancé(s).`, 'success');
+  document.getElementById('offline-bulk-actions')?.classList.add('hidden');
   await loadAll();
 }
 
@@ -236,6 +368,7 @@ function handleClearCache() {
     try {
       const res = await apiSync.clearCache();
       if (res !== null) {
+        if (typeof OfflineStore !== 'undefined') await OfflineStore.clear();
         pushNotification('Cache local effacé avec succès.', 'warning');
         _offlineData = [];
         renderOfflineTable([]);
@@ -370,9 +503,9 @@ async function loadSyncHistory() {
       const icon = isSuccess ? 'check_circle' : 'error';
       const iconColor = isSuccess ? 'text-green-500' : 'text-red-500';
       const bgColor = isSuccess ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30';
-      const date = h.date || h.created_at || h.timestamp;
+      const date = h.date_sync || h.date || h.created_at || h.timestamp;
       const details = h.details || h.message || '';
-      const count = h.items_count ?? h.nombre_elements ?? null;
+      const count = h.items_count ?? h.nombre_elements ?? h.nb_enregistrements ?? null;
 
       return `<div class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/50">
         <div class="p-1.5 rounded-full ${bgColor} mt-0.5">
@@ -419,6 +552,8 @@ function handleSelectAll(e) {
   document.querySelectorAll('.offline-checkbox').forEach(cb => {
     cb.checked = checked;
   });
+  const bulkBar = document.getElementById('offline-bulk-actions');
+  if (bulkBar) bulkBar.classList.toggle('hidden', !checked);
 }
 
 function initPaginationClient(tbodyId, paginationId, pageSize = 10) {

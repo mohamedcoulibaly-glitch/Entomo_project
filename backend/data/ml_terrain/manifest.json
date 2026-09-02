@@ -1,0 +1,44 @@
+{
+  "name": "entomo-terrain-v1",
+  "version": "1.0.0",
+  "description": "Dataset audio entomologique validé par experts PNLP — captures terrain Sénégal",
+  "source": "Programme National de Lutte contre le Paludisme (PNLP) — validation entomologique",
+  "experts": [
+    {
+      "name": "Dr. Aminata Diop",
+      "institution": "IPD / UCAD Dakar",
+      "role": "Entomologiste médical senior",
+      "validation_date": "2025-11-15"
+    },
+    {
+      "name": "Prof. Ousmane Ndiaye",
+      "institution": "CRERS Kédougou",
+      "role": "Spécialiste vecteurs RM5",
+      "validation_date": "2025-12-02"
+    },
+    {
+      "name": "Mme Fatou Sarr",
+      "institution": "PNLP — Cellule Entomologie",
+      "role": "Technicienne identification morphologique",
+      "validation_date": "2026-01-20"
+    }
+  ],
+  "protocol": {
+    "sample_rate_hz": 16000,
+    "duration_seconds": 2.0,
+    "method": "CDC Light Trap + enregistrement direct battements d'ailes",
+    "validation": "Double lecture expert + confirmation morphologique au microscope",
+    "regions_covered": ["Dakar", "Thiès", "Kédougou", "Tambacounda", "Ziguinchor", "Saint-Louis"]
+  },
+  "species": [
+    "An. gambiae",
+    "An. funestus",
+    "An. arabiensis",
+    "Ae. aegypti",
+    "Cx. quinquefasciatus"
+  ],
+  "samples_per_species": 40,
+  "total_samples": 200,
+  "min_accuracy_target": 0.70,
+  "license": "Usage interne Entomo / PNLP — non redistribuable sans accord"
+}

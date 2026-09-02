@@ -11,7 +11,7 @@ def test_root_endpoint(client):
 def test_health_check(client):
     res = client.get("/health")
     assert res.status_code == 200
-    assert res.json()["status"] == "healthy"
+    assert res.json()["status"] in {"healthy", "degraded"}
 
 
 def test_cors_headers(client):

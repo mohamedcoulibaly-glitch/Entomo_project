@@ -63,6 +63,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         pushNotification('Configurez DHIS2 avant de lancer la synchronisation.', 'warning');
         return;
       }
+      if (!status?.credentials_ready) {
+        pushNotification('Identifiants DHIS2 incomplets — saisissez le mot de passe dans Configuration DHIS2.', 'warning');
+        return;
+      }
       const result = await apiDhis2.sync(status.config_id);
       pushNotification(`${result.nb_enregistrements || 0} enregistrement(s) synchronisé(s).`, 'success');
       await refreshStatus();

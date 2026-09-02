@@ -2,7 +2,7 @@ from typing import List, Optional
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, Request
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.crud.model import crud_ml_model, crud_risk_model, crud_pipeline
@@ -14,6 +14,11 @@ from app.schemas.model import (
     RiskModelCreate, RiskModelUpdate, RiskModelResponse,
     ModelPipelineCreate, ModelPipelineUpdate, ModelPipelineResponse,
 )
+from app.services.pipeline_runner import start_pipeline
+from app.services.model_evaluator import evaluate_ml_model
+from app.services.epidemic_risk import compute_epidemic_risk
+from app.services.audit_service import audit_service
+from app.services.model_registry import load_manifest, REGISTRY_ROOT
 
 router = APIRouter()
 
@@ -34,14 +39,36 @@ def list_ml_models(
     return query.offset(skip).limit(limit).all()
 
 
+@router.get("/registry")
+def get_model_registry(
+    _: User = Depends(get_current_active_user),
+):
+    """Retourne les manifests ONNX locaux (audio / image)."""
+    audio = load_manifest("audio")
+    image = load_manifest("image")
+    return {
+        "root": str(REGISTRY_ROOT),
+        "audio": audio,
+        "image": image,
+        "ready": bool(audio and image),
+    }
+
+
 @router.post("/ml", response_model=MLModelResponse)
 def create_ml_model(model_in: MLModelCreate, db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
     return crud_ml_model.create(db, obj_in=model_in)
 
 
 @router.get("/ml/deployes", response_model=List[MLModelResponse])
-def list_deployes(db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
-    return crud_ml_model.get_deployes(db)
+def list_deployes(
+    type_modele: Optional[str] = Query(None, alias="type"),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_active_user),
+):
+    query = db.query(MLModel).filter(MLModel.deploye == True)
+    if type_modele:
+        query = query.filter(MLModel.type_modele == type_modele)
+    return query.all()
 
 
 @router.post("/ml/importer", response_model=MLModelResponse)
@@ -102,10 +129,26 @@ def update_ml_model(model_id: int, model_in: MLModelUpdate, db: Session = Depend
 
 
 @router.post("/ml/{model_id}/deployer")
-def deployer_model(model_id: int, deploye: bool = True, db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
+def deployer_model(
+    model_id: int,
+    request: Request,
+    deploye: bool = True,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
     result = crud_ml_model.deployer(db, model_id=model_id, deploye=deploye)
     if not result:
         raise HTTPException(status_code=404, detail="Modèle non trouvé")
+    audit_service.log_for_user(
+        db,
+        current_user,
+        action="model_deploy" if deploye else "model_undeploy",
+        module="modeles",
+        resource_type="ml_model",
+        resource_id=model_id,
+        details={"nom": result.nom, "version": result.version, "deploye": deploye},
+        adresse_ip=request.client.host if request.client else None,
+    )
     action = "déployé" if deploye else "retiré du déploiement"
     return {"message": f"Modèle {action} avec succès"}
 
@@ -129,24 +172,11 @@ def tester_ml_model(
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
-    """Teste un modèle ML et retourne des métriques d'évaluation."""
+    """Teste un modèle ML et retourne des métriques d'évaluation réelles."""
     model = crud_ml_model.get(db, id=model_id)
     if not model:
         raise HTTPException(status_code=404, detail="Modèle non trouvé")
-    import random, statistics
-    base_precision = model.precision or 0.85
-    base_rappel = model.rappel or 0.82
-    base_f1 = model.f1_score or 0.84
-    return {
-        "accuracy": round(statistics.mean([base_precision, base_rappel, base_f1]) * random.uniform(0.97, 1.03), 4),
-        "precision": round(base_precision * random.uniform(0.98, 1.02), 4),
-        "rappel": round(base_rappel * random.uniform(0.98, 1.02), 4),
-        "f1_score": round(base_f1 * random.uniform(0.98, 1.02), 4),
-        "temps_inference": round(random.uniform(12, 85), 1),
-        "echantillon_test": random.randint(500, 5000),
-        "modele_id": model_id,
-        "modele_nom": model.nom,
-    }
+    return evaluate_ml_model(db, model)
 
 
 # ─── Modèles de risque épidémiologique ───────────────────────────────────────
@@ -183,82 +213,18 @@ def simuler_risque(
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
-    """Calcule le risque épidémiologique à partir des données réelles de captures."""
-    from app.models.capture import Capture
-    from app.models.site import SiteSentinelle
-    from sqlalchemy import func
-    import random, statistics, math
-
+    """Calcule le risque épidémiologique via un modèle SEIR alimenté par les captures."""
     facteurs = body.get("facteurs", [])
     if isinstance(facteurs, dict):
         facteurs = [{"id": k, "poids": v} for k, v in facteurs.items()]
-
-    # Get real capture data per region
-    region_stats = (
-        db.query(
-            SiteSentinelle.region,
-            func.count(Capture.id).label("total_captures"),
-            func.sum(Capture.nombre_individus).label("total_individus"),
-        )
-        .outerjoin(Capture, Capture.site_id == SiteSentinelle.id)
-        .group_by(SiteSentinelle.region)
-        .all()
-    )
-
-    max_captures = max((r.total_captures for r in region_stats), default=1)
-    regions_risk = {}
-
-    for r in region_stats:
-        if r.total_captures == 0:
-            continue
-        density_factor = min(1.0, r.total_captures / max_captures)
-        weight_sum = sum(f.get("poids", 0) for f in facteurs) / 100.0 if facteurs else 0.5
-        risk = round(min(1.0, density_factor * 0.6 + weight_sum * 0.4), 4)
-        regions_risk[r.region] = {
-            "risque": risk,
-            "captures": r.total_captures,
-            "individus": r.total_individus,
-        }
-
-    regions_haut_risque = [k for k, v in regions_risk.items() if v["risque"] >= 0.7]
-    risque_global = round(
-        statistics.mean([v["risque"] for v in regions_risk.values()])
-        if regions_risk else 0, 4
-    )
-
-    return {
-        "risque_global": risque_global,
-        "regions": regions_risk,
-        "message": (
-            "Risque ÉLEVÉ — Action immédiate recommandée" if risque_global >= 0.7
-            else "Risque MODÉRÉ — Surveillance renforcée recommandée" if risque_global >= 0.4
-            else "Risque FAIBLE — Surveillance de routine"
-        ),
-        "regions_haut_risque": regions_haut_risque,
-        "population_exposee": sum(v["individus"] for v in regions_risk.values()) * 100,
-        "facteurs_utilises": len(facteurs),
-    }
+    return compute_epidemic_risk(db, facteurs)
 
 
 # ─── Pipelines ML ────────────────────────────────────────────────────────────
 
 @router.get("/pipelines", response_model=List[ModelPipelineResponse])
 def list_pipelines(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
-    pipelines = crud_pipeline.get_multi(db, skip=skip, limit=limit)
-    changed = False
-    for pipeline in pipelines:
-        if pipeline.statut == "en_cours":
-            pipeline.progression = min(100, (pipeline.progression or 0) + 8)
-            pipeline.logs = (pipeline.logs or "") + f"\nProgression serveur: {pipeline.progression}%."
-            if pipeline.progression >= 100:
-                pipeline.statut = "termine"
-                pipeline.logs += "\nPipeline terminé avec succès."
-            changed = True
-    if changed:
-        db.commit()
-        for pipeline in pipelines:
-            db.refresh(pipeline)
-    return pipelines
+    return crud_pipeline.get_multi(db, skip=skip, limit=limit)
 
 
 @router.post("/pipelines", response_model=ModelPipelineResponse)
@@ -277,14 +243,6 @@ def get_pipeline(pipeline_id: int, db: Session = Depends(get_db), _: User = Depe
     p = crud_pipeline.get(db, id=pipeline_id)
     if not p:
         raise HTTPException(status_code=404, detail="Pipeline non trouvé")
-    if p.statut == "en_cours":
-        p.progression = min(100, (p.progression or 0) + 5)
-        p.logs = (p.logs or "") + f"\nÉtape exécutée: {p.progression}%."
-        if p.progression >= 100:
-            p.statut = "termine"
-            p.logs += "\nPipeline terminé avec succès."
-        db.commit()
-        db.refresh(p)
     return p
 
 
@@ -298,19 +256,25 @@ def update_pipeline(pipeline_id: int, pipeline_in: ModelPipelineUpdate, db: Sess
 
 @router.post("/pipelines/{pipeline_id}/lancer", response_model=ModelPipelineResponse)
 def run_pipeline(pipeline_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
-    """Démarre un pipeline et initialise son suivi d'exécution."""
+    """Démarre un pipeline et lance l'exécution en arrière-plan."""
     p = crud_pipeline.get(db, id=pipeline_id)
     if not p:
         raise HTTPException(status_code=404, detail="Pipeline non trouvé")
-    return crud_pipeline.update(
+    if p.statut == "en_cours":
+        raise HTTPException(status_code=400, detail="Le pipeline est déjà en cours d'exécution")
+    updated = crud_pipeline.update(
         db,
         db_obj=p,
         obj_in=ModelPipelineUpdate(
             statut="en_cours",
-            progression=max(p.progression or 0, 5),
+            progression=0,
             logs="Pipeline démarré. Préparation des données et des ressources.",
         ),
     )
+    if not start_pipeline(pipeline_id):
+        raise HTTPException(status_code=409, detail="Impossible de démarrer le pipeline")
+    db.refresh(updated)
+    return updated
 
 
 @router.post("/pipelines/{pipeline_id}/arreter", response_model=ModelPipelineResponse)

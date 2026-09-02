@@ -1,0 +1,23 @@
+{
+  "name": "entomo-audio-v1",
+  "version": "1.0.0",
+  "type": "audio",
+  "architecture": "RandomForest+mfcc13_mel64",
+  "labels": [
+    "Ae. aegypti",
+    "An. arabiensis",
+    "An. funestus",
+    "An. gambiae",
+    "Cx. quinquefasciatus"
+  ],
+  "feature_size": 77,
+  "sample_rate": 16000,
+  "metrics": {
+    "precision": 0.8545,
+    "rappel": 0.8,
+    "f1_score": 0.7949,
+    "accuracy": 0.8,
+    "echantillons": 200
+  },
+  "onnx_file": "entomo-audio-v1.onnx"
+}

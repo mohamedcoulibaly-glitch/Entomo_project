@@ -60,3 +60,26 @@ class DHIS2SyncResponse(BaseSchema):
 class DHIS2SyncTrigger(BaseModel):
     config_id: int
     periode: Optional[str] = None
+    password: Optional[str] = None
+
+
+class DHIS2TestConnectionRequest(BaseModel):
+    config_id: int
+    password: Optional[str] = None
+
+
+class DHIS2TestConnectionResponse(BaseModel):
+    success: bool
+    message: str
+    system_info: Optional[dict] = None
+
+
+class DHIS2PendingCapture(BaseModel):
+    id: int
+    type: str
+    code: str
+    statut: str
+    espece: Optional[str] = None
+    site_nom: Optional[str] = None
+    date_capture: Optional[datetime] = None
+    modified_at: Optional[datetime] = None

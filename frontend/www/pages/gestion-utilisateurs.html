@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
     <meta charset="utf-8" />
@@ -8,8 +8,9 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style type="text/tailwindcss">
+    <link rel="stylesheet" href="../css/tailwind.min.css" />
+    <link rel="stylesheet" href="../css/design-tokens.css" />
+<style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
                 font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24;
@@ -226,7 +227,7 @@
                     <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f2f4] dark:bg-gray-700 text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
                         <span class="material-symbols-outlined text-xl">notifications</span>
                     </button>
-                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCf4ReoO6DzV9WU-ZhB6goMwdc2JDmBKPIoG2wN42ZesgRlTndCYQd5Y4Q17BXkh-PT52vUi6nUrrgMXPRTv4W1NC1O-LyvBC0xSiOXwz4xygtxx5sZFITOUmL7IoPwQN_P6imrOlzhNEAsmIT3gH3Hi0LhvKCJNtywqPtozvTgNHut3Vb-HCF2otQEsEWNGmh9_cMer8QaFRYhqdLiMZA-XaV7T0-wPYENp_TzGXxiwr-0fQsLdjhjnXPuLk9tB-xqFuoN9iXNPg");'></div>
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" ></div>
                 </div>
             </header>
 
@@ -297,7 +298,7 @@
 <td class="px-6 py-4 whitespace-nowrap">
 <div class="flex items-center">
 <div class="h-10 w-10 flex-shrink-0">
-<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar de Mariama Diallo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUDLPhGVO65CGiSPtcdpfuUXMAp09QXszLhvL3hIUIn08vTXtXKqaX13CVG2GY1hozoyxatNxUGUtRDxjsQ2vPkBun-1hTYEsCJaVaF9995e2E2jCoh-UeRBBtUxyzNYUUDGe0GkXJsKcgV_yuXXB6KVL5TjnS7avV-SO_UUNe7vh0FrgoUmMeQG-bQsQf4fB0Bf1Dpg1jgTD2WWWwmP33YBeh6ybfMAyLvHlGt5HACGqwpN3q0xbFUalt8BpLsyKFQ5HmJ_FLsw"/>
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar de Mariama Diallo" data-entomo-avatar="1"/>
 </div>
 <div class="ml-4">
 <div class="text-sm font-medium text-gray-900 dark:text-white">Mouss Dethie Sarr</div>
@@ -326,7 +327,7 @@
 <td class="px-6 py-4 whitespace-nowrap">
 <div class="flex items-center">
 <div class="h-10 w-10 flex-shrink-0">
-<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar de Ousmane Faye" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQMUK4TQTssD3sGuPbj53rpJPRVMgvE8KKKwO5zoQ7CNzuDtkHz2q3ypmpQNOBOjkZS9oX2rYjpJF9ThtL6i6kxgKxpw1F7YV30NkGakSiPItkbqKmJPy_0y1H2MNcNdg7yejqRO018ZcbLoPXg1k51Vgu9Tr2jFtEnT0_5t5qqBxHxD8vD8Mmop6U4gc_5kgpCxzkKue-KytRfrSWQMAFekHeMtt1rdrRwdIrcHMKm9nzP-9-OODp3DeOPEVQxmNZ1NdlxBvMXQ"/>
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar de Ousmane Faye" data-entomo-avatar="1"/>
 </div>
 <div class="ml-4">
 <div class="text-sm font-medium text-gray-900 dark:text-white">Ousmane Faye</div>
@@ -355,7 +356,7 @@
 <td class="px-6 py-4 whitespace-nowrap">
 <div class="flex items-center">
 <div class="h-10 w-10 flex-shrink-0">
-<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar de Fatou Ndiaye" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDiCWROGfz3L8U0SwiwcYHAHTYhETskg9WAflWm4oU0CZUyj9__g4iJklfjTr1ywpLBB_5DhmwhaSi55v6EndG43Nn2PwbSnvxxkSnxvLp4-9Uc6hxjf_0mpqFtNoN2muw6jil9lKcQ_HQs88xiCNfLznpoYDtNEuV_qImscXXowWZk_05jyqKUdxx9upvkuGytckXuKzVUTSGpm_37S9k8MUW71fTM6pYmswuQQoaM25cbuZtHJca9RTU5Awd8jL516LX1meAhA"/>
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar de Fatou Ndiaye" data-entomo-avatar="1"/>
 </div>
 <div class="ml-4">
 <div class="text-sm font-medium text-gray-900 dark:text-white">Fatou Ndiaye</div>
@@ -429,8 +430,10 @@
     </div>
 
     <!-- Ento-App Scripts -->
+    <script src="../js/config-boot.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/core.js"></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../js/gestion-utilisateurs.js"></script>
     <!-- /Ento-App Scripts -->

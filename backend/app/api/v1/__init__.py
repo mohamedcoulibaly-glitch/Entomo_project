@@ -1,7 +1,8 @@
-from fastapi import APIRouter
-from app.api.v1.endpoints import auth, users, roles, sites, captures, datasets, models, dhis2, reports, dashboard, indicateurs, langues, sync, interventions, notifications, audit, campagnes, reference, data_imports, cartography, support
+from fastapi import APIRouter, Depends
+from app.api.v1.endpoints import auth, users, roles, sites, captures, datasets, models, dhis2, reports, dashboard, indicateurs, langues, sync, interventions, notifications, audit, campagnes, reference, data_imports, cartography, support, assistant
+from app.core.permissions import enforce_route_access
 
-api_router = APIRouter()
+api_router = APIRouter(dependencies=[Depends(enforce_route_access)])
 
 api_router.include_router(auth.router,      prefix="/auth",      tags=["Authentification"])
 api_router.include_router(users.router,     prefix="/users",     tags=["Utilisateurs"])
@@ -24,3 +25,4 @@ api_router.include_router(reference.router,    prefix="/reference",  tags=["Réf
 api_router.include_router(data_imports.router, prefix="/import",     tags=["Import de données"])
 api_router.include_router(cartography.router, prefix="/cartographie", tags=["Cartographie"])
 api_router.include_router(support.router, prefix="/support", tags=["Assistance"])
+api_router.include_router(assistant.router, prefix="/assistant", tags=["Assistant IA"])

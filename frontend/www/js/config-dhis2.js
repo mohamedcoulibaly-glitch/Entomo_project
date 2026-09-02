@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     password: document.getElementById('dhis2-password'),
     periode: document.getElementById('dhis2-periode'),
     actif: document.getElementById('dhis2-active'),
+    org_unit: document.getElementById('dhis2-org-unit'),
+    data_set: document.getElementById('dhis2-data-set'),
   };
 
   function collectConfig() {
@@ -14,7 +16,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       url: fields.url?.value.trim() || '',
       username: fields.username?.value.trim() || null,
       password: fields.password?.value || undefined,
-      periode: fields.periode?.value || 'hebdomadaire',
+      periode: fields.periode?.value || 'mensuel',
+      org_unit: fields.org_unit?.value.trim() || null,
+      data_set: fields.data_set?.value.trim() || null,
       actif: fields.actif?.checked !== false,
     };
   }
@@ -77,8 +81,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     fields.url.value = currentConfig.url || '';
     fields.username.value = currentConfig.username || '';
-    fields.periode.value = currentConfig.periode || 'hebdomadaire';
+    fields.periode.value = currentConfig.periode || 'mensuel';
     fields.actif.checked = currentConfig.actif !== false;
+    if (fields.org_unit) fields.org_unit.value = currentConfig.org_unit || '';
+    if (fields.data_set) fields.data_set.value = currentConfig.data_set || '';
     renderConnectionStatus(currentConfig.actif !== false, currentConfig.actif !== false ? 'Configuration active' : 'Configuration désactivée');
     renderMappings(currentConfig.mappings || []);
   }
@@ -110,9 +116,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const saved = await saveConfig(event.currentTarget);
     if (!saved) return;
     try {
-      const result = await apiDhis2.sync(saved.id);
-      renderConnectionStatus(true, `API opérationnelle — ${result.nb_enregistrements || 0} enregistrement(s) vérifié(s)`);
-      pushNotification('Connexion backend et configuration DHIS2 vérifiées.', 'success');
+      const result = await apiDhis2.testConnection(saved.id, fields.password?.value || undefined);
+      renderConnectionStatus(result.success, result.message);
+      pushNotification(result.success ? 'Connexion DHIS2 vérifiée.' : 'Échec de la connexion DHIS2.', result.success ? 'success' : 'error');
     } catch (error) {
       renderConnectionStatus(false, 'Échec de la vérification');
       pushNotification('La configuration est enregistrée, mais la vérification a échoué.', 'error');

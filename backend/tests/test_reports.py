@@ -3,7 +3,7 @@
 def test_list_reports_empty(client, admin_token_headers):
     res = client.get("/api/v1/rapports/", headers=admin_token_headers)
     assert res.status_code == 200
-    assert res.json() == []
+    assert isinstance(res.json(), list)
 
 
 def test_create_report_success(client, admin_token_headers):

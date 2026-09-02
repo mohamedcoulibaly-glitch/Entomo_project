@@ -71,15 +71,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (!res) ok = false;
                   }
                   if (ok) {
-                    document.querySelectorAll('[class*="rounded-full"]').forEach(badge => {
-                      if (badge.textContent.trim() === 'En attente') {
-                        badge.className = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800';
-                        badge.textContent = 'Envoyé';
-                      }
-                    });
-                    pushNotification('Toutes les données validées et envoyées à DHIS2.', 'success');
                     const status = await apiDhis2.getStatus();
-                    if (status?.config_id) await apiDhis2.sync(status.config_id);
+                    if (status?.credentials_ready) await apiDhis2.sync(status.config_id);
+                    pushNotification('Toutes les données validées et envoyées à DHIS2.', 'success');
+                    if (window.EntomoEvents) EntomoEvents.dispatch('capture-validated', { bulk: true });
                     await loadPendingData();
                   }
                 } else {
@@ -202,14 +197,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             onConfirm: async () => {
               buttonLoading(btn, true);
               try {
-                const res = await apiDhis2.validate(id, { statut: 'valide' });
+                const res = await apiDhis2.validateAndPush(id, { statut: 'valide' });
                 if (res) {
-                  const badge = row?.querySelector('[class*="rounded-full"]');
-                  if (badge) {
-                    badge.className = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300';
-                    badge.textContent = 'Envoyé';
-                  }
                   pushNotification('Données validées et transmises à DHIS2.', 'success');
+                  if (window.EntomoEvents) EntomoEvents.dispatch('capture-validated', { id });
+                  await loadPendingData();
                 }
               } catch (err) { pushNotification('Erreur lors de la validation.', 'error'); }
               buttonLoading(btn, false);
@@ -245,10 +237,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             onConfirm: async () => {
               buttonLoading(btn, true);
               try {
+                const motif = document.getElementById('reject-reason')?.value || '';
+                const commentaire = document.getElementById('reject-comment')?.value || '';
+                const notes = [motif && `Motif: ${motif}`, commentaire].filter(Boolean).join(' — ');
                 const res = await apiDhis2.validate(id, {
                   statut: 'rejete',
-                  motif: document.getElementById('reject-reason')?.value || '',
-                  commentaire: document.getElementById('reject-comment')?.value || '',
+                  notes: notes || undefined,
                 });
                 if (res) {
                   const badge = row?.querySelector('[class*="rounded-full"]');
@@ -258,6 +252,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   }
                   row?.classList.add('opacity-50');
                   pushNotification('Donnée rejetée.', 'warning');
+                  await loadPendingData();
                 }
               } catch (err) { pushNotification('Erreur lors du rejet.', 'error'); }
               buttonLoading(btn, false);

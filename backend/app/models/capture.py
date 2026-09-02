@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Float, Text, Boolean, Table
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Float, Text, Boolean, JSON
 from sqlalchemy.orm import relationship
 from app.models.base import BaseModel
 
@@ -21,6 +21,8 @@ class Capture(BaseModel):
     # Fichiers médias
     image_path = Column(String(500))
     audio_path = Column(String(500))
+    audio_metadata = Column(JSON, nullable=True)
+    image_metadata = Column(JSON, nullable=True)
 
     # Identification IA
     confidence_ia = Column(Float)                   # score 0-1
@@ -53,4 +55,38 @@ class Capture(BaseModel):
     @confiance.setter
     def confiance(self, value):
         self.confidence_ia = value
+
+    @property
+    def site_nom(self):
+        return self.site.nom if self.site else None
+
+    @property
+    def fichier_url(self):
+        if not self.audio_path:
+            return None
+        path = self.audio_path.replace("\\", "/")
+        if path.startswith("/"):
+            return path
+        if path.startswith("uploads/"):
+            return f"/{path}"
+        return f"/uploads/captures/{path.split('/')[-1]}"
+
+    @property
+    def espece_detectee(self):
+        if self.confidence_ia is not None and self.espece:
+            return self.espece
+        return None
+
+    @property
+    def duree(self):
+        if self.audio_metadata and isinstance(self.audio_metadata, dict):
+            return self.audio_metadata.get("duree_sec")
+        return None
+
+    @property
+    def nom(self):
+        if self.notes and self.notes.strip():
+            first_line = self.notes.strip().split("\n")[0][:80]
+            return first_line
+        return f"Enregistrement #{self.id}"
 

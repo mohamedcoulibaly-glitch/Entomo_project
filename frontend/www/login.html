@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
     <meta charset="utf-8" />
@@ -8,12 +8,14 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style type="text/tailwindcss">
+    <link rel="stylesheet" href="css/tailwind.min.css" />
+    <link rel="stylesheet" href="css/design-tokens.css" />
+<style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         }
     </style>
+    <script src="js/tailwind-shim.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -87,9 +89,12 @@
             </a>
         </div>
     </div>
-
-    <script src="./js/api.js"></script>
-    <script src="./js/core.js"></script>
+    
+    <!-- Ento-App Scripts -->
+    <script src="js/config-boot.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/core.js"></script>
+    <!-- /Ento-App Scripts -->
     <script>
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -114,7 +119,7 @@
           buttonLoading(btn, false);
         }
       } catch (err) {
-        errMsg.textContent = 'Erreur de connexion au serveur.';
+        errMsg.textContent = err.message || 'Erreur de connexion au serveur.';
         errEl.classList.remove('hidden');
         buttonLoading(btn, false);
       }

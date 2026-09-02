@@ -1,18 +1,58 @@
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, Depends
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import os
+from contextlib import asynccontextmanager
+
+from sqlalchemy.orm import Session
+from app.db.session import get_db
 
 from app.core.config import settings
-from app.db.session import engine
+from app.db.session import engine, SessionLocal
 from app.db.migrations import ensure_schema_compatibility
 from app.models import Base
 from app.api.v1 import api_router
 from app.core.error_handler import ErrorHandlingMiddleware
+from app.services.health_service import build_health_summary, build_liveness, build_readiness
 
-# Mettre à niveau les anciennes bases, puis créer les tables manquantes.
+# Mettre à niveau les anciennes bases, puis créer les tables manquantes (dev SQLite).
 ensure_schema_compatibility(engine)
-Base.metadata.create_all(bind=engine)
+if os.environ.get("ENVIRONMENT") != "production":
+    Base.metadata.create_all(bind=engine)
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    if os.environ.get("ENVIRONMENT") == "production":
+        weak = settings.SECRET_KEY in {"", "change-me-in-production", "change-me"}
+        if weak:
+            import logging
+            logging.getLogger("entomo").warning(
+                "SECRET_KEY faible ou par défaut en production — configurez .env"
+            )
+    if not os.environ.get("TESTING"):
+        db = SessionLocal()
+        try:
+            from app.services.ml_training import ensure_default_models
+            ensure_default_models(db)
+        except Exception:
+            pass
+        finally:
+            db.close()
+    if not os.environ.get("TESTING"):
+        try:
+            from app.services.report_scheduler import start_report_scheduler
+            start_report_scheduler()
+        except Exception:
+            pass
+    yield
+    if not os.environ.get("TESTING"):
+        try:
+            from app.services.report_scheduler import stop_report_scheduler
+            stop_report_scheduler()
+        except Exception:
+            pass
+
 
 # Configuration centralisée du middleware
 def setup_app_middleware(app: FastAPI) -> None:
@@ -53,6 +93,7 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     docs_url=f"{settings.API_V1_STR}/docs",
     redoc_url=f"{settings.API_V1_STR}/redoc",
+    lifespan=lifespan,
 )
 
 # Appliquer les middlewares d'erreur, compression et CORS
@@ -77,8 +118,44 @@ def root_endpoint():
     }
 
 @app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+def health_check(db: Session = Depends(get_db)):
+    summary = build_health_summary(db)
+    status_code = 200 if summary["status"] != "unhealthy" else 503
+    from fastapi.responses import JSONResponse
+    return JSONResponse(content=summary, status_code=status_code)
+
+
+@app.get("/health/live")
+def health_live():
+    return build_liveness()
+
+
+@app.get("/health/ready")
+def health_ready(db: Session = Depends(get_db)):
+    payload = build_readiness(db)
+    from fastapi.responses import JSONResponse
+    status_code = 200 if payload["status"] == "ready" else 503
+    return JSONResponse(content=payload, status_code=status_code)
+
+
+@app.get("/health/dhis2")
+def health_dhis2(db: Session = Depends(get_db)):
+    from app.crud.dhis2 import crud_dhis2_config
+    from app.services.dhis2_client import credentials_ready, test_connection
+
+    config = crud_dhis2_config.get_actif(db)
+    if not config:
+        return {"status": "not_configured", "configured": False}
+    ready = credentials_ready(config)
+    if not ready:
+        return {"status": "credentials_missing", "configured": True, "credentials_ready": False}
+    ok, message, _ = test_connection(config)
+    return {
+        "status": "ok" if ok else "unreachable",
+        "configured": True,
+        "credentials_ready": True,
+        "message": message,
+    }
 
 # Frontend statique avec routage protégé
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend" / "www"
@@ -110,13 +187,4 @@ if FRONTEND_DIR.exists() and not os.environ.get("TESTING"):
         return FileResponse(str(FRONTEND_DIR / "pages" / "404.html"))
 
 
-# Middleware de validation des uploads
-VALID_IMAGE_EXT = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"}
-VALID_AUDIO_EXT = {".wav", ".mp3", ".ogg", ".flac", ".m4a"}
-VALID_DOC_EXT = {".pdf", ".xlsx", ".xls", ".csv", ".json", ".pt", ".onnx", ".h5", ".pkl"}
-
-
-def validate_upload_file(file: UploadFile) -> bool:
-    """Valide le type de fichier uploadé."""
-    ext = os.path.splitext(file.filename or "")[1].lower()
-    return ext in VALID_IMAGE_EXT | VALID_AUDIO_EXT | VALID_DOC_EXT
+# Middleware de validation des uploads — voir app.services.upload_validation

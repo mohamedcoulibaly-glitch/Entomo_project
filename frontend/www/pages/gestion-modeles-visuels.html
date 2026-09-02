@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
     <meta charset="utf-8" />
@@ -8,8 +8,9 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style type="text/tailwindcss">
+    <link rel="stylesheet" href="../css/tailwind.min.css" />
+    <link rel="stylesheet" href="../css/design-tokens.css" />
+<style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
                 font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24;
@@ -226,7 +227,7 @@
                     <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f2f4] dark:bg-gray-700 text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
                         <span class="material-symbols-outlined text-xl">notifications</span>
                     </button>
-                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCf4ReoO6DzV9WU-ZhB6goMwdc2JDmBKPIoG2wN42ZesgRlTndCYQd5Y4Q17BXkh-PT52vUi6nUrrgMXPRTv4W1NC1O-LyvBC0xSiOXwz4xygtxx5sZFITOUmL7IoPwQN_P6imrOlzhNEAsmIT3gH3Hi0LhvKCJNtywqPtozvTgNHut3Vb-HCF2otQEsEWNGmh9_cMer8QaFRYhqdLiMZA-XaV7T0-wPYENp_TzGXxiwr-0fQsLdjhjnXPuLk9tB-xqFuoN9iXNPg");'></div>
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" ></div>
                 </div>
             </header>
 
@@ -296,18 +297,18 @@
 <div class="lg:col-span-2 flex flex-col gap-6">
 <div class="bg-white dark:bg-[#111418] rounded-xl border border-gray-200 dark:border-[#283039]">
 <h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] px-5 py-4 border-b border-gray-200 dark:border-[#283039]">Suivi de l'Entraînement</h2>
-<div class="p-5">
-<img class="w-full h-auto rounded-lg object-cover" data-alt="A line graph showing training and validation accuracy and loss over epochs. The accuracy lines are trending upwards, while the loss lines are trending downwards, indicating successful model training." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIvzp6HE3u9mpvVWX6q-yIUAL6qAYSzJKkQ_rylkOoM8dGB4-UGxcJtGE_GPUZPM6xPKSsIxPM5ay0XpwEI_l9eRqjLfk5xMoWe1wDvVu8IUbRmenXE1KuWFJJnizjsprY_ZbEdutDxHf30XOWNLmxhwagRIbrZLNBknX-qlxrteQloE7OlV90V2gL6Xf299iGbLrZOe8NV-uQVMd9Fi7RNCpHlISqcRHciRVSuYtCm9mCvVcGRqqww80GXfMfTHRrr_Hl9eCgIw"/>
+<div class="p-5 space-y-3">
+<div class="h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden"><div class="h-full bg-brand-primary transition-all" data-pipeline-progress style="width:0%"></div></div>
+<p class="text-sm text-gray-500">Statut: <span data-pipeline-status>en attente</span></p>
+<pre class="text-xs text-gray-400 whitespace-pre-wrap max-h-24 overflow-y-auto" data-pipeline-logs></pre>
 </div>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div class="bg-white dark:bg-[#111418] rounded-xl border border-gray-200 dark:border-[#283039]">
 <h2 class="text-gray-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] px-5 py-4 border-b border-gray-200 dark:border-[#283039]">Rapport de Performance</h2>
 <div class="p-5 space-y-3">
-<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">Précision</span> <span class="font-bold text-green-600 dark:text-green-400">98.2%</span></div>
-<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">Rappel</span> <span class="font-bold text-gray-800 dark:text-white">97.5%</span></div>
-<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">F1-Score</span> <span class="font-bold text-gray-800 dark:text-white">97.8%</span></div>
-<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">Perte (Loss)</span> <span class="font-bold text-orange-600 dark:text-orange-400">0.054</span></div>
+<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">Précision</span> <span class="font-bold text-green-600 dark:text-green-400" data-registry-precision>—</span></div>
+<div class="flex justify-between items-center"><span class="text-gray-500 dark:text-gray-400">Classes ONNX</span> <span class="font-bold text-gray-800 dark:text-white text-right text-xs" data-registry-labels>—</span></div>
 </div>
 </div>
 <div class="bg-white dark:bg-[#111418] rounded-xl border border-gray-200 dark:border-[#283039]">
@@ -349,7 +350,7 @@
 <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
 <div class="md:col-span-3">
 <div class="relative group aspect-video w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center cursor-zoom-in">
-<img class="w-full h-full object-contain" data-alt="Annotated image of an Aedes aegypti mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAelJFFIZy5KrzALVpxr9XZloaVU3M7AvcQ0ZOyOOKxkKan8oZ4-3aycLyTO8UVOr89VTpGzdBVo4oa88u_9uPf_hdix1uT06xHLhxoeqJMuztCSoOylSBf0fpvKKaN_8Cbp_9-kP-5hoUfAmGvUtwRe2lPTss2jRoXBI5CVmXnEl3W02SyydzrhM-WNOiecjPcut7DXj5Hh1zPwqfvjcYplErSqxxnVPaYrKyKbKNBYCgwccUe-4DwaLmmjq1Dsrh3I3ep2x2wpg"/>
+<img class="w-full h-full object-contain" data-alt="Annotated image of an Aedes aegypti mosquito." data-entomo-avatar="1"/>
 <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
 <span class="material-symbols-outlined text-white text-5xl">zoom_in</span>
 </div>
@@ -381,11 +382,11 @@
 </div>
 </div>
 <div class="mt-6 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
-<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of an Anopheles gambiae mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3zbkE3m8fmiCPTm7VCsLn2LVFlsFrwm52Y-SMU0mYdErDNv004Uni72un6p86twU0q6Sk2lkj2-5cdfEVDkZdkT-HPtj-Qlz5lrAOTdbfny-WGDJzzOb8jFZjb5-FRo5S0uQuYPQ_PATj-_l5edu_mvv74H44rinA0ETF_FWJTtOeYc_2YoR53eqldR49C9iiOS1Cv1DVnLbxpBuTUijLmVjyEi7bbf9kgJgY4t7UShYqLJLYLHQqXKgdZ__2KQpEMFuPvvCnIg"/>
-<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of a Culex mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZbIDmtD-TyQZkoiCSBrzKRD3bJzZDsNZGmbFQIWXchLPQo_tEoQC0kYE9uFjfLYArRuDiEKJHtJOrcyUX-upnLd4yiVI-D3mY-HJ0usPj2Z_fsPbu5uxRdiovpTmuTbeWvmXn4AObfPinZjjjDMCtQ1Og4MLvr46Et5CWTRHCi1JDy48SXc8G-W-BmD4bvLeYZZkvCxrF8VKpaa8Lud-MthdC-gtcaiDXo47JBWIDxLNNlpj9lVF4JNJLpjJiKrXoU2bYD5AZ1g"/>
-<img class="aspect-square w-full rounded-md object-cover border-2 border-primary transition-all duration-200 cursor-pointer ring-2 ring-primary" data-alt="Annotated image of an Aedes aegypti mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAelJFFIZy5KrzALVpxr9XZloaVU3M7AvcQ0ZOyOOKxkKan8oZ4-3aycLyTO8UVOr89VTpGzdBVo4oa88u_9uPf_hdix1uT06xHLhxoeqJMuztCSoOylSBf0fpvKKaN_8Cbp_9-kP-5hoUfAmGvUtwRe2lPTss2jRoXBI5CVmXnEl3W02SyydzrhM-WNOiecjPcut7DXj5Hh1zPwqfvjcYplErSqxxnVPaYrKyKbKNBYCgwccUe-4DwaLmmjq1Dsrh3I3ep2x2wpg"/>
-<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of an Anopheles funestus mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA0HxzRV8BOBJf2pUJRS6yhqGW0-_df5XP_JlLyeHE3rzynAL2lHj3siPwN9Xw84VQ2v_k6-tg8ywLqNruvBfTbuQ7iAlcAlUS45toKmHX3y4bCFqQV5DlNnTySd7NY18P4KWxDEPCfK4U3tS8EykQgOs75hMBQqw57RgFJ7zGT4Hb9nFJUrA7H_1wurxtMLvuPlRAK3M0HL2TNJngRuDtk05A_BTjOE24XG7ARpaHBiVDJdzscF4YeAdFUjV0EJJKZUSheLIOhQ"/>
-<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of a mosquito larva." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAShOA4OjgrlwhETrRJjhBHE0glWhLfChL-loMDcREsMY7Utfgwn3di5_hC_5LRVOGkHjyKOgWZa55SD6IxS-eb-3J2dUoSrhA10FDFDZOtvezRCO1OA1vRq2VvIjwo577tzVfjs6YDCdV7VM_5uUK3u8RlOhnQPnXhA-ALiHnzq0upozhW5DjjqDtn9iUPym_Ln0TOPHYnOBlBhU616xjo3GfEmrJcf5tDgYrxV-moLul6zHNE8wgSG403fgPfv-zn6y7J_VFwQw"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of an Anopheles gambiae mosquito." data-entomo-avatar="1"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of a Culex mosquito." data-entomo-avatar="1"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-primary transition-all duration-200 cursor-pointer ring-2 ring-primary" data-alt="Annotated image of an Aedes aegypti mosquito." data-entomo-avatar="1"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of an Anopheles funestus mosquito." data-entomo-avatar="1"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" data-alt="Annotated image of a mosquito larva." data-entomo-avatar="1"/>
 <div class="aspect-square w-full rounded-md bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer text-sm">+986</div>
 </div>
 </div>
@@ -398,10 +399,12 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/api.js?v=ml2"></script>
+    <script src="../js/config-boot.js"></script>
+    <script src="../js/api.js"></script>
     <script src="../js/core.js"></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/gestion-modeles-visuels.js?v=ml2"></script>
+    <script src="../js/gestion-modeles-visuels.js"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

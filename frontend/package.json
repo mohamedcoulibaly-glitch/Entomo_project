@@ -1,0 +1,12 @@
+{
+  "name": "entomo-frontend",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./www/css/input.css -o ./www/css/tailwind.min.css --minify"
+  },
+  "devDependencies": {
+    "chart.js": "^4.4.7",
+    "leaflet": "^1.9.4",
+    "tailwindcss": "^3.4.17"
+  }
+}

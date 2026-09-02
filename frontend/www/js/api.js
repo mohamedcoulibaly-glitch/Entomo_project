@@ -3,11 +3,26 @@
  * Ento-App Afrique — Version dynamique complète
  */
 
-const API_BASE = window.ENTOMO_API_BASE || (
-  window.location.port === '8765'
-    ? `${window.location.origin}/api/v1`
-    : 'http://127.0.0.1:8765/api/v1'
-);
+const API_BASE = (
+  window.ENTOMO_CONFIG?.resolveApiBase?.() ||
+  window.ENTOMO_API_BASE ||
+  `${window.location.origin}/api/v1`
+).replace(/\/$/, '');
+
+function apiOrigin() {
+  return (window.ENTOMO_CONFIG?.apiOrigin?.() || API_BASE.replace(/\/api\/v1\/?$/, ''));
+}
+
+function resolveMediaUrl(path) {
+  if (window.ENTOMO_CONFIG?.resolveMediaUrl) return window.ENTOMO_CONFIG.resolveMediaUrl(path);
+  if (!path) return null;
+  if (/^https?:\/\//i.test(path)) return path;
+  const normalized = String(path).replace(/\\/g, '/');
+  const origin = apiOrigin();
+  if (normalized.startsWith('/uploads/')) return `${origin}${normalized}`;
+  if (normalized.startsWith('uploads/')) return `${origin}/${normalized}`;
+  return `${origin}/uploads/${normalized.replace(/^\/+/, '')}`;
+}
 
 // ─── Gestion du token JWT ─────────────────────────────────────────────────────
 const Auth = {
@@ -18,7 +33,27 @@ const Auth = {
   setUser(u)        { localStorage.setItem('entomo_user', JSON.stringify(u)); },
   isLoggedIn()      { return !!this.getToken(); },
   logout()          { this.removeToken(); },
+  hasPermission(code) {
+    if (!code) return true;
+    const user = this.getUser();
+    if (!user) return false;
+    if (user.is_superuser) return true;
+    const perms = user.permissions || [];
+    if (perms.includes('admin')) return true;
+    return Array.isArray(code) ? code.some(c => perms.includes(c)) : perms.includes(code);
+  },
 };
+
+/** Formate les erreurs FastAPI (422, 500, etc.) pour l'UI. */
+function formatApiError(detail, status) {
+  if (!detail) return `Erreur ${status}`;
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) {
+    return detail.map(e => e.msg || e.message || JSON.stringify(e)).join(' · ');
+  }
+  if (typeof detail === 'object' && detail.message) return detail.message;
+  return JSON.stringify(detail);
+}
 
 // ─── Requête HTTP générique avec gestion complète des états ──────────────────
 async function apiRequest(method, path, body = null, formData = false, options = {}) {
@@ -57,8 +92,16 @@ async function apiRequest(method, path, body = null, formData = false, options =
 
     if (!res.ok) {
       let detail = `Erreur ${res.status}`;
-      try { const e = await res.json(); detail = e.detail || detail; } catch {}
-      if (!options.silent) { hideLoader(); pushNotification(detail, 'error'); }
+      try {
+        const e = await res.json();
+        detail = formatApiError(e.detail ?? e.message ?? e, res.status);
+      } catch { /* corps non JSON */ }
+      if (!options.silent) {
+        hideLoader();
+        const level = res.status === 422 ? 'warning' : 'error';
+        pushNotification(detail, level);
+      }
+      if (!options.silent && res.status >= 500) console.error('[API]', method, path, detail);
       return null;
     }
 
@@ -67,10 +110,73 @@ async function apiRequest(method, path, body = null, formData = false, options =
     return await res.json();
   } catch (err) {
     if (!options.silent) hideLoader();
-    pushNotification('Erreur de connexion au serveur', 'error');
+    if (!options.silent) pushNotification('Erreur de connexion au serveur', 'error');
     console.warn('[API] Backend non joignable :', err.message);
-    return null;
+    return options.offlineQueue ? { __offline: true, error: err } : null;
   }
+}
+
+/** Téléchargement authentifié (PDF, CSV, Excel). */
+async function apiDownload(path, filename, options = {}) {
+  const token = Auth.getToken();
+  const headers = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (!options.silent) showLoader();
+  try {
+    const res = await fetch(`${API_BASE}${path}`, { method: 'GET', headers });
+    if (!res.ok) {
+      let detail = `Erreur ${res.status}`;
+      try {
+        const e = await res.json();
+        detail = formatApiError(e.detail ?? e.message, res.status);
+      } catch { /* ignore */ }
+      if (!options.silent) pushNotification(detail, 'error');
+      return false;
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename || 'export';
+    link.click();
+    URL.revokeObjectURL(url);
+    return true;
+  } catch (err) {
+    if (!options.silent) pushNotification('Téléchargement impossible.', 'error');
+    return false;
+  } finally {
+    if (!options.silent) hideLoader();
+  }
+}
+
+/** Enregistre une mutation hors ligne si le réseau est indisponible. */
+async function queueOfflineMutation(resourceType, action, payload, resourceId = null) {
+  if (typeof OfflineStore === 'undefined' || typeof apiSync === 'undefined') return false;
+  const clientId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : `local-${resourceType}-${Date.now()}`;
+  const localId = clientId;
+  const enrichedPayload = { ...payload, client_id: clientId };
+  await OfflineStore.put({
+    local_id: localId,
+    client_id: clientId,
+    resource_type: resourceType,
+    resource_id: resourceId,
+    action,
+    statut: 'pending',
+    payload: enrichedPayload,
+  });
+  try {
+    await apiSync.enqueue({
+      resource_type: resourceType,
+      resource_id: resourceId,
+      action,
+      client_id: clientId,
+      payload: enrichedPayload,
+    });
+  } catch { /* file locale conservée */ }
+  pushNotification('Action enregistrée hors ligne. Synchronisation à la reconnexion.', 'warning');
+  return true;
 }
 
 // ─── Authentification ─────────────────────────────────────────────────────────
@@ -82,6 +188,11 @@ const apiAuth = {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: form,
     });
+    if (res.status === 429) {
+      let msg = 'Trop de tentatives. Réessayez dans une minute.';
+      try { const e = await res.json(); if (e.detail) msg = e.detail; } catch { /* ignore */ }
+      throw new Error(msg);
+    }
     if (!res.ok) return null;
     const data = await res.json();
     Auth.setToken(data.access_token);
@@ -110,12 +221,52 @@ const apiCaptures = {
     return apiRequest('GET', `/captures/${q ? '?' + q : ''}`);
   },
   get(id)                 { return apiRequest('GET', `/captures/${id}`); },
-  create(data)            { return apiRequest('POST', '/captures/', data); },
+  async create(data) {
+    const payload = normalizeCapturePayload(data);
+    const res = await apiRequest('POST', '/captures/', payload, false, { offlineQueue: true });
+    if (res && res.__offline) {
+      await queueOfflineMutation('capture', 'create', payload);
+      return { offline: true, ...payload };
+    }
+    return res;
+  },
   update(id, data)        { return apiRequest('PUT', `/captures/${id}`, data); },
   delete(id)              { return apiRequest('DELETE', `/captures/${id}`); },
   valider(id, validation) { return apiRequest('POST', `/captures/${id}/valider`, validation); },
+  analyser(id, data = {})  { return apiRequest('POST', `/captures/${id}/analyser`, data); },
+  analyserImage(id, data = {}) { return apiRequest('POST', `/captures/${id}/analyser-image`, data); },
+  statsAudio()             { return apiRequest('GET', '/captures/stats-audio'); },
   aValider()              { return apiRequest('GET', '/captures/a-valider'); },
+  export(params = {}, format = 'csv') {
+    const q = new URLSearchParams({ ...params, format }).toString();
+    const ext = format === 'xlsx' ? 'xlsx' : 'csv';
+    const stamp = new Date().toISOString().slice(0, 10);
+    return apiDownload(`/captures/export?${q}`, `analyse_captures_${stamp}.${ext}`);
+  },
+  uploadImage(id, file) {
+    const fd = new FormData();
+    fd.append('file', file);
+    return apiRequest('POST', `/captures/${id}/upload-image`, fd, true);
+  },
+  uploadAudio(id, file) {
+    const fd = new FormData();
+    fd.append('file', file);
+    return apiRequest('POST', `/captures/${id}/upload-audio`, fd, true);
+  },
 };
+
+/** Aligne le payload capture frontend sur CaptureCreate FastAPI. */
+function normalizeCapturePayload(data) {
+  const out = { ...data };
+  if (out.date_capture && !out.date_capture.includes('T')) {
+    out.date_capture = `${out.date_capture}T12:00:00`;
+  }
+  if (out.confiance != null && out.confidence_ia == null) out.confidence_ia = out.confiance;
+  if (out.espece && !out.identification_ia) out.identification_ia = out.espece;
+  out.statut = out.statut || 'a_valider';
+  out.nombre_individus = Number(out.nombre_individus || 1);
+  return out;
+}
 
 // ─── Sites sentinelles ────────────────────────────────────────────────────────
 const apiSites = {
@@ -189,6 +340,7 @@ const apiModels = {
   updatePipeline(id, d) { return apiRequest('PUT', `/modeles/pipelines/${id}`, d); },
   runPipeline(id)    { return apiRequest('POST', `/modeles/pipelines/${id}/lancer`); },
   stopPipeline(id)   { return apiRequest('POST', `/modeles/pipelines/${id}/arreter`); },
+  registry()         { return apiRequest('GET', '/modeles/registry'); },
 };
 
 // ─── Rapports ─────────────────────────────────────────────────────────────────
@@ -207,6 +359,9 @@ const apiReports = {
   fileUrl(report) {
     if (!report?.chemin_fichier) return null;
     return `${API_BASE.replace(/\/api\/v1$/, '')}${report.chemin_fichier}`;
+  },
+  download(id, filename) {
+    return apiDownload(`/rapports/${id}/telecharger`, filename || `rapport_${id}.pdf`);
   },
   delete(id)        { return apiRequest('DELETE', `/rapports/${id}`); },
 };
@@ -230,19 +385,64 @@ const apiDhis2 = {
   addMapping(configId, d)  { return apiRequest('POST', `/dhis2/config/${configId}/mappings`, d); },
   deleteMapping(id)        { return apiRequest('DELETE', `/dhis2/mappings/${id}`); },
   // Sync
-  sync(configId = 1)       { return apiRequest('POST', '/dhis2/sync', { config_id: configId }); },
+  sync(configId, options = {}) {
+    const id = configId || options.configId || 1;
+    return apiRequest('POST', '/dhis2/sync', { config_id: id }, false, { silent: !!options.silent });
+  },
+  syncCapture(captureId, options = {}) {
+    return apiRequest('POST', `/dhis2/sync/capture/${captureId}`, null, false, { silent: !!options.silent });
+  },
+  async syncIfReady(options = {}) {
+    const status = await this.getStatus();
+    if (!status?.credentials_ready || !status?.config_id) return null;
+    return this.sync(status.config_id, options);
+  },
   getHistorique(configId)  { return apiRequest('GET', `/dhis2/sync/historique/${configId}`); },
-  testConnection()         { return apiRequest('POST', '/dhis2/sync', { config_id: 1 }).then(() => ({ success: true })).catch(() => ({ success: false })); },
+  testConnection(configId, password) {
+    return apiRequest('POST', '/dhis2/test-connection', { config_id: configId, password: password || null });
+  },
   getStatus()              { return apiRequest('GET', '/dhis2/status', null, false, { silent: true }); },
-  listPending()            { return apiCaptures.aValider(); },
+  getCatalog(configId)     { return apiRequest('GET', `/dhis2/catalog/${configId}`); },
+  listPending()            { return apiRequest('GET', '/dhis2/pending'); },
   validate(id, data)       { return apiCaptures.valider(id, data); },
+  async validateAndPush(id, data) {
+    const res = await apiCaptures.valider(id, data);
+    if (!res) return null;
+    const status = await this.getStatus();
+    if (status?.credentials_ready && status?.config_id) {
+      try {
+        await this.syncCapture(id, { silent: true });
+      } catch {
+        try { await this.sync(status.config_id, { silent: true }); } catch { /* agrégé en secours */ }
+      }
+    }
+    return res;
+  },
 };
 
 // ─── Dashboard stats ──────────────────────────────────────────────────────────
+function _dashboardQuery(params = {}) {
+  const q = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => {
+    if (v != null && v !== '' && v !== 'toutes' && v !== 'Toutes') q.set(k, v);
+  });
+  const s = q.toString();
+  return s ? `?${s}` : '';
+}
+
 const apiDashboard = {
-  stats()             { return apiRequest('GET', '/dashboard/stats'); },
-  capturesParEspece() { return apiRequest('GET', '/dashboard/captures-par-espece'); },
-  capturesParSite()   { return apiRequest('GET', '/dashboard/captures-par-site'); },
+  stats(params = {})           { return apiRequest('GET', `/dashboard/stats${_dashboardQuery(params)}`); },
+  capturesParEspece(params = {}) { return apiRequest('GET', `/dashboard/captures-par-espece${_dashboardQuery(params)}`); },
+  capturesParSite(params = {})   { return apiRequest('GET', `/dashboard/captures-par-site${_dashboardQuery(params)}`); },
+  capturesParRegion(params = {}) { return apiRequest('GET', `/dashboard/captures-par-region${_dashboardQuery(params)}`); },
+  capturesParMethode(params = {}) { return apiRequest('GET', `/dashboard/captures-par-methode${_dashboardQuery(params)}`); },
+  capturesParStatut(params = {})  { return apiRequest('GET', `/dashboard/captures-par-statut${_dashboardQuery(params)}`); },
+  densiteEvolution(params = {})   { return apiRequest('GET', `/dashboard/densite-evolution${_dashboardQuery(params)}`); },
+  alertes(params = {})            { return apiRequest('GET', `/dashboard/alertes${_dashboardQuery(params)}`); },
+  heatmap(params = {})            { return apiRequest('GET', `/dashboard/heatmap${_dashboardQuery(params)}`); },
+  interventionsStats(params = {}) { return apiRequest('GET', `/dashboard/interventions-stats${_dashboardQuery(params)}`); },
+  regionDetail(name)              { return apiRequest('GET', `/dashboard/region/${encodeURIComponent(name)}`); },
+  regions()                       { return apiRequest('GET', '/dashboard/regions'); },
 };
 
 // ─── Interventions ────────────────────────────────────────────────────────────
@@ -306,9 +506,22 @@ const apiProfil = {
 };
 
 const apiSync = {
-  settings()           { return apiRequest('GET', '/sync/settings?extended=true'); },
+  settings()           { return apiRequest('GET', '/sync/settings?extended=true', null, false, { silent: true }); },
   saveSettings(data)   { return apiRequest('POST', '/sync/settings', data); },
   clearCache()         { return apiRequest('DELETE', '/sync/cache'); },
+  listQueue()          { return apiRequest('GET', '/sync/queue'); },
+  enqueue(data)        { return apiRequest('POST', '/sync/queue', data); },
+  replay(itemId)       { return apiRequest('POST', `/sync/queue/${itemId}/replay`); },
+  resolveConflict(itemId, strategy) {
+    return apiRequest('POST', `/sync/queue/${itemId}/resolve`, { strategy });
+  },
+  processQueue()       { return apiRequest('POST', '/sync/queue/process'); },
+};
+
+// ─── Assistant IA ─────────────────────────────────────────────────────────────
+const apiAssistant = {
+  context()            { return apiRequest('GET', '/assistant/context'); },
+  chat(message)        { return apiRequest('POST', '/assistant/chat', { message }); },
 };
 
 // ─── Assistance ──────────────────────────────────────────────────────────────
@@ -327,13 +540,10 @@ function showApiStatus(connected) {
     badge.className = 'fixed bottom-4 left-4 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow';
     document.body.appendChild(badge);
   }
+  badge.dataset.status = connected ? 'ok' : 'error';
   if (connected) {
-    badge.className = badge.className.replace(/bg-\w+-\d+/g, '');
-    badge.classList.add('bg-green-100', 'text-green-800');
     badge.innerHTML = '<span class="material-symbols-outlined text-sm">cloud_done</span> API connectée';
   } else {
-    badge.className = badge.className.replace(/bg-\w+-\d+/g, '');
-    badge.classList.add('bg-yellow-100', 'text-yellow-800');
     badge.innerHTML = '<span class="material-symbols-outlined text-sm">cloud_off</span> Mode hors-ligne';
   }
 }
@@ -423,8 +633,9 @@ const REFERENCE_DATA_STATIC = {
 
 // Vérifier la connexion backend au démarrage
 async function checkApiHealth() {
+  const healthUrl = `${apiOrigin()}/health`;
   try {
-    const res = await fetch('http://127.0.0.1:8765/health', { signal: AbortSignal.timeout(3000) });
+    const res = await fetch(healthUrl, { signal: AbortSignal.timeout(3000) });
     const ok = res.ok;
     showApiStatus(ok);
     return ok;

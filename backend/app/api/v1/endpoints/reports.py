@@ -21,6 +21,7 @@ from app.schemas.report import (
     RapportUpdate,
 )
 from app.services.report_generator import generate_report_file
+from app.services.report_scheduler import compute_next_envoi
 
 router = APIRouter()
 
@@ -154,4 +155,9 @@ def programmer_rapport(rapport_id: int, prog_in: RapportProgrammeCreate, db: Ses
     if not crud_rapport.get(db, id=rapport_id):
         raise HTTPException(status_code=404, detail="Rapport non trouvé")
     prog_in.rapport_id = rapport_id
-    return crud_rapport_programme.create(db, obj_in=prog_in)
+    programme = crud_rapport_programme.create(db, obj_in=prog_in)
+    if not programme.prochain_envoi:
+        programme.prochain_envoi = compute_next_envoi(programme.recurrence)
+        db.commit()
+        db.refresh(programme)
+    return programme

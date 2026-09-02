@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Détail du dataset — Ento-App Afrique</title>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{'brand-primary':'#005689'}}}}</script>
+    <link rel="stylesheet" href="../css/tailwind.min.css" />
+    <link rel="stylesheet" href="../css/design-tokens.css" /><script>tailwind.config={darkMode:'class',theme:{extend:{colors:{'brand-primary':'#005689'}}}}</script>
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
   <header class="border-b bg-white dark:border-gray-800 dark:bg-gray-900">
@@ -44,8 +44,14 @@
     </section>
     <section id="dataset-error" class="hidden rounded-xl border border-red-200 bg-red-50 p-5 text-red-700"></section>
   </main>
-  <script src="../js/api.js"></script>
-  <script src="../js/core.js"></script>
-  <script src="../js/details-dataset.js"></script>
+
+    <!-- Ento-App Scripts -->
+    <script src="../js/config-boot.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/core.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/pages-generiques.js"></script>
+    <script src="../js/details-dataset.js"></script>
+    <!-- /Ento-App Scripts -->
 </body>
 </html>

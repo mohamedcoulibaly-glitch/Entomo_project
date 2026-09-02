@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('img[class*="rounded"], [class*="aspect"][class*="bg-cover"]').forEach(makeLightbox);
 
   await loadModels();
+  await loadRegistry();
 
   document.querySelectorAll('button').forEach(btn => {
     const t = btn.textContent.trim();
@@ -165,10 +166,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  async function loadRegistry() {
+    try {
+      const registry = await apiModels.registry();
+      const precisionEl = document.querySelector('[data-registry-precision]');
+      const labelsEl = document.querySelector('[data-registry-labels]');
+      if (precisionEl && registry?.image?.metrics?.precision != null) {
+        precisionEl.textContent = `${(registry.image.metrics.precision * 100).toFixed(1)}%`;
+      }
+      if (labelsEl && registry?.image?.labels?.length) {
+        labelsEl.textContent = registry.image.labels.join(', ');
+      }
+    } catch (err) {
+      console.warn('Registre ML indisponible', err);
+    }
+  }
+
+  function modelPlaceholderStyle(model) {
+    const hue = (Number(model.id) || 1) * 47 % 360;
+    return `background: linear-gradient(135deg, hsl(${hue} 45% 35%), hsl(${(hue + 40) % 360} 55% 55%))`;
+  }
+
   async function loadModels() {
     try {
       const allModels = await apiModels.list();
-      const models = (allModels || []).filter(model => model.type_modele !== 'audio');
+      const models = (allModels || []);
       if (!models) return;
       const countEl = document.querySelector('[data-count="models"]');
       if (countEl) countEl.textContent = models.length || '0';
@@ -176,15 +198,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (container) {
         container.innerHTML = models.length ? models.map(m => `
           <div class="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow" data-id="${m.id}">
-            <div class="aspect-video bg-gray-100 dark:bg-gray-700 bg-cover bg-center" style="background-image: url('${m.image_url || 'https://placehold.co/400x225/e2e8f0/94a3b8?text=Modèle'}')"></div>
+            <div class="aspect-video flex items-center justify-center text-white text-sm font-semibold" style="${modelPlaceholderStyle(m)}">
+              <span class="material-symbols-outlined text-4xl opacity-80">image_search</span>
+            </div>
             <div class="p-3">
               <h3 class="font-bold text-sm text-[#111418] dark:text-white">${m.nom || 'Modèle'}</h3>
-              <p class="text-xs text-gray-500 mb-2">v${m.version || '1.0.0'}</p>
+              <p class="text-xs text-gray-500 mb-2">v${m.version || '1.0.0'}${m.precision != null ? ` • précision ${(m.precision * 100).toFixed(1)}%` : ''}</p>
               ${m.description ? `<p class="text-xs text-gray-500 dark:text-gray-400 mb-2">${m.description}</p>` : ''}
               <div class="flex items-center justify-between">
                 <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${m.deploye ? 'bg-green-100 text-green-800' : !m.actif ? 'bg-gray-100 text-gray-700' : 'bg-blue-100 text-blue-800'}">${m.deploye ? 'déployé' : !m.actif ? 'archivé' : 'actif'}</span>
                 <div class="flex gap-1">
                   <button class="px-2 py-1 text-xs rounded-lg bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20">Déployer</button>
+                  <button class="px-2 py-1 text-xs rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400">Tester</button>
                   <button class="px-2 py-1 text-xs rounded-lg bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400">Supprimer</button>
                 </div>
               </div>
@@ -193,4 +218,82 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } catch (err) { pushNotification('Erreur lors du chargement des modèles.', 'error'); }
   }
+
+  let activePipelineId = null;
+  let pipelinePollTimer = null;
+
+  function updatePipelineProgress(pipeline) {
+    const bar = document.querySelector('[data-pipeline-progress]');
+    const status = document.querySelector('[data-pipeline-status]');
+    const logs = document.querySelector('[data-pipeline-logs]');
+    if (bar) bar.style.width = `${pipeline.progression || 0}%`;
+    if (status) status.textContent = pipeline.statut || '—';
+    if (logs && pipeline.logs) logs.textContent = pipeline.logs.split('\n').slice(-4).join('\n');
+  }
+
+  function stopPipelinePolling() {
+    if (pipelinePollTimer) {
+      clearInterval(pipelinePollTimer);
+      pipelinePollTimer = null;
+    }
+  }
+
+  function startPipelinePolling(pipelineId) {
+    stopPipelinePolling();
+    pipelinePollTimer = setInterval(async () => {
+      try {
+        const pipeline = await apiModels.getPipeline(pipelineId);
+        if (!pipeline) return;
+        updatePipelineProgress(pipeline);
+        if (['termine', 'erreur', 'arrete'].includes(pipeline.statut)) {
+          stopPipelinePolling();
+          activePipelineId = null;
+          await Promise.all([loadModels(), loadRegistry()]);
+        }
+      } catch {
+        stopPipelinePolling();
+      }
+    }, 1500);
+  }
+
+  document.querySelectorAll('button').forEach(btn => {
+    const text = btn.textContent.trim();
+    if (text.includes('Lancer l\'entraînement') || text.includes("Lancer l'entraînement")) {
+      btn.addEventListener('click', async () => {
+        buttonLoading(btn, true);
+        try {
+          const models = (await apiModels.list()) || [];
+          const model = models[0];
+          if (!model) { pushNotification('Aucun modèle visuel disponible.', 'warning'); return; }
+          const pipeline = await apiModels.createPipeline({
+            nom: `Entraînement ${model.nom}`,
+            type_pipeline: 'entrainement',
+            ml_model_id: model.id,
+          });
+          if (!pipeline) return;
+          activePipelineId = pipeline.id;
+          const started = await apiModels.runPipeline(pipeline.id);
+          pushNotification(`Pipeline "${started?.nom || pipeline.nom}" démarré.`, 'success');
+          startPipelinePolling(pipeline.id);
+        } catch {
+          pushNotification('Impossible de lancer l\'entraînement.', 'error');
+        } finally {
+          buttonLoading(btn, false);
+        }
+      });
+    }
+    if (text.includes('Arrêter')) {
+      btn.addEventListener('click', async () => {
+        if (!activePipelineId) { pushNotification('Aucun entraînement en cours.', 'warning'); return; }
+        try {
+          await apiModels.stopPipeline(activePipelineId);
+          pushNotification('Entraînement arrêté.', 'success');
+          stopPipelinePolling();
+          activePipelineId = null;
+        } catch {
+          pushNotification('Impossible d\'arrêter le pipeline.', 'error');
+        }
+      });
+    }
+  });
 });

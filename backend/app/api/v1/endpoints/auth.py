@@ -1,45 +1,87 @@
 from datetime import datetime, timezone
 import json
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.db.session import get_db
 from app.crud.user import crud_user
 from app.core.security import create_access_token
 from app.core.deps import get_current_active_user
+from app.core.permissions import permissions_for_user
 from app.models.user import User
+from app.models.role import Role
 from app.schemas.user import Token, UserResponse
 from app.models.audit_log import AuditLog
 from app.models.reference import ReferenceData
+from app.services.audit_service import audit_service
+from app.core.rate_limit import check_login_allowed, record_failed_login, reset_login_attempts
 
 router = APIRouter()
 
 
+def _client_ip(request: Request) -> str | None:
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else None
+
+
 @router.post("/login", response_model=Token)
 def login(
+    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
     """Authentification — retourne un token JWT Bearer."""
+    client_key = _client_ip(request) or form_data.username
+    if not check_login_allowed(client_key):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Trop de tentatives de connexion. Réessayez dans une minute.",
+        )
     user = crud_user.authenticate(db, username=form_data.username, password=form_data.password)
     if not user:
+        record_failed_login(client_key)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Nom d'utilisateur ou mot de passe incorrect",
             headers={"WWW-Authenticate": "Bearer"},
         )
     if not user.is_active:
+        record_failed_login(client_key)
         raise HTTPException(status_code=400, detail="Compte désactivé")
+    reset_login_attempts(client_key)
     user.last_login = datetime.utcnow()
     db.commit()
+    audit_service.log(
+        db,
+        action="login",
+        utilisateur_id=user.id,
+        module="auth",
+        details={"username": user.username},
+        adresse_ip=_client_ip(request),
+    )
     token = create_access_token(data={"sub": user.username, "user_id": user.id})
     return {"access_token": token, "token_type": "bearer"}
 
 
 @router.get("/me", response_model=UserResponse)
-def get_me(current_user: User = Depends(get_current_active_user)):
-    """Retourne le profil de l'utilisateur connecté."""
-    return current_user
+def get_me(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    """Retourne le profil de l'utilisateur connecté avec ses permissions."""
+    user = (
+        db.query(User)
+        .options(joinedload(User.role).joinedload(Role.permissions))
+        .filter(User.id == current_user.id)
+        .first()
+    )
+    if not user:
+        raise HTTPException(status_code=404, detail="Utilisateur introuvable")
+    payload = UserResponse.model_validate(user).model_dump()
+    payload["permissions"] = permissions_for_user(user)
+    return payload
 
 
 @router.put("/me")
@@ -143,7 +185,11 @@ def update_my_preferences(preferences: dict, db: Session = Depends(get_db), curr
 
 
 @router.post("/logout-all")
-def logout_all(db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
+def logout_all(
+    request: Request,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
     now = datetime.now(timezone.utc).isoformat()
     item = db.query(ReferenceData).filter(
         ReferenceData.category == "session_revocation",
@@ -155,4 +201,11 @@ def logout_all(db: Session = Depends(get_db), current_user: User = Depends(get_c
     else:
         item.label = now
     db.commit()
+    audit_service.log_for_user(
+        db,
+        current_user,
+        action="logout_all",
+        module="auth",
+        adresse_ip=_client_ip(request),
+    )
     return {"message": "Toutes les sessions ont été révoquées"}

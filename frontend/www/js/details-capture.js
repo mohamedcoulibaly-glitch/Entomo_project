@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const imageUrl = capture?.image_path || capture?.specimen_image || capture?.image_url || capture?.photo_url;
     if (!imageUrl) { pushNotification('Aucune image disponible pour cette capture.', 'warning'); return; }
     const link = document.createElement('a');
-    link.href = imageUrl.startsWith('http') ? imageUrl : `http://127.0.0.1:8765/${imageUrl.replace(/^\//, '')}`;
+    link.href = resolveMediaUrl(imageUrl) || imageUrl;
     link.download = `${capture.code || `capture-${capture.id}`}.jpg`;
     document.body.appendChild(link);
     link.click();

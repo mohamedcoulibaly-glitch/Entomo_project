@@ -98,7 +98,11 @@ def test_delete_mapping_not_found(client, admin_token_headers):
     assert res.status_code == 404
 
 
-def test_trigger_sync(client, admin_token_headers):
+def test_trigger_sync(client, admin_token_headers, monkeypatch):
+    def fake_push(db, config, password=None):
+        return True, "ok", {"dataValues": [{"value": "1"}]}, 1
+
+    monkeypatch.setattr("app.api.v1.endpoints.dhis2.push_data_values", fake_push)
     cid = test_create_config(client, admin_token_headers)
     res = client.post("/api/v1/dhis2/sync", json={"config_id": cid},
                       headers=admin_token_headers)

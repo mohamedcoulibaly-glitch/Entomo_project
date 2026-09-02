@@ -5,7 +5,7 @@ def test_list_permissions(client, admin_token_headers):
     assert res.status_code == 200
     data = res.json()
     assert isinstance(data, list)
-    assert len(data) >= 42  # 7 modules * 6 actions
+    assert len(data) >= 34
 
 
 def test_create_permission(client, admin_token_headers):

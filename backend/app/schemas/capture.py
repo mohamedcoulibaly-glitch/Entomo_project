@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict, Any
 from datetime import datetime
 from pydantic import BaseModel, model_validator
 from app.schemas.base import BaseSchema
@@ -73,8 +73,15 @@ class CaptureResponse(BaseSchema, CaptureBase):
     ml_model_id: Optional[int] = None
     image_path: Optional[str] = None
     audio_path: Optional[str] = None
+    audio_metadata: Optional[Dict[str, Any]] = None
+    image_metadata: Optional[Dict[str, Any]] = None
     utilisateur_id: Optional[int] = None
     valideur_id: Optional[int] = None
+    site_nom: Optional[str] = None
+    fichier_url: Optional[str] = None
+    espece_detectee: Optional[str] = None
+    duree: Optional[float] = None
+    nom: Optional[str] = None
     
     @model_validator(mode='before')
     @classmethod
@@ -98,4 +105,36 @@ class CaptureValidate(BaseModel):
     statut: str  # valide / corrige / rejete
     espece_corrigee: Optional[str] = None
     notes: Optional[str] = None
+
+
+class CaptureAnalyzeRequest(BaseModel):
+    model_id: Optional[int] = None
+
+
+class CaptureAnalyzeResponse(BaseModel):
+    capture_id: int
+    espece_detectee: str
+    confiance: float
+    distribution: Dict[str, float]
+    frequence: float
+    modele: str
+    temps_traitement: float
+    duree: float
+    statut: str
+
+
+class ImageAnalyzeResponse(BaseModel):
+    capture_id: int
+    espece_detectee: str
+    confiance: float
+    distribution: Dict[str, float]
+    modele: str
+    temps_traitement: float
+    statut: str
+
+
+class AudioStatsResponse(BaseModel):
+    precision: float
+    detection: float
+    echantillons: int
 

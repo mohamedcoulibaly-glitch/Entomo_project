@@ -7,8 +7,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.db.session import Base
 from app.models import *  # noqa: F401, F403 — importe tous les modèles
+from app.core.config import settings
 
 config = context.config
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 

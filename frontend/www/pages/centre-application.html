@@ -1,5 +1,7 @@
-<!doctype html>
-<html lang="fr" class="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Centre de l’application — Ento-App Afrique</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={darkMode:'class',theme:{extend:{colors:{'brand-primary':'#005689'}}}}</script></head>
+﻿<!doctype html>
+<html lang="fr" class="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Centre de l’application — Ento-App Afrique</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="../css/tailwind.min.css" />
+    <link rel="stylesheet" href="../css/design-tokens.css" /><script>tailwind.config={darkMode:'class',theme:{extend:{colors:{'brand-primary':'#005689'}}}}</script></head>
 <body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-white">
   <header class="sticky top-0 z-20 border-b bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95"><div class="mx-auto flex max-w-7xl items-center gap-4 px-5 py-4"><a href="../index.html" class="flex items-center gap-2 font-black text-brand-primary"><span class="material-symbols-outlined">hub</span>Ento-App</a><div class="relative flex-1"><span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400">search</span><input id="screen-search" type="search" placeholder="Rechercher un écran, une action ou un module…" class="w-full rounded-xl border border-slate-300 bg-slate-50 py-2.5 pl-11 pr-4 outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 dark:border-slate-700 dark:bg-slate-800"></div><button id="theme-toggle" class="rounded-xl border p-2.5 dark:border-slate-700"><span id="theme-icon" class="material-symbols-outlined">dark_mode</span></button></div></header>
   <main class="mx-auto max-w-7xl px-5 py-8">
@@ -7,5 +9,13 @@
     <section class="mt-8"><div class="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 class="text-2xl font-black">Actions rapides</h2><p class="text-sm text-slate-500">Créer une nouvelle ressource sans détour.</p></div></div><div id="quick-create" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"></div></section>
     <section class="mt-10"><div class="mb-5 flex items-end justify-between"><div><h2 class="text-2xl font-black">Tous les écrans</h2><p id="result-count" class="text-sm text-slate-500"></p></div><select id="category-filter" class="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-800"><option value="">Tous les domaines</option></select></div><div id="screen-groups" class="space-y-9"></div><div id="screen-empty" class="hidden rounded-2xl border border-dashed p-12 text-center text-slate-400"><span class="material-symbols-outlined text-5xl">search_off</span><p class="mt-2 font-semibold">Aucun écran ne correspond à cette recherche.</p></div></section>
   </main>
-  <script src="../js/api.js"></script><script src="../js/core.js"></script><script src="../js/centre-application.js"></script>
+
+    <!-- Ento-App Scripts -->
+    <script src="../js/config-boot.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/core.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/pages-generiques.js"></script>
+    <script src="../js/centre-application.js"></script>
+    <!-- /Ento-App Scripts -->
 </body></html>

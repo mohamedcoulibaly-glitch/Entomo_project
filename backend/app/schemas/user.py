@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, ConfigDict
 from app.schemas.base import BaseSchema
@@ -43,6 +43,7 @@ class UserUpdate(BaseModel):
 class UserResponse(BaseSchema, UserBase):
     is_superuser: bool = False
     role: Optional[RoleSimple] = None
+    permissions: List[str] = []
 
 
 class UserLogin(BaseModel):

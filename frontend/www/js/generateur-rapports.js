@@ -42,7 +42,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const container = document.querySelector('[data-reports-container]');
     if (!container) return;
     container.innerHTML = reports.length ? reports.map(report => `<div class="flex items-center justify-between gap-2 p-3 border-b border-gray-100 dark:border-gray-700 last:border-0"><a href="details-rapport.html?id=${report.id}" class="min-w-0 hover:text-primary"><p class="truncate text-sm font-medium">${escapeHtml(report.titre)}</p><p class="text-xs text-gray-500">${new Date(report.date_generation || report.created_at).toLocaleDateString('fr-FR')} • ${escapeHtml(report.statut)}</p></a><div class="flex gap-1">${report.chemin_fichier ? `<button data-download-report="${report.id}" class="p-2 text-primary" aria-label="Télécharger ${escapeHtml(report.titre)}"><span class="material-symbols-outlined text-base">download</span></button>` : ''}<button data-delete-report="${report.id}" class="p-2 text-red-600" aria-label="Supprimer ${escapeHtml(report.titre)}"><span class="material-symbols-outlined text-base">delete</span></button></div></div>`).join('') : '<p class="text-center text-sm text-gray-400 py-4">Aucun rapport généré</p>';
-    container.querySelectorAll('[data-download-report]').forEach(button => button.addEventListener('click', () => { const report = reports.find(item => item.id === Number(button.dataset.downloadReport)); const url = apiReports.fileUrl(report); if (url) { const link = document.createElement('a'); link.href = url; link.download = ''; link.click(); } }));
+    container.querySelectorAll('[data-download-report]').forEach(button => button.addEventListener('click', async () => {
+      if (button.disabled) return;
+      const report = reports.find(item => item.id === Number(button.dataset.downloadReport));
+      if (!report) return;
+      buttonLoading(button, true);
+      const ext = (report.format_fichier || 'pdf').toLowerCase().replace('excel', 'xlsx');
+      await apiReports.download(report.id, `${report.titre || 'rapport'}.${ext}`);
+      buttonLoading(button, false);
+    }));
     container.querySelectorAll('[data-delete-report]').forEach(button => button.addEventListener('click', () => { const report = reports.find(item => item.id === Number(button.dataset.deleteReport)); confirmDelete(report?.titre || 'ce rapport', async () => { await apiReports.delete(report.id); pushNotification('Rapport supprimé.', 'success'); await loadReports(); }); }));
   }
 

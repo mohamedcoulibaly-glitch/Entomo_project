@@ -135,9 +135,9 @@ def test_google_fonts_loaded(page, base_url):
 
 
 def test_tailwind_css_loaded(page, base_url):
-    """Page should reference Tailwind CSS."""
+    """Page should reference local Tailwind CSS."""
     page.goto(f"{base_url}/")
-    tailwind = page.locator('script[src*="tailwindcss"]')
+    tailwind = page.locator('link[href*="tailwind.min.css"], script[src*="tailwindcss"]')
     assert tailwind.count() > 0
 
 

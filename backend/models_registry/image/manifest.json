@@ -1,0 +1,22 @@
+{
+  "name": "entomo-image-v1",
+  "version": "1.0.0",
+  "type": "image",
+  "architecture": "RandomForest+histogram48",
+  "labels": [
+    "Ae. aegypti",
+    "An. arabiensis",
+    "An. funestus",
+    "An. gambiae",
+    "Cx. quinquefasciatus"
+  ],
+  "feature_size": 48,
+  "metrics": {
+    "precision": 0.9381,
+    "rappel": 0.9333,
+    "f1_score": 0.9331,
+    "accuracy": 0.9333,
+    "echantillons": 150
+  },
+  "onnx_file": "entomo-image-v1.onnx"
+}

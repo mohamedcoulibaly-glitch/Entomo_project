@@ -1,0 +1,22 @@
+{
+  "app.name": "Ento-App Afrique",
+  "nav.back": "Retour",
+  "nav.login": "Se connecter",
+  "nav.logout": "Déconnexion",
+  "capture.new.title": "Enregistrer une nouvelle capture",
+  "capture.new.submit": "Créer la capture",
+  "capture.media.photo": "Photo du spécimen",
+  "capture.media.audio": "Enregistrement audio",
+  "capture.media.record_start": "Démarrer l'enregistrement",
+  "capture.media.record_stop": "Arrêter",
+  "capture.media.upload": "Choisir un fichier",
+  "capture.media.analyze": "Analyser après création",
+  "api.connected": "API connectée",
+  "api.offline": "Mode hors-ligne",
+  "common.save": "Enregistrer",
+  "common.cancel": "Annuler",
+  "common.search": "Rechercher…",
+  "common.loading": "Chargement…",
+  "common.success": "Opération réussie",
+  "common.error": "Une erreur s'est produite"
+}

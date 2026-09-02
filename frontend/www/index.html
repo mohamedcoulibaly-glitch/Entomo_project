@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
     <meta charset="utf-8" />
@@ -8,14 +8,16 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style type="text/tailwindcss">
+    <link rel="stylesheet" href="css/tailwind.min.css" />
+    <link rel="stylesheet" href="css/design-tokens.css" />
+<style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
                 font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
             }
         }
     </style>
+    <script src="js/tailwind-shim.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -395,100 +397,10 @@
     </div>
 
     <!-- Ento-App Scripts -->
+    <script src="./js/config-boot.js"></script>
     <script src="./js/api.js"></script>
     <script src="./js/core.js"></script>
-    <script>
-    // ─── Header auth: show login btn or avatar ──────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-      const loginBtn = document.getElementById('login-header-btn');
-      const avatarEl = document.getElementById('header-avatar');
-      const userData = (() => { try { return JSON.parse(localStorage.getItem('entomo_user') || 'null'); } catch { return null; } })();
-      if (Auth.isLoggedIn() && userData) {
-        if (loginBtn) loginBtn.classList.add('hidden');
-        if (avatarEl) {
-          avatarEl.classList.remove('hidden');
-          const initials = (userData.full_name || userData.username || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-          avatarEl.textContent = initials;
-          avatarEl.title = userData.full_name || userData.username || 'Profil';
-          avatarEl.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (typeof showSessionMenu !== 'undefined') showSessionMenu(this, userData);
-          });
-        }
-      } else {
-        if (loginBtn) loginBtn.classList.remove('hidden');
-        if (avatarEl) avatarEl.classList.add('hidden');
-      }
-    });
-
-    // ─── Accueil dynamique : stats en temps réel ───────────────────────────────
-    document.addEventListener('DOMContentLoaded', async () => {
-      const el = (id) => document.getElementById(id);
-      const stats = await apiRequest('GET', '/dashboard/stats', null, false, { suppressAuth: true, silent: true });
-      if (stats) {
-        if (el('quick-stats')) {
-          el('quick-stats').innerHTML = `
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-              <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
-                <span class="material-symbols-outlined text-brand-primary text-3xl">bug_report</span>
-                <p class="text-2xl font-bold mt-1">${stats.captures?.total ?? '0'}</p>
-                <p class="text-xs text-gray-500">Captures</p>
-              </div>
-              <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
-                <span class="material-symbols-outlined text-brand-primary text-3xl">place</span>
-                <p class="text-2xl font-bold mt-1">${stats.sites?.actifs ?? stats.sites?.total ?? '0'}</p>
-                <p class="text-xs text-gray-500">Sites Actifs</p>
-              </div>
-              <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
-                <span class="material-symbols-outlined text-brand-alert-warning text-3xl">pending</span>
-                <p class="text-2xl font-bold mt-1">${stats.captures?.a_valider ?? '0'}</p>
-                <p class="text-xs text-gray-500">À Valider</p>
-              </div>
-              <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
-                <span class="material-symbols-outlined text-brand-primary text-3xl">memory</span>
-                <p class="text-2xl font-bold mt-1">${stats.modeles?.deployes ?? '0'}</p>
-                <p class="text-xs text-gray-500">Modèles ML</p>
-              </div>
-              <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
-                <span class="material-symbols-outlined text-brand-primary text-3xl">group</span>
-                <p class="text-2xl font-bold mt-1">${stats.utilisateurs?.actifs ?? '0'}</p>
-                <p class="text-xs text-gray-500">Utilisateurs</p>
-              </div>
-              <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
-                <span class="material-symbols-outlined text-brand-success text-3xl">sync</span>
-                <p class="text-2xl font-bold mt-1">${stats.dhis2?.dernier_statut ?? '—'}</p>
-                <p class="text-xs text-gray-500">Dernière Sync</p>
-              </div>
-            </div>`;
-        }
-      }
-
-      // ── Activité récente depuis l'API ──
-      const recentCaptures = await apiRequest('GET', '/captures/?limit=5', null, false, { silent: true });
-      const container = el('recent-activity');
-      if (container) {
-        if (!recentCaptures || recentCaptures.length === 0) {
-          container.innerHTML = '<div class="flex items-start gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50"><span class="material-symbols-outlined text-gray-400 mt-0.5">inbox</span><div><p class="font-medium text-[#111418] dark:text-white text-sm">Aucune capture récente</p><p class="text-xs text-gray-500 dark:text-gray-400">Les données apparaîtront ici une fois les captures enregistrées.</p></div></div>';
-        } else {
-          container.innerHTML = recentCaptures.map(c => `
-            <div class="flex items-start gap-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
-              <span class="material-symbols-outlined ${c.valide ? 'text-brand-success' : c.statut === 'rejete' ? 'text-brand-alert-critical' : 'text-brand-alert-warning'} mt-0.5">
-                ${c.valide ? 'check_circle' : c.statut === 'rejete' ? 'cancel' : 'pending'}
-              </span>
-              <div>
-                <p class="font-medium text-[#111418] dark:text-white text-sm">
-                  ${c.espece} — ${c.nombre_individus} spécimens${c.site_nom ? ` (${c.site_nom})` : ''}
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                  ${new Date(c.date_capture).toLocaleDateString('fr-FR')} · ${c.statut}
-                </p>
-              </div>
-            </div>
-          `).join('');
-        }
-      }
-    });
-    </script>
+    <script src="./js/i18n.js"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

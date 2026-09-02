@@ -73,8 +73,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const totalBtn = document.getElementById('filter-toutes');
     const unreadBtn = document.getElementById('filter-non-lues');
-    if (totalBtn) totalBtn.querySelector('span') && (totalBtn.querySelector('span:last-child') || (() => { const s = document.createElement('span'); totalBtn.appendChild(s); return s; })()).textContent = total;
-    if (unreadBtn) unreadBtn.querySelector('span:last-child') && (unreadBtn.querySelector('span:last-child') || (() => { const s = document.createElement('span'); unreadBtn.appendChild(s); return s; })()).textContent = unread;
+    if (totalBtn) {
+      let badge = totalBtn.querySelector('span:last-child');
+      if (!badge) { badge = document.createElement('span'); totalBtn.appendChild(badge); }
+      badge.textContent = total;
+    }
+    if (unreadBtn) {
+      let badge = unreadBtn.querySelector('span:last-child');
+      if (!badge) { badge = document.createElement('span'); unreadBtn.appendChild(badge); }
+      badge.textContent = unread;
+    }
   }
 
   function updateFilterBadges() {

@@ -67,15 +67,47 @@ def seed_db(db: Session):
     from app.models.site import SiteSentinelle
     from app.models.model import MLModel, RiskModel
 
-    modules = ["captures", "sites", "datasets", "modeles", "rapports", "dhis2", "admin"]
-    actions = ["voir", "creer", "modifier", "valider", "exporter", "supprimer"]
+    permissions_data = [
+        ("captures:voir", "captures", "voir"),
+        ("captures:creer", "captures", "creer"),
+        ("captures:modifier", "captures", "modifier"),
+        ("captures:valider", "captures", "valider"),
+        ("captures:exporter", "captures", "exporter"),
+        ("captures:supprimer", "captures", "supprimer"),
+        ("sites:voir", "sites", "voir"),
+        ("sites:creer", "sites", "creer"),
+        ("sites:modifier", "sites", "modifier"),
+        ("sites:supprimer", "sites", "supprimer"),
+        ("users:voir", "users", "voir"),
+        ("users:creer", "users", "creer"),
+        ("users:modifier", "users", "modifier"),
+        ("users:supprimer", "users", "supprimer"),
+        ("roles:voir", "roles", "voir"),
+        ("roles:creer", "roles", "creer"),
+        ("roles:modifier", "roles", "modifier"),
+        ("roles:supprimer", "roles", "supprimer"),
+        ("rapports:voir", "rapports", "voir"),
+        ("rapports:creer", "rapports", "creer"),
+        ("rapports:supprimer", "rapports", "supprimer"),
+        ("dashboard:voir", "dashboard", "voir"),
+        ("dhis2:gestion", "dhis2", "gestion"),
+        ("interventions:gestion", "interventions", "gestion"),
+        ("campagnes:gestion", "campagnes", "gestion"),
+        ("langues:gestion", "langues", "gestion"),
+        ("notifications:gestion", "notifications", "gestion"),
+        ("audit:voir", "audit", "voir"),
+        ("reference:gestion", "reference", "gestion"),
+        ("datasets:gestion", "datasets", "gestion"),
+        ("modeles:gestion", "modeles", "gestion"),
+        ("indicateurs:gestion", "indicateurs", "gestion"),
+        ("sync:gestion", "sync", "gestion"),
+        ("admin", "admin", "tout"),
+    ]
     perms = {}
-    for mod in modules:
-        for act in actions:
-            code = f"{mod}:{act}"
-            p = Permission(name=f"{act.capitalize()} {mod}", code=code, module=mod, action=act)
-            db.add(p)
-            perms[code] = p
+    for code, module, action in permissions_data:
+        p = Permission(name=code, code=code, module=module, action=action)
+        db.add(p)
+        perms[code] = p
     db.flush()
 
     admin_role = Role(name="Super Administrateur", description="Accès complet", is_system=True)
@@ -83,7 +115,9 @@ def seed_db(db: Session):
     db.add(admin_role)
 
     labo_role = Role(name="Technicien Laboratoire", description="Validation des captures")
-    labo_role.permissions = [perms[c] for c in ["captures:voir", "captures:creer", "captures:valider", "captures:modifier"]]
+    labo_role.permissions = [perms[c] for c in [
+        "captures:voir", "captures:creer", "captures:valider", "captures:modifier",
+    ]]
     db.add(labo_role)
 
     user_role = Role(name="Utilisateur", description="Accès limité")
@@ -112,6 +146,13 @@ def seed_db(db: Session):
         is_active=False, role_id=user_role.id,
     )
     db.add(inactive)
+    limited = User(
+        email="limited@test.entomo.sn", username="limited",
+        hashed_password=get_password_hash("Limited@2024"),
+        full_name="Limited User", region="Dakar",
+        is_active=True, is_superuser=False, role_id=user_role.id,
+    )
+    db.add(limited)
     db.flush()
 
     sites = [
@@ -136,6 +177,7 @@ def seed_db(db: Session):
     seed_db._admin_id = admin.id
     seed_db._labo_id = labo.id
     seed_db._inactive_id = inactive.id
+    seed_db._limited_id = limited.id
     seed_db._site1_id = sites[0].id
     seed_db._site2_id = sites[1].id
     seed_db._ml_model_id = ml.id
@@ -167,6 +209,13 @@ def admin_token_headers() -> Dict[str, str]:
 @pytest.fixture
 def labo_token_headers() -> Dict[str, str]:
     token = create_access_token({"user_id": seed_db._labo_id, "sub": "labo1"})
+    return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def limited_token_headers() -> Dict[str, str]:
+    """Utilisateur avec accès captures/sites lecture seule."""
+    token = create_access_token({"user_id": seed_db._limited_id, "sub": "limited"})
     return {"Authorization": f"Bearer {token}"}
 
 
@@ -204,3 +253,7 @@ def ml_model_id() -> int:
 @pytest.fixture
 def risk_model_id() -> int:
     return seed_db._risk_model_id
+
+
+def pytest_configure(config):
+    config.addinivalue_line("markers", "dhis2_e2e: tests E2E contre instance DHIS2 Play réelle")

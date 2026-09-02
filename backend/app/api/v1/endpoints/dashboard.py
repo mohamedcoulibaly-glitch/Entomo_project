@@ -1,95 +1,168 @@
-from fastapi import APIRouter, Depends
+"""Endpoints analytics pour les tableaux de bord."""
+
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from app.db.session import get_db
+
 from app.core.deps import get_current_active_user
+from app.db.session import get_db
 from app.models.user import User
+from app.services import dashboard_service as ds
 
 router = APIRouter()
 
 
+def _filters(
+    region: Optional[str] = None,
+    espece: Optional[str] = None,
+    period: Optional[str] = None,
+    date_debut: Optional[str] = None,
+    date_fin: Optional[str] = None,
+    statut: Optional[str] = None,
+    methode: Optional[str] = None,
+) -> dict:
+    return {
+        "region": region,
+        "espece": espece,
+        "period": period,
+        "date_debut": date_debut,
+        "date_fin": date_fin,
+        "statut": statut,
+        "methode": methode,
+    }
+
+
 @router.get("/stats")
 def get_dashboard_stats(
+    region: Optional[str] = Query(None),
+    espece: Optional[str] = Query(None),
+    period: Optional[str] = Query(None),
+    date_debut: Optional[str] = Query(None),
+    date_fin: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
-    """Statistiques globales pour le tableau de bord."""
-    from app.models.site import SiteSentinelle
-    from app.models.capture import Capture
-    from app.models.dataset import Dataset
-    from app.models.model import MLModel
-    from app.models.dhis2 import DHIS2Sync
-    from app.models.user import User as UserModel
-
-    total_sites = db.query(SiteSentinelle).count()
-    sites_actifs = db.query(SiteSentinelle).filter(SiteSentinelle.actif == True).count()
-    total_captures = db.query(Capture).count()
-    captures_a_valider = db.query(Capture).filter(Capture.statut == "a_valider").count()
-    captures_validees = db.query(Capture).filter(Capture.statut == "valide").count()
-    total_datasets = db.query(Dataset).count()
-    modeles_deployes = db.query(MLModel).filter(MLModel.deploye == True).count()
-    total_utilisateurs = db.query(UserModel).filter(UserModel.is_active == True).count()
-
-    derniere_sync = db.query(DHIS2Sync).order_by(DHIS2Sync.date_sync.desc()).first()
-
-    return {
-        "sites": {"total": total_sites, "actifs": sites_actifs},
-        "captures": {
-            "total": total_captures,
-            "a_valider": captures_a_valider,
-            "validees": captures_validees,
-        },
-        "datasets": {"total": total_datasets},
-        "modeles": {"deployes": modeles_deployes},
-        "utilisateurs": {"actifs": total_utilisateurs},
-        "dhis2": {
-            "derniere_sync": derniere_sync.date_sync.isoformat() if derniere_sync else None,
-            "dernier_statut": derniere_sync.statut if derniere_sync else None,
-        },
-    }
+    return ds.get_stats(
+        db, region=region, espece=espece, period=period,
+        date_debut=date_debut, date_fin=date_fin,
+    )
 
 
 @router.get("/captures-par-espece")
 def captures_par_espece(
+    region: Optional[str] = Query(None),
+    espece: Optional[str] = Query(None),
+    period: Optional[str] = Query(None),
+    date_debut: Optional[str] = Query(None),
+    date_fin: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
-    """Distribution des captures par espèce."""
-    from sqlalchemy import func
-    from app.models.capture import Capture
-    results = (
-        db.query(Capture.espece, func.count(Capture.id).label("count"))
-        .group_by(Capture.espece)
-        .order_by(func.count(Capture.id).desc())
-        .limit(20)
-        .all()
-    )
-    return [{"espece": r.espece, "count": r.count} for r in results]
-
-
-@router.get("/interventions-stats")
-def interventions_stats(db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
-    from app.models.intervention import Intervention
-    from sqlalchemy import func
-    total = db.query(Intervention).count()
-    planifiees = db.query(Intervention).filter(Intervention.statut == "planifiee").count()
-    en_cours = db.query(Intervention).filter(Intervention.statut == "en_cours").count()
-    realisees = db.query(Intervention).filter(Intervention.statut == "realisee").count()
-    return {"total": total, "planifiees": planifiees, "en_cours": en_cours, "realisees": realisees}
+    return ds.captures_par_espece(db, **_filters(region, espece, period, date_debut, date_fin))
 
 
 @router.get("/captures-par-site")
 def captures_par_site(
+    region: Optional[str] = Query(None),
+    espece: Optional[str] = Query(None),
+    period: Optional[str] = Query(None),
+    date_debut: Optional[str] = Query(None),
+    date_fin: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
-    """Nombre de captures par site sentinelle."""
-    from sqlalchemy import func
-    from app.models.capture import Capture
-    from app.models.site import SiteSentinelle
-    results = (
-        db.query(SiteSentinelle.nom, func.count(Capture.id).label("count"))
-        .outerjoin(Capture, Capture.site_id == SiteSentinelle.id)
-        .group_by(SiteSentinelle.id)
-        .all()
+    return ds.captures_par_site(db, **_filters(region, espece, period, date_debut, date_fin))
+
+
+@router.get("/captures-par-region")
+def captures_par_region(
+    region: Optional[str] = Query(None),
+    espece: Optional[str] = Query(None),
+    period: Optional[str] = Query(None),
+    date_debut: Optional[str] = Query(None),
+    date_fin: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_active_user),
+):
+    return ds.captures_par_region(db, **_filters(region, espece, period, date_debut, date_fin))
+
+
+@router.get("/captures-par-methode")
+def captures_par_methode(
+    region: Optional[str] = Query(None),
+    period: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_active_user),
+):
+    return ds.captures_par_methode(db, **_filters(region, None, period))
+
+
+@router.get("/captures-par-statut")
+def captures_par_statut(
+    region: Optional[str] = Query(None),
+    period: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_active_user),
+):
+    return ds.captures_par_statut(db, **_filters(region, None, period))
+
+
+@router.get("/densite-evolution")
+def densite_evolution(
+    granularity: str = Query("week", pattern="^(day|week|month)$"),
+    region: Optional[str] = Query(None),
+    espece: Optional[str] = Query(None),
+    period: Optional[str] = Query("1A"),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_active_user),
+):
+    return ds.densite_evolution(
+        db, granularity=granularity, region=region, espece=espece, period=period,
     )
-    return [{"site": r.nom, "count": r.count} for r in results]
+
+
+@router.get("/alertes")
+def get_alertes(
+    region: Optional[str] = Query(None),
+    limit: int = Query(20, ge=1, le=100),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_active_user),
+):
+    return ds.generate_alertes(db, region=region, limit=limit)
+
+
+@router.get("/heatmap")
+def heatmap(
+    region: Optional[str] = Query(None),
+    period: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_active_user),
+):
+    return ds.heatmap_data(db, **_filters(region, None, period))
+
+
+@router.get("/interventions-stats")
+def interventions_stats(
+    region: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_active_user),
+):
+    return ds.interventions_stats(db, region=region)
+
+
+@router.get("/region/{region_name}")
+def region_detail(
+    region_name: str,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_active_user),
+):
+    return ds.region_detail(db, region_name)
+
+
+@router.get("/regions")
+def list_regions(_: User = Depends(get_current_active_user)):
+    return {
+        "regions": ds.SENEGAL_REGIONS,
+        "region_medicale_5": sorted(ds.REGION_MEDICALE_5),
+    }

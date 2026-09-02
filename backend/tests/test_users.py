@@ -104,6 +104,7 @@ def test_update_user_by_superuser(client, admin_token_headers, labo_id):
     res = client.put(f"/api/v1/users/{labo_id}", json={"is_active": False}, headers=admin_token_headers)
     assert res.status_code == 200
     assert res.json()["is_active"] is False
+    client.put(f"/api/v1/users/{labo_id}", json={"is_active": True}, headers=admin_token_headers)
 
 
 def test_update_user_not_authorized(client, labo_token_headers, admin_id):

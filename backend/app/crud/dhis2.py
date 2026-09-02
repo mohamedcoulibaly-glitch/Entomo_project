@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.crud.base import CRUDBase
 from app.models.dhis2 import DHIS2Config, DHIS2Mapping, DHIS2Sync
 from app.core.security import get_password_hash
+from app.core.crypto import encrypt_secret
 
 
 class CRUDDHIS2Config(CRUDBase):
@@ -15,6 +16,7 @@ class CRUDDHIS2Config(CRUDBase):
             url=url,
             username=username,
             hashed_password=get_password_hash(password),
+            credential_enc=encrypt_secret(password),
             **kwargs,
         )
         db.add(config)

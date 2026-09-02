@@ -14,3 +14,4 @@ class SyncPreference(BaseModel):
     stockage_max = Column(Integer, default=100, nullable=False)
     wifi_only = Column(Boolean, default=False, nullable=False)
     data_types = Column(Text, default='["new-captures","species-analysis","record-corrections"]', nullable=False)
+    cache_expiry_hours = Column(Integer, default=72, nullable=False)

@@ -11,6 +11,7 @@ class DHIS2Config(BaseModel):
     url = Column(String(500), nullable=False)
     username = Column(String(200))
     hashed_password = Column(String(500))       # mot de passe hashé, jamais en clair
+    credential_enc = Column(Text)               # mot de passe chiffré pour l'API DHIS2
     org_unit = Column(String(200))
     data_set = Column(String(200))
     periode = Column(String(50))                # hebdomadaire, mensuel…

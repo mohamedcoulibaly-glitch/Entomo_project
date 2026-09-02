@@ -23,6 +23,11 @@
         return;
       }
       localStorage.setItem('entomo_user', JSON.stringify(user));
+      const waitPerm = (n = 0) => {
+        if (window.PermissionGuard) PermissionGuard.enforcePageAccess(currentPage);
+        else if (n < 40) setTimeout(() => waitPerm(n + 1), 50);
+      };
+      waitPerm();
     } catch (err) {
       Auth.logout();
       redirectToLogin();
@@ -94,6 +99,63 @@ function initActiveNav() {
       link.classList.add('text-brand-primary', 'bg-brand-primary/10', 'font-medium');
       link.classList.remove('text-gray-700', 'dark:text-gray-300');
     }
+  });
+}
+
+// ─── Layout : scroll contenu principal uniquement ────────────────────────────
+function initAppLayoutScroll() {
+  if (!document.querySelector('aside') || !document.querySelector('main')) return;
+
+  if (!document.getElementById('entomo-layout-fix')) {
+    const style = document.createElement('style');
+    style.id = 'entomo-layout-fix';
+    style.textContent = `
+      html, body { height: 100%; overflow: hidden; }
+      body > div.flex.h-screen,
+      body > div.flex.min-h-screen {
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+        min-height: 0;
+      }
+      body > div.flex.h-screen > aside,
+      body > div.flex.h-screen > main,
+      body > div.flex.min-h-screen > aside,
+      body > div.flex.min-h-screen > main {
+        min-height: 0;
+      }
+      body > div.flex.h-screen > main,
+      body > div.flex.min-h-screen > main {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+      body > div.flex.h-screen > aside,
+      body > div.flex.min-h-screen > aside {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+      main > div.overflow-y-auto {
+        overflow: visible !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  const main = document.querySelector('main');
+  if (main) {
+    main.scrollTop = 0;
+    main.querySelectorAll(':scope > div.overflow-y-auto').forEach(el => {
+      el.classList.remove('overflow-y-auto');
+    });
+  }
+
+  document.querySelectorAll('aside nav a[href]').forEach(link => {
+    link.addEventListener('click', () => {
+      const mainEl = document.querySelector('main');
+      if (mainEl) mainEl.scrollTop = 0;
+    });
   });
 }
 
@@ -195,14 +257,17 @@ function showToast(msg, type = 'info') {
 
 // ─── Gestion de session (avatar + nom utilisateur) ───────────────────────────
 function initSessionHeader() {
-  // Afficher le nom de l'utilisateur connecté dans l'avatar si dispo
   const user = (() => {
     try { return JSON.parse(localStorage.getItem('entomo_user') || 'null'); } catch { return null; }
   })();
 
-  // Avatar cliquable → menu profil
+  document.querySelectorAll('[style*="googleusercontent"]').forEach(el => {
+    el.style.backgroundImage = 'none';
+  });
+
   const avatar = document.getElementById('header-avatar') ||
-                 document.querySelector('header [style*="background-image"]') ||
+                 document.querySelector('header [data-entomo-avatar]') ||
+                 document.querySelector('header .rounded-full.size-10') ||
                  document.querySelector('header .rounded-full');
   if (avatar) {
     avatar.style.cursor = 'pointer';
@@ -211,21 +276,20 @@ function initSessionHeader() {
       e.stopPropagation();
       showSessionMenu(avatar, user);
     });
-  }
-
-  // Afficher initiales si connecté
-  if (user && avatar) {
-    const initials = (user.full_name || user.username || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-    if (avatar.id === 'header-avatar') {
-      avatar.textContent = initials;
-    } else if (!avatar.querySelector('.avatar-initials')) {
-      // Superposer les initiales si l'avatar est un div bg-image (ancien style)
-      const span = document.createElement('div');
-      span.className = 'avatar-initials w-full h-full rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-bold';
-      span.textContent = initials;
-      span.style.cssText = 'position:absolute;inset:0;';
-      avatar.style.position = 'relative';
-      avatar.appendChild(span);
+    if (window.EntomoAvatar) {
+      EntomoAvatar.apply(avatar, user);
+    } else if (user) {
+      const initials = (user.full_name || user.username || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      if (avatar.id === 'header-avatar') {
+        avatar.textContent = initials;
+      } else if (!avatar.querySelector('.avatar-initials')) {
+        const span = document.createElement('div');
+        span.className = 'avatar-initials w-full h-full rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-bold';
+        span.textContent = initials;
+        span.style.cssText = 'position:absolute;inset:0;';
+        avatar.style.position = 'relative';
+        avatar.appendChild(span);
+      }
     }
   }
 }
@@ -337,14 +401,12 @@ function initNotificationBell() {
   const bellBtn = document.querySelector('button:has(> span[class*="notifications"])');
   if (!bellBtn) return;
 
-  // Créer badge
   const badge = document.createElement('span');
   badge.id = 'notif-badge';
   badge.className = 'absolute -top-1 -right-1 w-4 h-4 text-xs font-bold bg-red-500 text-white rounded-full flex items-center justify-center hidden';
   bellBtn.style.position = 'relative';
   bellBtn.appendChild(badge);
 
-  // Dropdown
   const dropdown = document.createElement('div');
   dropdown.id = 'notif-dropdown';
   dropdown.className = `absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-xl
@@ -355,7 +417,7 @@ function initNotificationBell() {
       <button id="mark-all-read" class="text-xs text-brand-primary hover:underline">Tout marquer lu</button>
     </div>
     <div id="notif-list" class="max-h-64 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700">
-      <p class="text-center text-sm text-gray-400 py-6">Aucune notification</p>
+      <p class="text-center text-sm text-gray-400 py-6">Chargement...</p>
     </div>`;
   bellBtn.parentElement.style.position = 'relative';
   bellBtn.parentElement.appendChild(dropdown);
@@ -371,16 +433,23 @@ function initNotificationBell() {
     }
   });
 
-  dropdown.querySelector('#mark-all-read')?.addEventListener('click', () => {
-    NotifStore.items.forEach(n => n.read = true);
-    badge.classList.add('hidden');
-    renderNotifList();
+  dropdown.querySelector('#mark-all-read')?.addEventListener('click', async () => {
+    try {
+      if (typeof apiNotifications !== 'undefined') {
+        await apiNotifications.markAllRead();
+      }
+      NotifStore.items.forEach(n => { n.read = true; });
+      badge.classList.add('hidden');
+      renderNotifList();
+    } catch {
+      pushNotification('Impossible de marquer les notifications comme lues.', 'error');
+    }
   });
 
   NotifStore.listeners.push(renderNotifList);
 
   function renderNotifList() {
-    const list  = dropdown.querySelector('#notif-list');
+    const list = dropdown.querySelector('#notif-list');
     const unread = NotifStore.items.filter(n => !n.read).length;
     badge.textContent = unread > 9 ? '9+' : unread;
     badge.classList.toggle('hidden', unread === 0);
@@ -392,9 +461,32 @@ function initNotificationBell() {
     list.innerHTML = NotifStore.items.slice(0, 10).map(n => `
       <div class="flex items-start gap-3 px-4 py-3 ${n.read ? '' : 'bg-blue-50 dark:bg-blue-900/10'}">
         <span class="material-symbols-outlined text-brand-primary text-base mt-0.5">notifications</span>
-        <p class="text-sm text-[#111418] dark:text-gray-200 flex-1">${n.msg}</p>
+        <p class="text-sm text-[#111418] dark:text-gray-200 flex-1">${n.msg || n.message || n.titre || 'Notification'}</p>
       </div>`).join('');
   }
+
+  async function loadNotificationsFromApi() {
+    if (typeof Auth === 'undefined' || !Auth.isLoggedIn() || typeof apiNotifications === 'undefined') {
+      renderNotifList();
+      return;
+    }
+    try {
+      const items = await apiNotifications.list({ limit: 20 });
+      if (Array.isArray(items) && items.length) {
+        NotifStore.items = items.map(item => ({
+          id: item.id,
+          msg: item.message || item.titre || item.contenu,
+          type: item.type || 'info',
+          read: Boolean(item.lu),
+        }));
+      }
+    } catch {
+      // Conserver les notifications locales si l'API est indisponible
+    }
+    renderNotifList();
+  }
+
+  loadNotificationsFromApi();
 }
 
 // ─── Modale universelle ──────────────────────────────────────────────────────
@@ -732,14 +824,88 @@ function initAppLauncher() {
   document.body.appendChild(launcher);
 }
 
+// ─── PWA & synchronisation hors-ligne globale ────────────────────────────────
+function initPWA() {
+  if (!document.querySelector('link[rel="manifest"]')) {
+    const base = window.location.pathname.includes('/pages/') ? '..' : '.';
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = `${base}/manifest.json`;
+    document.head.appendChild(link);
+  }
+  if ('serviceWorker' in navigator) {
+    const swPath = window.location.pathname.includes('/pages/') ? '../sw.js' : '/sw.js';
+    navigator.serviceWorker.register(swPath).catch(() => {});
+  }
+}
+
+function initOfflineModules() {
+  const base = window.location.pathname.includes('/pages/') ? '../js/' : 'js/';
+  const files = ['entomo-events.js', 'offline-store.js', 'offline-sync.js', 'permission-guard.js'];
+  files.forEach((file) => {
+    if (document.querySelector(`script[data-entomo="${file}"]`)) return;
+    const s = document.createElement('script');
+    s.src = base + file;
+    s.dataset.entomo = file;
+    s.onload = () => {
+      if (file === 'offline-sync.js' && window.EntomoOfflineSync && typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+        window.EntomoOfflineSync.init();
+      }
+    };
+    document.head.appendChild(s);
+  });
+}
+
+function initImageFallbacks() {
+  document.querySelectorAll('img[src]:not([data-entomo-fallback])').forEach(img => {
+    img.dataset.entomoFallback = '1';
+    img.addEventListener('error', () => {
+      const w = img.offsetWidth || parseInt(img.getAttribute('width'), 10) || 48;
+      const h = img.offsetHeight || parseInt(img.getAttribute('height'), 10) || 48;
+      const fallback = document.createElement('div');
+      fallback.className = 'entomo-image-fallback inline-flex items-center justify-center rounded-lg';
+      fallback.style.width = img.style.width || `${w}px`;
+      fallback.style.height = img.style.height || `${h}px`;
+      fallback.setAttribute('role', 'img');
+      fallback.setAttribute('aria-label', img.alt || 'Image indisponible');
+      fallback.innerHTML = '<span class="material-symbols-outlined text-2xl">broken_image</span>';
+      img.replaceWith(fallback);
+    }, { once: true });
+  });
+}
+
+function loadSharedAssets() {
+  const base = window.location.pathname.includes('/pages/') ? '..' : '.';
+  if (!document.querySelector('link[data-entomo-design-tokens]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `${base}/css/design-tokens.css`;
+    link.dataset.entomoDesignTokens = '1';
+    document.head.appendChild(link);
+  }
+  if (!document.querySelector('script[data-entomo-avatar]')) {
+    const script = document.createElement('script');
+    script.src = `${base}/js/components/avatar.js`;
+    script.dataset.entomoAvatar = '1';
+    script.onload = () => window.EntomoAvatar?.applyAll();
+    document.head.appendChild(script);
+  }
+}
+
 // ─── Initialisation globale ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  loadSharedAssets();
   initTheme();
+  initAppLayoutScroll();
   initActiveNav();
   initMobileMenu();
   initNotificationBell();
   initTooltips();
   initEntryAnimations();
   initSessionHeader();
+  initImageFallbacks();
   initAppLauncher();
+  initPWA();
+  initOfflineModules();
+  if (window.EntomoI18n) EntomoI18n.init().catch(() => {});
 });

@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html class="light" lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Assistant IA - Ento-App Afrique</title>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/tailwind.min.css" />
+    <link rel="stylesheet" href="../css/design-tokens.css" />
+    <script id="tailwind-config">
+        tailwind.config = { darkMode: "class", theme: { extend: { colors: { "brand-primary": "#005689" } } } };
+    </script>
+</head>
+<body class="font-display bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6 min-h-screen flex flex-col">
+        <header class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-black">Assistant Entomo</h1>
+                <p class="text-sm text-gray-500">Réponses basées sur les données réelles de la plateforme</p>
+            </div>
+            <a href="aide.html" class="text-sm text-brand-primary hover:underline">Aide & support</a>
+        </header>
+        <div id="assistant-messages" class="flex-1 overflow-y-auto space-y-3 mb-4 p-4 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 min-h-[420px]"></div>
+        <div id="assistant-suggestions" class="flex flex-wrap gap-2 mb-4"></div>
+        <form id="assistant-form" class="flex gap-2">
+            <input id="assistant-input" class="flex-1 h-12 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4" placeholder="Posez votre question..." />
+            <button class="h-12 px-5 rounded-xl bg-brand-primary text-white font-semibold" type="submit">Envoyer</button>
+        </form>
+    </div>
+
+    <!-- Ento-App Scripts -->
+    <script src="../js/config-boot.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/core.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script src="../js/pages-generiques.js"></script>
+    <script src="../js/assistant.js"></script>
+    <!-- /Ento-App Scripts -->
+</body>
+</html>

@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import random
 from app.core.security import get_password_hash
+from app.core.crypto import encrypt_secret
 
 # Importez les modèles après avoir changé d'environnement
 import sys
@@ -61,6 +62,7 @@ try:
         {"name": "Créer une capture", "code": "captures:creer", "module": "captures", "action": "creer"},
         {"name": "Modifier une capture", "code": "captures:modifier", "module": "captures", "action": "modifier"},
         {"name": "Valider une capture", "code": "captures:valider", "module": "captures", "action": "valider"},
+        {"name": "Exporter les captures", "code": "captures:exporter", "module": "captures", "action": "exporter"},
         {"name": "Supprimer une capture", "code": "captures:supprimer", "module": "captures", "action": "supprimer"},
         
         # Sites
@@ -254,16 +256,34 @@ try:
     
     print("\n4️⃣ Création de quelques sites sentinelles d'exemple")
     sites_data = [
-        {"nom": "Site Kédougou-1", "code": "SITE-KDG-01", "region": "Kédougou", 
+        {"nom": "Site Kédougou-1", "code": "SITE-KDG-01", "region": "Kédougou",
          "district": "Kédougou", "latitude": 12.5574, "longitude": -12.1752, "actif": True},
-        {"nom": "Site Dakar-1", "code": "SITE-DAK-01", "region": "Dakar", 
+        {"nom": "Site Dakar-1", "code": "SITE-DAK-01", "region": "Dakar",
          "district": "Dakar", "latitude": 14.7167, "longitude": -17.4677, "actif": True},
-        {"nom": "Site Thiès-1", "code": "SITE-THS-01", "region": "Thiès", 
+        {"nom": "Site Thiès-1", "code": "SITE-THS-01", "region": "Thiès",
          "district": "Thiès", "latitude": 14.2420, "longitude": -16.7567, "actif": True},
-        {"nom": "Site Saint-Louis-1", "code": "SITE-SLO-01", "region": "Saint-Louis", 
+        {"nom": "Site Saint-Louis-1", "code": "SITE-SLO-01", "region": "Saint-Louis",
          "district": "Saint-Louis", "latitude": 16.0304, "longitude": -16.4952, "actif": True},
-        {"nom": "Site Ziguinchor-1", "code": "SITE-ZIG-01", "region": "Ziguinchor", 
+        {"nom": "Site Ziguinchor-1", "code": "SITE-ZIG-01", "region": "Ziguinchor",
          "district": "Ziguinchor", "latitude": 12.5843, "longitude": -16.2722, "actif": True},
+        {"nom": "Site Tambacounda-1", "code": "SITE-TBC-01", "region": "Tambacounda",
+         "district": "Tambacounda", "latitude": 13.7707, "longitude": -13.6683, "actif": True},
+        {"nom": "Site Kolda-1", "code": "SITE-KLD-01", "region": "Kolda",
+         "district": "Kolda", "latitude": 12.8833, "longitude": -14.9500, "actif": True},
+        {"nom": "Site Sédhiou-1", "code": "SITE-SDH-01", "region": "Sédhiou",
+         "district": "Sédhiou", "latitude": 12.7081, "longitude": -15.5569, "actif": True},
+        {"nom": "Site Diourbel-1", "code": "SITE-DBR-01", "region": "Diourbel",
+         "district": "Diourbel", "latitude": 14.6550, "longitude": -16.2333, "actif": True},
+        {"nom": "Site Fatick-1", "code": "SITE-FTK-01", "region": "Fatick",
+         "district": "Fatick", "latitude": 14.3167, "longitude": -16.4167, "actif": True},
+        {"nom": "Site Kaolack-1", "code": "SITE-KLC-01", "region": "Kaolack",
+         "district": "Kaolack", "latitude": 14.1500, "longitude": -16.0833, "actif": True},
+        {"nom": "Site Kaffrine-1", "code": "SITE-KFR-01", "region": "Kaffrine",
+         "district": "Kaffrine", "latitude": 14.1167, "longitude": -15.5500, "actif": True},
+        {"nom": "Site Louga-1", "code": "SITE-LGA-01", "region": "Louga",
+         "district": "Louga", "latitude": 15.6167, "longitude": -16.2167, "actif": True},
+        {"nom": "Site Matam-1", "code": "SITE-MTM-01", "region": "Matam",
+         "district": "Matam", "latitude": 15.6559, "longitude": -13.2553, "actif": True},
     ]
     
     sites_created = []
@@ -423,7 +443,7 @@ try:
     
     captures_created = 0
     if db.query(Capture).count() == 0:
-      for i, site in enumerate(sites_created[:3]):
+      for i, site in enumerate(sites_created):
         for j in range(random.randint(3, 8)):
             espece = random.choice(espece_list)
             sexe = random.choice(sexe_list)
@@ -454,6 +474,58 @@ try:
             captures_created += 1
     
     print(f"   📊 {captures_created} captures créées")
+
+    print("\n7️⃣ bis Création des captures audio et du modèle audio déployé")
+    from pathlib import Path
+    from app.services.audio_classifier import generate_test_wav
+
+    audio_model = db.query(MLModel).filter(MLModel.nom == "anopheles-audio-classifier-v1").first()
+    if not audio_model:
+        audio_model = MLModel(
+            nom="anopheles-audio-classifier-v1",
+            version="1.0.0",
+            type_modele="audio",
+            architecture="feature-based-v1",
+            description="Classifieur audio basé sur l'analyse spectrale FFT",
+            precision=0.91,
+            rappel=0.88,
+            f1_score=0.89,
+            taille_mb=0.5,
+            actif=True,
+            deploye=True,
+        )
+        db.add(audio_model)
+        db.flush()
+
+    audio_captures_existing = db.query(Capture).filter(Capture.methode_capture == "audio").count()
+    if audio_captures_existing == 0 and sites_created:
+        audio_specs = [
+            ("An. gambiae", 450.0),
+            ("An. funestus", 480.0),
+            ("Ae. aegypti", 600.0),
+            ("Cx. quinquefasciatus", 680.0),
+            ("An. arabiensis", 510.0),
+        ]
+        for index, (espece, frequency) in enumerate(audio_specs):
+            site = sites_created[index % len(sites_created)]
+            wav_path = Path("uploads/captures") / f"seed_audio_{index + 1}.wav"
+            generate_test_wav(wav_path, frequency_hz=frequency)
+            db.add(Capture(
+                site_id=site.id,
+                date_capture=datetime.utcnow() - timedelta(days=index + 1),
+                espece=espece,
+                nombre_individus=1,
+                sexe="Indéterminé",
+                stade="adulte",
+                methode_capture="audio",
+                notes=f"Enregistrement acoustique — {espece}",
+                audio_path=str(wav_path.as_posix()),
+                statut="a_valider",
+                valide=False,
+                utilisateur_id=demo_admin.id if demo_admin else None,
+            ))
+        db.flush()
+        print(f"   🎵 {len(audio_specs)} captures audio créées avec fichiers WAV réels")
     
     print("\n8️⃣ Création d'interventions d'exemple")
     intervention_types = ["larvicide", "pulverisation", "sensibilisation", "piégeage"]
@@ -565,11 +637,13 @@ try:
     print("\n🔟 Création de données DHIS2 d'exemple")
     dhis2_config = db.query(DHIS2Config).first()
     if not dhis2_config:
+        dhis2_password = "DHIS2Api123!"
         dhis2_config = DHIS2Config(
             nom="Configuration principale DHIS2",
             url="https://dhis2.example.com",
             username="api_user",
-            hashed_password=get_password_hash("DHIS2Api123!"),
+            hashed_password=get_password_hash(dhis2_password),
+            credential_enc=encrypt_secret(dhis2_password),
             org_unit="OU_123456",
             data_set="DS_789012",
             periode="mensuel",
@@ -577,9 +651,29 @@ try:
         )
         db.add(dhis2_config)
         db.flush()
-        print(f"   🌐 Configuration DHIS2 créée (ID: {dhis2_config.id})")
+        from app.models.dhis2 import DHIS2Mapping
+        default_mappings = [
+            ("total_captures", "DE_CAPTURES_TOTAL", "INTEGER"),
+            ("sites_actifs", "DE_SITES_ACTIFS", "INTEGER"),
+            ("captures_a_valider", "DE_CAPTURES_PENDING", "INTEGER"),
+            ("total_individus", "DE_INDIVIDUS_TOTAL", "INTEGER"),
+        ]
+        for indicateur, element, dtype in default_mappings:
+            db.add(DHIS2Mapping(
+                config_id=dhis2_config.id,
+                indicateur_local=indicateur,
+                element_dhis2=element,
+                type_donnee=dtype,
+                actif=True,
+            ))
+        print(f"   🌐 Configuration DHIS2 créée (ID: {dhis2_config.id}) + {len(default_mappings)} mappings")
     else:
-        print(f"   ℹ️  Configuration DHIS2 déjà présente (ID: {dhis2_config.id})")
+        if dhis2_config.username and not dhis2_config.credential_enc:
+            dhis2_config.credential_enc = encrypt_secret("DHIS2Api123!")
+            db.flush()
+            print(f"   🔧 Identifiants DHIS2 réparés pour la config existante (ID: {dhis2_config.id})")
+        else:
+            print(f"   ℹ️  Configuration DHIS2 déjà présente (ID: {dhis2_config.id})")
 
     print("\n1️⃣1️⃣ Création des langues de base")
     for language_data in [

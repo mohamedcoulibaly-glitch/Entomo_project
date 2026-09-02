@@ -36,6 +36,9 @@ backend/.server_pid
 backend/uploads/
 output/
 
+# Node
+node_modules/
+
 # OS
 .DS_Store
 Thumbs.db

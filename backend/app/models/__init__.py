@@ -19,3 +19,4 @@ from app.models.reference import ReferenceData  # noqa: F401
 from app.models.data_import import DataImport  # noqa: F401
 from app.models.sync_preference import SyncPreference  # noqa: F401
 from app.models.support import SupportTicket  # noqa: F401
+from app.models.offline_queue import OfflineQueueItem  # noqa: F401

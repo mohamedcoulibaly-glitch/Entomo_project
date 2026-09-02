@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
     <meta charset="utf-8" />
@@ -8,8 +8,11 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style type="text/tailwindcss">
+    <link rel="stylesheet" href="../css/tailwind.min.css" />
+    <link rel="stylesheet" href="../css/design-tokens.css" />
+    <link rel="stylesheet" href="../vendor/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="../vendor/leaflet/leaflet.css" />
+<style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
                 font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24;
@@ -194,7 +197,7 @@
                     <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f2f4] dark:bg-gray-700 text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
                         <span class="material-symbols-outlined text-xl">notifications</span>
                     </button>
-                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCf4ReoO6DzV9WU-ZhB6goMwdc2JDmBKPIoG2wN42ZesgRlTndCYQd5Y4Q17BXkh-PT52vUi6nUrrgMXPRTv4W1NC1O-LyvBC0xSiOXwz4xygtxx5sZFITOUmL7IoPwQN_P6imrOlzhNEAsmIT3gH3Hi0LhvKCJNtywqPtozvTgNHut3Vb-HCF2otQEsEWNGmh9_cMer8QaFRYhqdLiMZA-XaV7T0-wPYENp_TzGXxiwr-0fQsLdjhjnXPuLk9tB-xqFuoN9iXNPg");'></div>
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" ></div>
                 </div>
             </header>
 
@@ -228,7 +231,7 @@
                 <div class="grid grid-cols-12 gap-6">
                     <div class="col-span-12 lg:col-span-9">
                         <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden relative">
-                            <div id="map-container" class="w-full bg-center bg-no-repeat aspect-[16/9] bg-cover relative" data-alt="Carte du Sénégal avec heatmap des vecteurs">
+                            <div id="map-container" class="w-full min-h-[480px] relative z-0 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700" data-alt="Carte interactive des sites sentinelles">
                                 <button class="absolute top-[25%] left-[22%] group cursor-pointer">
                                     <span class="material-symbols-outlined text-brand-alert-warning text-3xl drop-shadow-lg" style="font-variation-settings: 'FILL' 1;">location_on</span>
                                     <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-white dark:bg-gray-800 text-gray-800 dark:text-white text-xs rounded-lg py-2 px-3 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg border border-gray-200 dark:border-gray-700 pointer-events-none">
@@ -358,9 +361,12 @@
     </div>
 
     <!-- Ento-App Scripts -->
+    <script src="../js/config-boot.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/core.js"></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
+    <script src="../vendor/leaflet/leaflet.js"></script>
     <script src="../js/cartographie.js"></script>
     <!-- /Ento-App Scripts -->
 </body>

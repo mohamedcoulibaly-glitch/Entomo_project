@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="fr">
 <head>
     <meta charset="utf-8" />
@@ -8,8 +8,9 @@
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style type="text/tailwindcss">
+    <link rel="stylesheet" href="../css/tailwind.min.css" />
+    <link rel="stylesheet" href="../css/design-tokens.css" />
+<style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
                 font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'OPSZ' 24;
@@ -226,7 +227,7 @@
                     <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f2f4] dark:bg-gray-700 text-[#111418] dark:text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
                         <span class="material-symbols-outlined text-xl">notifications</span>
                     </button>
-                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCf4ReoO6DzV9WU-ZhB6goMwdc2JDmBKPIoG2wN42ZesgRlTndCYQd5Y4Q17BXkh-PT52vUi6nUrrgMXPRTv4W1NC1O-LyvBC0xSiOXwz4xygtxx5sZFITOUmL7IoPwQN_P6imrOlzhNEAsmIT3gH3Hi0LhvKCJNtywqPtozvTgNHut3Vb-HCF2otQEsEWNGmh9_cMer8QaFRYhqdLiMZA-XaV7T0-wPYENp_TzGXxiwr-0fQsLdjhjnXPuLk9tB-xqFuoN9iXNPg");'></div>
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Avatar de l'utilisateur" ></div>
                 </div>
             </header>
 
@@ -313,7 +314,7 @@
 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
 <h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] mb-4">Répartition Géographique du Risque</h2>
 <div id="oms-risk-map" class="w-full h-96 bg-gray-100 dark:bg-gray-700 rounded-lg relative overflow-hidden">
-<img class="object-contain h-full w-full" data-alt="Carte du Sénégal avec des zones colorées indiquant le niveau de risque" data-location="Sénégal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqjUHNTcwSRBAyRHl4EM6Adwte9D8az9VwBd-vPRuSHL09valMlBiCGsMyBnD5z927AfUcHz6kuWAfYIm4-QqQKDxT-bKToOoChjuik1gyhlZChMK0tKmpIMA7x4s_SzwNgYPItqTaGNb9f_W6d2AXrfszMmi9pxSGnKppLHxrsPkBTeU1SL7iTwrMYD6yU8AjxlBHqxDAy9y-xg8MvJwnxKObw6gU42pItPf35v6tqslV6ywTYZDlWVE_jfOy8GrJS_sMietsmQ"/>
+<img class="object-contain h-full w-full" data-alt="Carte du Sénégal avec des zones colorées indiquant le niveau de risque" data-location="Sénégal" data-entomo-avatar="1"/>
 </div>
 </div>
 </div>
@@ -322,7 +323,7 @@
 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
 <h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] mb-4">Tendance Temporelle</h2>
 <div id="oms-trend-chart" class="w-full h-96 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-end gap-2 p-5">
-<img class="object-contain h-full w-full p-4" data-alt="Graphique linéaire montrant la tendance de la densité d'anophèles sur 30 jours" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIeWvsnvdNJ-FDPZmE5KI7npW764ieOQ_f8odpJgQQ7lYhQGGqDhGp_z2wqNg_yjFMCxq1sq_MAM69eezv--tDRE3NVVVVi-_FwhRV9Gu_J7mtiDf4JRQVCam0Y8rLEyfXmXcguFbbJMjkBJlCAqkdOgq0G4ewzoSTC32TD5cZxUghYW4kQn1FF9lhv-LPx5vECF-aDrJu3Z7R_wPyXTE41g91SGzNITjWxv_XUJ_go6QtHu0bUSt_WO9XODPLczWmUru6GsNAZA"/>
+<img class="object-contain h-full w-full p-4" data-alt="Graphique linéaire montrant la tendance de la densité d'anophèles sur 30 jours" data-entomo-avatar="1"/>
 </div>
 </div>
 </div>
@@ -394,9 +395,15 @@ Chargement des rapports...
     </div>
 
     <!-- Ento-App Scripts -->
+    <script src="../js/config-boot.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/core.js"></script>
+    <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
+    <script src="../vendor/chart.js/chart.umd.min.js"></script>
+    <script src="../vendor/leaflet/leaflet.js"></script>
+    <script src="../js/utils/analytics-charts.js"></script>
+    <script src="../js/utils/analytics-maps.js"></script>
     <script src="../js/dashboard-rapports-oms.js"></script>
     <!-- /Ento-App Scripts -->
 </body>

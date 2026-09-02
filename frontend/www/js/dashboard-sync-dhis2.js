@@ -105,7 +105,53 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   loadSyncStatus();
+  loadSyncHistory();
   setInterval(loadSyncStatus, 30000);
+
+  async function loadSyncHistory() {
+    const tbody = document.getElementById('sync-history-body');
+    if (!tbody || typeof apiDhis2 === 'undefined') return;
+    try {
+      const status = await apiDhis2.getStatus();
+      const configId = status?.config_id || 1;
+      const entries = await apiDhis2.getHistorique(configId);
+      if (!entries?.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500">Aucun historique de synchronisation.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = entries.map(entry => {
+        const isError = ['echec', 'erreur', 'error'].includes((entry.statut || '').toLowerCase());
+        const isSuccess = ['succes', 'success'].includes((entry.statut || '').toLowerCase());
+        const date = entry.date_sync ? new Date(entry.date_sync).toLocaleString('fr-FR') : '—';
+        return `<tr class="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50" data-sync-id="${entry.id}">
+          <td class="px-6 py-4 font-medium whitespace-nowrap">${date}</td>
+          <td class="px-6 py-4">Indices agrégés</td>
+          <td class="px-6 py-4"><span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium ${isSuccess ? 'bg-green-100 text-green-700' : isError ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}">${entry.statut}</span></td>
+          <td class="px-6 py-4">${entry.nb_enregistrements || 0} val.</td>
+          <td class="px-6 py-4">${isError ? `<button class="sync-error-btn text-primary hover:underline font-medium" data-message="${(entry.message || '').replace(/"/g, '&quot;')}">Voir l'erreur</button>` : `<span class="text-gray-500">ID: sync_${entry.id}</span>`}</td>
+          <td class="px-6 py-4 text-right">${isError ? `<button class="sync-replay-btn p-1.5 text-gray-500 hover:bg-gray-200 rounded-md" data-config-id="${entry.config_id}"><span class="material-symbols-outlined text-lg">replay</span></button>` : ''}</td>
+        </tr>`;
+      }).join('');
+
+      tbody.querySelectorAll('.sync-error-btn').forEach(btn => {
+        btn.addEventListener('click', () => openModal('Détail de l\'erreur', `<p class="text-sm text-gray-600">${btn.dataset.message || 'Aucun détail disponible.'}</p>`, { confirmLabel: 'Fermer', cancelLabel: '' }));
+      });
+      tbody.querySelectorAll('.sync-replay-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          try {
+            await apiDhis2.sync(Number(btn.dataset.configId));
+            pushNotification('Synchronisation relancée.', 'success');
+            await loadSyncHistory();
+            await loadSyncStatus();
+          } catch {
+            pushNotification('Échec de la relance.', 'error');
+          }
+        });
+      });
+    } catch (err) {
+      tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500">Impossible de charger l\'historique.</td></tr>';
+    }
+  }
 
   // ── Boutons ──────────────────────────────────────────────────────────────────
   document.querySelectorAll('button').forEach(btn => {
