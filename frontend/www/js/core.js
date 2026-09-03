@@ -72,32 +72,70 @@ async function populateSelect(selectId, category, defaultOption = 'Tous') {
 
 // ─── Thème Dark / Light ─────────────────────────────────────────────────────
 function initTheme() {
-  const toggle = document.getElementById('theme-toggle');
-  const icon   = document.getElementById('theme-icon');
   const html   = document.documentElement;
 
   const saved = localStorage.getItem('theme') || 'light';
-  html.classList.toggle('dark', saved === 'dark');
-  if (icon) icon.textContent = saved === 'dark' ? 'light_mode' : 'dark_mode';
+  applyTheme(saved === 'dark');
 
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      html.classList.toggle('dark');
-      const isDark = html.classList.contains('dark');
-      if (icon) icon.textContent = isDark ? 'light_mode' : 'dark_mode';
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  let toggle = document.getElementById('theme-toggle');
+  if (!toggle && document.body.dataset.entity) {
+    toggle = document.createElement('button');
+    toggle.id = 'theme-toggle';
+    toggle.type = 'button';
+    toggle.className = 'entomo-theme-toggle fixed right-5 top-5 z-50 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-md transition hover:-translate-y-0.5 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100';
+    toggle.setAttribute('aria-label', 'Activer le mode sombre');
+    toggle.innerHTML = '<span class="material-symbols-outlined" id="theme-icon">dark_mode</span>';
+    document.body.appendChild(toggle);
+  }
+
+  toggle?.addEventListener('click', () => {
+    applyTheme(!html.classList.contains('dark'));
+  });
+
+  function applyTheme(isDark) {
+    html.classList.toggle('dark', isDark);
+    html.classList.toggle('light', !isDark);
+    document.querySelectorAll('#theme-icon').forEach(icon => {
+      icon.textContent = isDark ? 'light_mode' : 'dark_mode';
     });
+    document.querySelectorAll('#theme-toggle').forEach(button => {
+      button.setAttribute('aria-label', isDark ? 'Activer le mode clair' : 'Activer le mode sombre');
+      button.setAttribute('aria-pressed', String(isDark));
+    });
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }
 }
 
 // ─── Lien actif dans la nav ──────────────────────────────────────────────────
 function initActiveNav() {
   const current = window.location.pathname.split('/').pop() || 'index.html';
+  const offlineLink = document.querySelector('aside nav a[href^="gestion-hors-ligne.html"]');
+  if (offlineLink) {
+    const managedLinks = [
+      ['interventions.html', 'healing', 'Interventions'],
+      ['campagnes.html', 'campaign', 'Campagnes'],
+      ['cartographie.html', 'map', 'Cartographie'],
+    ];
+    let anchor = offlineLink;
+    managedLinks.forEach(([href, icon, label]) => {
+      if (document.querySelector(`aside nav a[href^="${href}"]`)) {
+        anchor = document.querySelector(`aside nav a[href^="${href}"]`);
+        return;
+      }
+      const link = document.createElement('a');
+      link.href = href;
+      link.className = 'nav-link flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800';
+      link.innerHTML = `<span class="material-symbols-outlined">${icon}</span><span class="text-sm">${label}</span>`;
+      anchor.insertAdjacentElement('afterend', link);
+      anchor = link;
+    });
+  }
   document.querySelectorAll('nav a[href]').forEach(link => {
     const href = link.getAttribute('href').split('/').pop();
     if (href === current) {
       link.classList.add('text-brand-primary', 'bg-brand-primary/10', 'font-medium');
       link.classList.remove('text-gray-700', 'dark:text-gray-300');
+      link.addEventListener('click', event => event.preventDefault());
     }
   });
 }
@@ -123,6 +161,14 @@ function initAppLayoutScroll() {
       body > div.flex.min-h-screen > aside,
       body > div.flex.min-h-screen > main {
         min-height: 0;
+      }
+      body > div.flex.h-screen > aside nav,
+      body > div.flex.min-h-screen > aside nav {
+        flex: none;
+      }
+      body > div.flex.h-screen > aside nav a,
+      body > div.flex.min-h-screen > aside nav a {
+        flex-shrink: 0;
       }
       body > div.flex.h-screen > main,
       body > div.flex.min-h-screen > main {
@@ -157,6 +203,23 @@ function initAppLayoutScroll() {
       if (mainEl) mainEl.scrollTop = 0;
     });
   });
+
+  document.querySelectorAll('main .overflow-y-auto').forEach(el => {
+    if (el !== document.querySelector('main')) el.classList.remove('overflow-y-auto');
+  });
+
+  const savedSidebarScroll = Number(sessionStorage.getItem('entomo-sidebar-scroll'));
+  const sidebar = document.querySelector('aside');
+  if (sidebar && Number.isFinite(savedSidebarScroll)) {
+    const restoreSidebarScroll = () => {
+      const maxScroll = Math.max(0, sidebar.scrollHeight - sidebar.clientHeight);
+      sidebar.scrollTop = Math.min(savedSidebarScroll, maxScroll);
+    };
+    restoreSidebarScroll();
+    requestAnimationFrame(restoreSidebarScroll);
+    setTimeout(restoreSidebarScroll, 100);
+    setTimeout(restoreSidebarScroll, 350);
+  }
 }
 
 // ─── Menu mobile (burger) ────────────────────────────────────────────────────
@@ -834,8 +897,14 @@ function initPWA() {
     document.head.appendChild(link);
   }
   if ('serviceWorker' in navigator) {
-    const swPath = window.location.pathname.includes('/pages/') ? '../sw.js' : '/sw.js';
-    navigator.serviceWorker.register(swPath).catch(() => {});
+    navigator.serviceWorker.getRegistrations()
+      .then(registrations => Promise.all(registrations.map(registration => registration.unregister())))
+      .catch(() => {});
+    if ('caches' in window) {
+      caches.keys()
+        .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+        .catch(() => {});
+    }
   }
 }
 
@@ -879,7 +948,7 @@ function loadSharedAssets() {
   if (!document.querySelector('link[data-entomo-design-tokens]')) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = `${base}/css/design-tokens.css`;
+    link.href = `${base}/css/design-tokens.css?v=7`;
     link.dataset.entomoDesignTokens = '1';
     document.head.appendChild(link);
   }
@@ -908,4 +977,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initPWA();
   initOfflineModules();
   if (window.EntomoI18n) EntomoI18n.init().catch(() => {});
+});
+
+document.addEventListener('entomo-sidebar-ready', () => {
+  initActiveNav();
+  initMobileMenu();
 });

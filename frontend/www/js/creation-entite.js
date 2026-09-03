@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function fieldMarkup([name, label, type, required, options, defaultValue]) {
     const wide = type === 'textarea' ? 'md:col-span-2' : '';
-    const common = `id="f-${name}" name="${name}" ${required ? 'required' : ''} class="mt-1 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 dark:border-gray-700 dark:bg-gray-800"`;
+    const common = `id="f-${name}" name="${name}" ${required ? 'required' : ''} class="entomo-input mt-1 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 dark:border-gray-700 dark:bg-gray-800"`;
     let control;
     if (type === 'textarea') control = `<textarea ${common} rows="4" placeholder="Saisissez les informations utiles…"></textarea>`;
     else if (type === 'select' || type === 'select-api') {
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         : name === 'images_count' || name === 'budget' ? 'min="0"' : '';
       control = `<input ${common} type="${type}" ${step} ${constraints} value="${defaultValue ?? ''}" />`;
     }
-    return `<div class="${wide}"><label for="f-${name}" class="text-sm font-semibold text-gray-700 dark:text-gray-200">${label}${required ? ' *' : ''}</label>${control}<p class="field-error mt-1 hidden text-xs text-red-600"></p></div>`;
+    return `<div class="${wide}"><label for="f-${name}" class="block text-sm font-semibold text-gray-700 dark:text-gray-200">${label}${required ? ' *' : ''}</label>${control}<p class="field-error mt-1 hidden text-xs text-red-600"></p></div>`;
   }
 
   fieldsRoot.innerHTML = config.fields.map(fieldMarkup).join('');

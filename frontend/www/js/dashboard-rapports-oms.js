@@ -34,8 +34,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function renderTrend() {
     const evolution = await apiDashboard.densiteEvolution({ granularity: 'week', period: '3M' });
-    if (evolution?.length && window.EntomoCharts) {
-      EntomoCharts.line('oms-trend-chart', evolution.map(d => d.date), evolution.map(d => d.individus), { fill: true, labels: ['Individus'] });
+    if (window.EntomoCharts) {
+      const points = evolution || [];
+      EntomoCharts.line('oms-trend-chart', points.map(d => d.date), points.map(d => d.individus), {
+        fill: true,
+        labels: ['Individus'],
+        chartOptions: { plugins: { legend: { display: true } } },
+      });
     }
   }
 

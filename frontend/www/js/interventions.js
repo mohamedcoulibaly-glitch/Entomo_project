@@ -111,7 +111,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function openInterventionModal(id = null) {
     const item = id ? interventions.find(x => x.id === id) : null;
-    const typesIntervention = await loadReferenceData('types_intervention');
+    const defaultTypes = [
+      { code: 'pulverisation_irs', label: 'Pulvérisation IRS' },
+      { code: 'distribution_mii', label: 'Distribution MII' },
+      { code: 'traitement_larvicide', label: 'Traitement larvicide' },
+      { code: 'sensibilisation', label: 'Sensibilisation' },
+    ];
+    const referenceTypes = await loadReferenceData('types_intervention');
+    const typesIntervention = referenceTypes.length ? referenceTypes : defaultTypes;
+    const currentType = String(item?.type_intervention || item?.type || '').trim().toLowerCase();
+    const typeOptions = typesIntervention.map(type => {
+      const label = type.label || type.code || '';
+      const value = label;
+      const selected = currentType === String(label).trim().toLowerCase()
+        || currentType === String(value).trim().toLowerCase();
+      return `<option value="${value}" ${selected ? 'selected' : ''}>${label}</option>`;
+    }).join('');
     openModal(id ? 'Modifier intervention' : 'Nouvelle intervention', `
       <div class="space-y-3">
         <div>
@@ -121,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Type</label>
           <select id="f-type" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
-            ${typesIntervention.map(t => `<option ${(item?.type_intervention === t.label || item?.type === t.label) ? 'selected' : ''}>${t.label}</option>`).join('')}
+            ${typeOptions}
           </select>
         </div>
         <div>

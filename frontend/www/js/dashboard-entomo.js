@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           parMethode.map(d => (d.methode || '').slice(0, 12)),
           parMethode.map(d => d.count), { label: 'Méthodes' });
       }
-      if (parRegion?.length && window.EntomoMaps) {
-        await EntomoMaps.choropleth('carto-map-container', parRegion, {
+      if (window.EntomoMaps) {
+        await EntomoMaps.choropleth('carto-map-container', parRegion || [], {
           onRegionClick: (name) => {
             currentFilters.region = name;
             reloadAll();
@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } catch (err) {
       console.warn('[dashboard-entomo] charts error:', err);
+      if (window.EntomoMaps) EntomoMaps.choropleth('carto-map-container', []);
     }
   }
 

@@ -16,6 +16,14 @@ const EntomoCharts = (() => {
 
   const _instances = {};
 
+  function stabilizeCanvas(canvas, height) {
+    if (!canvas || !height) return;
+    const apply = () => canvas.style.setProperty('height', `${height}px`, 'important');
+    apply();
+    requestAnimationFrame(apply);
+    setTimeout(apply, 250);
+  }
+
   function _isDark() {
     return document.documentElement.classList.contains('dark');
   }
@@ -86,6 +94,7 @@ const EntomoCharts = (() => {
         ...opts.chartOptions,
       },
     });
+    stabilizeCanvas(canvas, opts.horizontal ? 280 : 280);
     return _instances[canvasId];
   }
 
@@ -116,6 +125,7 @@ const EntomoCharts = (() => {
       data: { labels, datasets: chartDatasets },
       options: { ..._baseOptions('line'), ...opts.chartOptions },
     });
+    stabilizeCanvas(canvas, 280);
     return _instances[canvasId];
   }
 
@@ -141,6 +151,7 @@ const EntomoCharts = (() => {
         ...opts.chartOptions,
       },
     });
+    stabilizeCanvas(canvas, 240);
     return _instances[canvasId];
   }
 
@@ -171,6 +182,7 @@ const EntomoCharts = (() => {
         },
       },
     });
+    stabilizeCanvas(canvas, 280);
     return _instances[canvasId];
   }
 
@@ -191,6 +203,7 @@ const EntomoCharts = (() => {
       data: { labels, datasets },
       options: { ..._baseOptions('line'), ...opts.chartOptions },
     });
+    stabilizeCanvas(canvas, 280);
     return _instances[canvasId];
   }
 
