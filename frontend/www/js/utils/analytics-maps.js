@@ -18,7 +18,8 @@ const EntomoMaps = (() => {
   const MEDICAL_REGION_5 = new Set(['Kédougou', 'Tambacounda', 'Kolda', 'Sédhiou', 'Ziguinchor']);
 
   function normalizeRegion(name) {
-    return REGION_NAME_MAP[name] || name;
+    const value = String(name || '').trim();
+    return REGION_NAME_MAP[value] || REGION_NAME_MAP[value.replace(/^./, c => c.toUpperCase())] || value;
   }
 
   function getRegionName(feature) {
@@ -95,14 +96,14 @@ const EntomoMaps = (() => {
     const geojson = await loadGeoJSON();
     const dataByRegion = {};
     (regionData || []).forEach((r) => {
-      dataByRegion[r.region] = r;
+      dataByRegion[normalizeRegion(r.region).toLowerCase()] = r;
     });
     const maxDensite = Math.max(...(regionData || []).map((r) => r.densite || 0), 1);
 
     const layer = L.geoJSON(geojson, {
       style: (feature) => {
         const name = getRegionName(feature);
-        const data = dataByRegion[name];
+        const data = dataByRegion[name.toLowerCase()];
         const fill = data ? densityColor(data.densite || 0, maxDensite) : '#e2e8f0';
         return {
           fillColor: fill,
@@ -114,7 +115,7 @@ const EntomoMaps = (() => {
       },
       onEachFeature: (feature, layer) => {
         const name = getRegionName(feature);
-        const data = dataByRegion[name];
+        const data = dataByRegion[name.toLowerCase()];
         const captures = data?.count || 0;
         const densite = data?.densite || 0;
         const risque = data?.risque || 'faible';

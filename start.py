@@ -1,7 +1,10 @@
 """Lance le backend, exécute le seed, puis lance le frontend."""
 
-import subprocess, sys, time, urllib.request, urllib.error
+import subprocess, sys, time, urllib.request, urllib.error, io
 from pathlib import Path
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).parent
 BACKEND_PORT = 8765
@@ -29,7 +32,7 @@ try:
             pass
         time.sleep(1)
     else:
-        raise RuntimeError("Le backend n'a pas démarré à temps")
+        raise RuntimeError("Le backend n'a pas demarre a temps")
 
     # ── Seed ───────────────────────────────────────────────────────────────────
     subprocess.run([sys.executable, "seed.py"], cwd=BACKEND_DIR, capture_output=True)
@@ -41,16 +44,16 @@ try:
     )
     procs.append(("Frontend", p))
 
-    print(f"Backend  → http://127.0.0.1:{BACKEND_PORT}")
-    print(f"Frontend → http://127.0.0.1:{FRONTEND_PORT}")
+    print(f"Backend  : http://127.0.0.1:{BACKEND_PORT}")
+    print(f"Frontend : http://127.0.0.1:{FRONTEND_PORT}")
     print("Identifiants : admin / Admin@2024  ou  labo1 / Labo@2024")
-    print("Ctrl+C pour arrêter.")
+    print("Ctrl+C pour arreter.")
 
     while True:
         time.sleep(1)
 
 except KeyboardInterrupt:
-    print("\nArrêt...")
+    print("\nArret...")
 finally:
     for _, p in procs:
         p.kill()

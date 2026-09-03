@@ -25,10 +25,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (typeof val === 'number') EntomoCharts?.animateNumber(el, parseFloat(el.textContent) || 0, val, key === 'couverture-irs' ? 1 : 0);
         else el.textContent = val;
       });
-      if (stats.alertes?.length) {
-        const rm5Regions = ['kédougou', 'kedougou', 'tambacounda', 'kolda', 'sédhiou', 'sedhiou', 'ziguinchor'];
-        renderAlertes(stats.alertes.filter(a => rm5Regions.some(r => (a.localisation || '').toLowerCase().includes(r))));
-      }
+      const rm5Regions = ['kédougou', 'kedougou', 'tambacounda', 'kolda', 'sédhiou', 'sedhiou', 'ziguinchor'];
+      renderAlertes((stats.alertes || []).filter(a =>
+        rm5Regions.some(r => (a.localisation || '').toLowerCase().includes(r))
+      ));
     } catch (err) { console.warn('[region5]', err); showOffline(); }
   }
 
@@ -45,9 +45,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (parEspece?.length) EntomoCharts?.doughnut('chart-espece', parEspece.map(d => d.espece), parEspece.map(d => d.count));
       if (parSite?.length) EntomoCharts?.bar('chart-site', parSite.map(d => d.site?.slice(0, 12)), parSite.map(d => d.count), { horizontal: true });
       if (evolution?.length) EntomoCharts?.multiLine('chart-evolution', evolution.map(d => d.date), { Densité: evolution.map(d => d.densite), Captures: evolution.map(d => d.captures) });
-      if (parRegion?.length) await EntomoMaps?.choropleth('region5-map', parRegion);
+      if (window.EntomoMaps) await EntomoMaps.choropleth('region5-map', parRegion || [], {
+        center: [13.8, -14.5],
+        zoom: 7,
+      });
       if (heatmap?.length && document.getElementById('region5-heatmap')) EntomoMaps?.heatmapLayer('region5-heatmap', heatmap);
-    } catch (err) { console.warn('[region5] charts', err); }
+    } catch (err) {
+      console.warn('[region5] charts', err);
+      if (window.EntomoMaps) await EntomoMaps.choropleth('region5-map', []);
+    }
   }
 
   function renderAlertes(alertes) {

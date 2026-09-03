@@ -20,6 +20,166 @@
 .dark {
   --color-surface: #0f172a;
   --color-surface-elevated: #1e293b;
+  color-scheme: dark;
+}
+
+html,
+body {
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+body[data-entity] {
+  background: var(--color-surface);
+}
+
+body[data-entity] main {
+  width: min(calc(100% - 2rem), 68rem);
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+body[data-entity] main > section {
+  border-color: #e2e8f0;
+  box-shadow: var(--shadow-elevated);
+}
+
+.dark body[data-entity] main > section {
+  border-color: #334155;
+}
+
+body[data-entity] form#entity-form {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+body[data-entity] #entity-fields {
+  row-gap: 1.25rem;
+  column-gap: 1.5rem;
+}
+
+body[data-entity] #entity-fields > div {
+  min-width: 0;
+}
+
+/* Navigation partagée : même comportement visuel sur tous les écrans. */
+aside {
+  flex-shrink: 0;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 86, 137, 0.35) transparent;
+}
+
+aside nav {
+  flex: none !important;
+}
+
+aside nav a {
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  body > div.flex.h-screen > aside,
+  body > div.flex.min-h-screen > aside {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+}
+
+main > .overflow-y-auto,
+main > .flex-1.overflow-y-auto {
+  overflow: visible !important;
+}
+
+.dashboard-analytics canvas {
+  display: block;
+  width: 100% !important;
+}
+
+.dashboard-analytics #carto-map-container,
+.dashboard-analytics #region5-map {
+  min-height: 22rem;
+}
+
+.dashboard-analytics #chart-espece {
+  height: 15rem !important;
+  max-height: 15rem;
+}
+
+.dashboard-analytics #chart-site,
+.dashboard-analytics #chart-evolution {
+  height: 17rem !important;
+  max-height: 280px;
+}
+
+.dashboard-analytics #oms-risk-map {
+  min-height: 24rem;
+}
+
+.dashboard-analytics #oms-trend-chart {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+aside nav a {
+  min-height: 2.5rem;
+  transition: background-color var(--transition-fast), color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+aside nav a:hover {
+  transform: translateX(2px);
+}
+
+aside nav a.text-brand-primary {
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+/* Formulaires générés et formulaires métier. */
+form#entity-form {
+  background: var(--color-surface-elevated);
+}
+
+form#entity-form > #entity-fields > div:not(#capture-media-section) {
+  padding: 0.1rem;
+}
+
+form#entity-form input:not([type="checkbox"]):not([type="file"]),
+form#entity-form select,
+form#entity-form textarea {
+  min-height: 2.75rem;
+  border-color: #d1d5db;
+  background-color: var(--color-surface-elevated);
+  color: inherit;
+}
+
+.dark form#entity-form input:not([type="checkbox"]):not([type="file"]),
+.dark form#entity-form select,
+.dark form#entity-form textarea {
+  border-color: #475569;
+  background-color: #1e293b;
+}
+
+form#entity-form input:focus,
+form#entity-form select:focus,
+form#entity-form textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 86, 137, 0.15);
+}
+
+form#entity-form textarea {
+  min-height: 7rem;
+}
+
+form#entity-form button[type="submit"] {
+  min-height: 2.75rem;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+form#entity-form button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-elevated);
 }
 
 /* Cartes et surfaces */
