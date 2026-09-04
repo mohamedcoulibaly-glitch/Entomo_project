@@ -3,13 +3,15 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
     <title>Planification Interventions - Ento-App Afrique</title>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../css/tailwind.min.css" />
-    <link rel="stylesheet" href="../css/design-tokens.css?v=3" />
+    <link rel="stylesheet" href="../css/design-tokens.css?v=20260903" />
 <style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
@@ -74,7 +76,7 @@
                         <p class="text-[#111418] dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Interventions</p>
                         <p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Planification et suivi des interventions anti-vectorielles.</p>
                     </div>
-                    <button class="flex h-10 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-brand-primary px-4 text-sm font-bold leading-normal text-white" id="btn-nouvelle-intervention">
+                    <button type="button" class="flex h-10 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-brand-primary px-4 text-sm font-bold leading-normal text-white" id="btn-nouvelle-intervention" onclick="event.preventDefault(); event.stopPropagation(); if (window.openInterventionModal) { window.openInterventionModal(); return false; } return false;">
                         <span class="material-symbols-outlined text-lg">add_circle</span> Nouvelle intervention
                     </button>
                 </div>
@@ -253,13 +255,13 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js"></script>
-    <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=7"></script>
-    <script src="../js/i18n.js"></script>
-    <script src="../js/pages-generiques.js"></script>
-    <script src="../js/interventions.js"></script>
+    <script src="../js/config-boot.js?v=20260903-1"></script>
+    <script src="../js/api.js?v=20260903-1"></script>
+    <script src="../js/sidebar.js?v=20260903-1"></script>
+    <script src="../js/core.js?v=20260903-1"></script>
+    <script src="../js/i18n.js?v=20260903-1"></script>
+    <script src="../js/pages-generiques.js?v=20260903-1"></script>
+    <script src="../js/interventions.js?v=20260903-1"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

@@ -126,22 +126,44 @@ document.addEventListener('DOMContentLoaded', async () => {
   function openCampagneModal(id = null) {
     const c = id ? campagnes.find(x => x.id === id) : null;
     openModal(id ? 'Modifier campagne' : 'Nouvelle campagne', `
-      <div class="space-y-3">
-        <div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="md:col-span-2">
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Titre *</label>
           <input id="f-titre" value="${c?.titre || c?.nom || ''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
         </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Date début</label>
-            <input id="f-date-debut" type="date" value="${c?.date_debut ? c.date_debut.split('T')[0] : ''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Date fin</label>
-            <input id="f-date-fin" type="date" value="${c?.date_fin ? c.date_fin.split('T')[0] : ''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
-          </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Type</label>
+          <select id="f-type" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+            <option value="collecte" ${c?.type_campagne === 'collecte' ? 'selected' : ''}>Collecte</option>
+            <option value="traitement" ${c?.type_campagne === 'traitement' ? 'selected' : ''}>Traitement</option>
+            <option value="surveillance" ${c?.type_campagne === 'surveillance' ? 'selected' : ''}>Surveillance</option>
+          </select>
         </div>
         <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Région</label>
+          <input id="f-region" value="${c?.region || ''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Date début</label>
+          <input id="f-date-debut" type="date" value="${c?.date_debut ? c.date_debut.split('T')[0] : ''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Date fin</label>
+          <input id="f-date-fin" type="date" value="${c?.date_fin ? c.date_fin.split('T')[0] : ''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Responsable</label>
+          <input id="f-responsable" value="${c?.responsable || ''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Statut</label>
+          <select id="f-statut" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+            <option value="planifiee" ${!c || c.statut === 'planifiee' ? 'selected' : ''}>Planifiée</option>
+            <option value="en_cours" ${c?.statut === 'en_cours' ? 'selected' : ''}>En cours</option>
+            <option value="terminee" ${c?.statut === 'terminee' ? 'selected' : ''}>Terminée</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Description</label>
           <textarea id="f-description" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 py-2 h-20 resize-none">${c?.description || ''}</textarea>
         </div>
@@ -152,10 +174,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!titre) { pushNotification('Le titre est obligatoire.', 'error'); return; }
         const data = {
           nom: titre,
+          type_campagne: document.getElementById('f-type')?.value || 'collecte',
+          region: document.getElementById('f-region')?.value.trim() || '',
           date_debut: document.getElementById('f-date-debut')?.value,
           date_fin: document.getElementById('f-date-fin')?.value,
+          responsable: document.getElementById('f-responsable')?.value.trim() || '',
           description: document.getElementById('f-description')?.value.trim(),
         };
+        if (id) data.statut = document.getElementById('f-statut')?.value || 'planifiee';
         try {
           showLoader();
           if (id) {
@@ -179,6 +205,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       },
     });
   }
+
+  window.openCampagneModal = openCampagneModal;
 
   const filterMap = {
     'filter-toutes-campagnes': 'tous',
@@ -241,6 +269,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     } catch (error) { pushNotification('La création de la campagne a échoué.', 'error'); }
     finally { buttonLoading(button, false); }
+  });
+
+  document.getElementById('btn-nouvelle-campagne')?.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    openCampagneModal();
   });
 
   await loadCampagnes();

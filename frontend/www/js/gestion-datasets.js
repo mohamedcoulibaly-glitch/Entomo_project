@@ -103,8 +103,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const d = id ? datasets.find(x => x.id === id) : null;
 
     const body = `
-      <div class="grid grid-cols-1 gap-4">
-        <div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="md:col-span-2">
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nom du dataset *</label>
           <input id="f-nom" value="${d?.nom || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
@@ -113,6 +113,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Version</label>
           <input id="f-version" value="${d?.version || 'v1.0.0'}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 font-mono"/>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Type de données</label>
+          <select id="f-type" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+            ${['Images', 'Annotations', 'Multimodal', 'Audio'].map(v => `<option ${d?.type_dataset === v ? 'selected' : ''}>${v}</option>`).join('')}
+          </select>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Statut</label>
@@ -131,6 +137,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
         </div>
         <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Date de mise à jour</label>
+          <input id="f-date" type="date" value="${d?.modifie_le ? new Date(d.modifie_le).toISOString().slice(0,10) : ''}"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
+        </div>
+        <div class="md:col-span-2">
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Description</label>
           <textarea id="f-desc" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 py-2 h-20 resize-none">${d?.description || ''}</textarea>
         </div>
@@ -144,9 +155,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const data = {
           nom,
           version: document.getElementById('f-version')?.value.trim() || 'v1.0.0',
+          type_dataset: document.getElementById('f-type')?.value || 'Images',
           statut: document.getElementById('f-statut')?.value || 'En cours',
           source_annotations: document.getElementById('f-source')?.value.trim() || '',
           images_count: parseInt(document.getElementById('f-images')?.value || 0),
+          modifie_le: document.getElementById('f-date')?.value || new Date().toISOString(),
           description: document.getElementById('f-desc')?.value.trim() || '',
         };
         try {
@@ -172,6 +185,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       },
     });
   }
+
+  window.openDatasetModal = openDatasetModal;
 
   async function openAnnotationModal(d) {
     const especes = await loadReferenceData('especes');
@@ -228,7 +243,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.querySelectorAll('button').forEach(btn => {
     if (btn.textContent.includes('Nouveau Jeu de Données')) {
-      btn.addEventListener('click', () => openDatasetModal());
+      btn.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (typeof window.openDatasetModal === 'function') {
+          window.openDatasetModal();
+          return;
+        }
+        window.location.href = 'nouveau-dataset.html';
+      });
     }
   });
 

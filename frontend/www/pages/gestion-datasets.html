@@ -3,13 +3,15 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
     <title>Gestion des Datasets et Annotations</title>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../css/tailwind.min.css" />
-    <link rel="stylesheet" href="../css/design-tokens.css?v=3" />
+    <link rel="stylesheet" href="../css/design-tokens.css?v=20260903" />
 <style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
@@ -75,7 +77,7 @@
 <p class="text-gray-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Gestion des Datasets Annotés</p>
 <p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Parcourez, gérez et versionnez tous les jeux de données d'images entomologiques.</p>
 </div>
-<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-accent hover:bg-orange-600 text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2">
+<button id="btn-nouveau-dataset" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-accent hover:bg-orange-600 text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2">
 <span class="material-symbols-outlined text-xl">add</span>
 <span class="truncate">Nouveau Jeu de Données</span>
 </button>
@@ -201,7 +203,7 @@
     <script src="../js/config-boot.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=7"></script>
+    <script src="../js/core.js?v=20260903"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../js/gestion-datasets.js"></script>

@@ -148,10 +148,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         apiDashboard.heatmap(p),
       ]);
       if (parEspece?.length) EntomoCharts?.doughnut('chart-analysis-espece', parEspece.map(d => d.espece), parEspece.map(d => d.count));
-      if (parRegion?.length) {
-        EntomoCharts?.bar('chart-analysis-region', parRegion.map(d => d.region), parRegion.map(d => d.count));
-        await EntomoMaps?.choropleth('analysis-map', parRegion);
-      }
+      const regionLabels = (parRegion || []).map(d => d.region);
+      const regionValues = (parRegion || []).map(d => d.count);
+      if (regionLabels.length) EntomoCharts?.bar('chart-analysis-region', regionLabels, regionValues);
+      await EntomoMaps?.choropleth('analysis-map', parRegion || []);
       if (parMethode?.length) EntomoCharts?.radar('chart-analysis-methode', parMethode.map(d => d.methode?.slice(0, 10)), parMethode.map(d => d.count));
       if (parStatut?.length) EntomoCharts?.doughnut('chart-analysis-statut', parStatut.map(d => d.statut), parStatut.map(d => d.count));
       if (evolution?.length) EntomoCharts?.multiLine('chart-analysis-evolution', evolution.map(d => d.date), { Captures: evolution.map(d => d.captures), Densité: evolution.map(d => d.densite) });

@@ -249,16 +249,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  window.openSiteModal = openSiteModal;
+
   // Connexion du bouton "Nouveau Site" — cible d'abord l'id dédié
   const btnNouveauSite = document.getElementById('btn-nouveau-site');
   if (btnNouveauSite) {
-    btnNouveauSite.addEventListener('click', () => openSiteModal());
+    btnNouveauSite.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (typeof window.openSiteModal === 'function') {
+        window.openSiteModal();
+        return;
+      }
+      window.location.href = 'nouveau-site.html';
+    });
   } else {
-    // Fallback : recherche par texte
     document.querySelectorAll('button').forEach(btn => {
       const t = btn.textContent.trim();
       if (t.includes('Ajouter un Site') || t.includes('Nouveau Site') || t.includes('Ajouter')) {
-        btn.addEventListener('click', () => openSiteModal());
+        btn.addEventListener('click', event => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (typeof window.openSiteModal === 'function') {
+            window.openSiteModal();
+            return;
+          }
+          window.location.href = 'nouveau-site.html';
+        });
       }
     });
   }
