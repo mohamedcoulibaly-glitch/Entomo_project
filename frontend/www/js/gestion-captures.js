@@ -306,6 +306,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  window.openCreateCaptureModal = openCreateCaptureModal;
+
   const dateFilter = document.getElementById('date-filter');
   const statusFilter = document.getElementById('status-filter');
   const speciesFilter = document.getElementById('species-filter');
@@ -337,15 +339,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await loadCaptures();
 
-  // Attacher le bouton Nouvelle Capture (par ID en priorité)
   const btnNouvCapture = document.getElementById('btn-nouvelle-capture');
   if (btnNouvCapture) {
-    btnNouvCapture.addEventListener('click', () => openCreateCaptureModal());
+    btnNouvCapture.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (typeof window.openCreateCaptureModal === 'function') {
+        window.openCreateCaptureModal();
+        return;
+      }
+      window.location.href = 'nouvelle-capture.html';
+    });
   } else {
     document.querySelectorAll('button').forEach(btn => {
       if (btn.textContent.trim().includes('Nouvelle Capture') && !btn.dataset.attached) {
         btn.dataset.attached = '1';
-        btn.addEventListener('click', () => openCreateCaptureModal());
+        btn.addEventListener('click', event => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (typeof window.openCreateCaptureModal === 'function') {
+            window.openCreateCaptureModal();
+            return;
+          }
+          window.location.href = 'nouvelle-capture.html';
+        });
       }
     });
   }

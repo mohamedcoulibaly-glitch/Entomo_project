@@ -3,28 +3,71 @@
  * Les actions métier sont gérées par les modules dédiés de chaque page.
  */
 document.addEventListener('DOMContentLoaded', () => {
+  const openCreationModalIfAvailable = (key, fallbackHref) => {
+    const modalHandlers = {
+      'nouvelle-campagne': typeof window.openCampagneModal === 'function' ? () => window.openCampagneModal() : null,
+      'nouvelle-intervention': typeof window.openInterventionModal === 'function' ? () => window.openInterventionModal() : null,
+      'nouvelle-capture': typeof window.openCreateCaptureModal === 'function' ? () => window.openCreateCaptureModal() : null,
+      'nouveau-site': typeof window.openSiteModal === 'function' ? () => window.openSiteModal() : null,
+      'nouveau-dataset': typeof window.openDatasetModal === 'function' ? () => window.openDatasetModal() : null,
+      'nouvel-utilisateur': typeof window.openUserModal === 'function' ? () => window.openUserModal() : null,
+    };
+
+    const handler = modalHandlers[key];
+    if (handler) {
+      return handler;
+    }
+
+    return () => {
+      window.location.href = fallbackHref;
+    };
+  };
+
   const creationRoutes = [
-    ['#btn-nouvelle-capture', 'nouvelle-capture.html'],
-    ['#btn-nouveau-site', 'nouveau-site.html'],
-    ['#btn-nouvelle-campagne', 'nouvelle-campagne.html'],
-    ['#btn-nouvelle-intervention', 'nouvelle-intervention.html'],
+    ['#btn-nouvelle-capture', 'nouvelle-capture.html', 'nouvelle-capture'],
+    ['#btn-nouveau-site', 'nouveau-site.html', 'nouveau-site'],
+    ['#btn-nouvelle-campagne', 'nouvelle-campagne.html', 'nouvelle-campagne'],
+    ['#btn-nouveau-dataset', 'nouveau-dataset.html', 'nouveau-dataset'],
+    ['#btn-nouveau-jeu-de-donnees', 'nouveau-dataset.html', 'nouveau-dataset'],
+    ['#btn-nouvel-utilisateur', 'nouvel-utilisateur.html', 'nouvel-utilisateur'],
   ];
-  creationRoutes.forEach(([selector, href]) => {
+  creationRoutes.forEach(([selector, href, key]) => {
     document.querySelector(selector)?.addEventListener('click', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
-      window.location.href = href;
+      openCreationModalIfAvailable(key, href)();
     });
   });
 
   document.querySelectorAll('button').forEach(button => {
     const text = button.textContent.trim().toLowerCase();
     const href = text.includes('ajouter un utilisateur') ? 'nouvel-utilisateur.html'
-      : text.includes('nouveau jeu de données') ? 'nouveau-dataset.html' : null;
+      : text.includes('nouveau jeu de données') ? 'nouveau-dataset.html'
+      : text.includes('nouvelle capture') ? 'nouvelle-capture.html'
+      : text.includes('nouveau site') ? 'nouveau-site.html'
+      : text.includes('nouvelle campagne') ? 'nouvelle-campagne.html'
+      : null;
     if (!href) return;
     button.addEventListener('click', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
+      const key = href.replace(/\.html$/, '').replace(/^[^a-z]/, '');
+      if (key === 'nouvelle-campagne' && typeof window.openCampagneModal === 'function') {
+        window.openCampagneModal();
+        return;
+      }
+      if (key === 'nouvelle-capture' && typeof window.openCreateCaptureModal === 'function') {
+        window.openCreateCaptureModal();
+        return;
+      }
+      if (key === 'nouveau-site' && typeof window.openSiteModal === 'function') {
+        window.openSiteModal();
+        return;
+      }
+      if (key === 'nouveau-dataset' && typeof window.openDatasetModal === 'function') {
+        window.openDatasetModal();
+        return;
+      }
       window.location.href = href;
     });
   });

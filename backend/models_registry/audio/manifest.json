@@ -13,9 +13,9 @@
   "feature_size": 77,
   "sample_rate": 16000,
   "metrics": {
-    "precision": 0.8545,
+    "precision": 0.8502,
     "rappel": 0.8,
-    "f1_score": 0.7949,
+    "f1_score": 0.7961,
     "accuracy": 0.8,
     "echantillons": 200
   },

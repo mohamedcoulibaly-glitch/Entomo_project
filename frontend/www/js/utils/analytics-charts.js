@@ -220,6 +220,26 @@ const EntomoCharts = (() => {
     requestAnimationFrame(step);
   }
 
+  document.addEventListener('entomo-theme-change', () => {
+    Object.values(_instances).forEach(chart => {
+      const options = chart.options;
+      const text = _textColor();
+      const grid = _gridColor();
+      if (options.plugins?.legend?.labels) options.plugins.legend.labels.color = text;
+      if (options.plugins?.tooltip) {
+        options.plugins.tooltip.titleColor = text;
+        options.plugins.tooltip.bodyColor = text;
+        options.plugins.tooltip.backgroundColor = _isDark() ? '#1f2937' : '#fff';
+        options.plugins.tooltip.borderColor = _isDark() ? '#374151' : '#e5e7eb';
+      }
+      if (options.scales) Object.values(options.scales).forEach(scale => {
+        if (scale.ticks) scale.ticks.color = text;
+        if (scale.grid) scale.grid.color = grid;
+      });
+      chart.update('none');
+    });
+  });
+
   return { bar, line, doughnut, radar, multiLine, destroy, animateNumber, COLORS };
 })();
 

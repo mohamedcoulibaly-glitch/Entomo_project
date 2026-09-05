@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../css/tailwind.min.css" />
-    <link rel="stylesheet" href="../css/design-tokens.css?v=3" />
+    <link rel="stylesheet" href="../css/design-tokens.css?v=20260903" />
+    <link rel="stylesheet" href="../vendor/leaflet/leaflet.css" />
 <style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
@@ -41,7 +42,7 @@
         }
     </script>
 </head>
-<body class="font-display bg-background-light dark:bg-background-dark text-[#111418] dark:text-gray-200">
+<body class="analysis-page font-display bg-background-light dark:bg-background-dark text-[#111418] dark:text-gray-200">
     <div class="flex h-screen w-full">
 
         <!-- Sidebar -->
@@ -114,15 +115,14 @@
 <!-- Distribution Chart -->
 <div class="lg:col-span-2 bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
 <h3 class="text-lg font-bold mb-4">Distribution des Espèces par Région</h3>
-<div data-chart class="h-80 bg-background-light dark:bg-background-dark rounded flex items-center justify-center p-4">
-<p class="text-text-light-secondary dark:text-dark-secondary text-sm">Chargement du graphique…</p>
+<div class="analysis-chart h-80 bg-background-light dark:bg-background-dark rounded p-4">
+<canvas id="chart-analysis-region" aria-label="Distribution des espèces par région"></canvas>
 </div>
 </div>
 <!-- Heatmap -->
 <div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
 <h3 class="text-lg font-bold mb-4">Densité Géographique</h3>
-<div id="analysis-sites-chart" class="h-80 bg-background-light dark:bg-background-dark rounded flex items-center justify-center p-4">
-<p class="text-text-light-secondary dark:text-dark-secondary text-sm">Chargement de la carte…</p>
+<div id="analysis-map" class="analysis-map h-80 bg-background-light dark:bg-background-dark rounded overflow-hidden">
 </div>
 </div>
 </div>
@@ -181,7 +181,7 @@
     <script src="../js/config-boot.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=7"></script>
+    <script src="../js/core.js?v=20260903"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../vendor/chart.js/chart.umd.min.js"></script>
@@ -192,4 +192,3 @@
     <!-- /Ento-App Scripts -->
 </body>
 </html>
-

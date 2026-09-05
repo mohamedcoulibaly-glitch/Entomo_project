@@ -3,15 +3,38 @@
  * Ento-App Afrique
  */
 
+const APP_ASSET_VERSION = '20260903-b';
+
+if (!document.querySelector('meta[http-equiv="Cache-Control"]')) {
+  const metaNoCache = document.createElement('meta');
+  metaNoCache.setAttribute('http-equiv', 'Cache-Control');
+  metaNoCache.setAttribute('content', 'no-cache, no-store, must-revalidate');
+  document.head.appendChild(metaNoCache);
+}
+if (!document.querySelector('meta[http-equiv="Pragma"]')) {
+  const metaPragma = document.createElement('meta');
+  metaPragma.setAttribute('http-equiv', 'Pragma');
+  metaPragma.setAttribute('content', 'no-cache');
+  document.head.appendChild(metaPragma);
+}
+
+// Nettoyage immédiat des anciens caches Chrome, avant le rendu de la page.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations()
+    .then(registrations => registrations.forEach(registration => registration.unregister()))
+    .catch(() => {});
+}
+
 // ─── Route Guard — Vérification d'authentification ─────────────────────────
 (function() {
-  const PUBLIC_PAGES = ['index.html', 'login.html', '404.html', 'aide.html'];
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const PUBLIC_PAGES = new Set(['index.html', 'login.html', '404.html', 'aide.html']);
+  const currentPath = window.location.pathname.replace(/\/+$/, '');
+  const currentPage = currentPath.split('/').pop() || 'index.html';
 
-  if (PUBLIC_PAGES.includes(currentPage) || currentPage === '') return;
+  if (PUBLIC_PAGES.has(currentPage) || currentPath === '') return;
 
   document.addEventListener('DOMContentLoaded', async function guardCheck() {
-    if (!Auth.isLoggedIn()) {
+    if (!Auth || !Auth.isLoggedIn || !Auth.isLoggedIn()) {
       redirectToLogin();
       return;
     }
@@ -39,7 +62,6 @@
     if (currentPath && currentPath !== 'login.html' && currentPath !== '') {
       sessionStorage.setItem('redirect_after_login', '/' + currentPath);
     }
-    // Redirige vers le chemin absolu /login.html servi par FastAPI
     window.location.href = '/login.html';
   }
 })();
@@ -72,29 +94,18 @@ async function populateSelect(selectId, category, defaultOption = 'Tous') {
 
 // ─── Thème Dark / Light ─────────────────────────────────────────────────────
 function initTheme() {
-  const html   = document.documentElement;
+  const html = document.documentElement;
 
-  const saved = localStorage.getItem('theme') || 'light';
-  applyTheme(saved === 'dark');
-
-  let toggle = document.getElementById('theme-toggle');
-  if (!toggle && document.body.dataset.entity) {
-    toggle = document.createElement('button');
-    toggle.id = 'theme-toggle';
-    toggle.type = 'button';
-    toggle.className = 'entomo-theme-toggle fixed right-5 top-5 z-50 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-md transition hover:-translate-y-0.5 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100';
-    toggle.setAttribute('aria-label', 'Activer le mode sombre');
-    toggle.innerHTML = '<span class="material-symbols-outlined" id="theme-icon">dark_mode</span>';
-    document.body.appendChild(toggle);
+  function getPreferredTheme() {
+    const stored = localStorage.getItem('theme');
+    if (stored === 'dark' || stored === 'light') return stored === 'dark';
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
-
-  toggle?.addEventListener('click', () => {
-    applyTheme(!html.classList.contains('dark'));
-  });
 
   function applyTheme(isDark) {
     html.classList.toggle('dark', isDark);
     html.classList.toggle('light', !isDark);
+    html.style.colorScheme = isDark ? 'dark' : 'light';
     document.querySelectorAll('#theme-icon').forEach(icon => {
       icon.textContent = isDark ? 'light_mode' : 'dark_mode';
     });
@@ -103,7 +114,25 @@ function initTheme() {
       button.setAttribute('aria-pressed', String(isDark));
     });
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.dispatchEvent(new CustomEvent('entomo-theme-change', { detail: { isDark } }));
   }
+
+  applyTheme(getPreferredTheme());
+
+  let toggle = document.getElementById('theme-toggle');
+  if (!toggle) {
+    toggle = document.createElement('button');
+    toggle.id = 'theme-toggle';
+    toggle.type = 'button';
+    toggle.className = 'entomo-theme-toggle fixed right-5 top-5 z-[9999] inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100';
+    toggle.setAttribute('aria-label', 'Activer le mode sombre');
+    toggle.innerHTML = '<span class="material-symbols-outlined" id="theme-icon">dark_mode</span>';
+    document.body.appendChild(toggle);
+  }
+
+  toggle?.addEventListener('click', () => {
+    applyTheme(!html.classList.contains('dark'));
+  });
 }
 
 // ─── Lien actif dans la nav ──────────────────────────────────────────────────
@@ -558,15 +587,15 @@ function openModal(title, bodyHTML, { onConfirm, confirmLabel = 'Confirmer', con
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'universal-modal';
-    modal.className = 'fixed inset-0 z-[9998] flex items-center justify-center bg-black/50 backdrop-blur-sm';
+    modal.className = 'fixed inset-0 z-[9998] flex items-center justify-center bg-black/45 backdrop-blur-[2px]';
     document.body.appendChild(modal);
   }
 
   modal.innerHTML = `
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden
                 transform transition-all duration-200 scale-95 opacity-0" id="modal-inner">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-bold text-[#111418] dark:text-white">${title}</h3>
+        <h3 class="text-2xl font-black text-[#111418] dark:text-white">${title}</h3>
         <button id="modal-close" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
           <span class="material-symbols-outlined">close</span>
         </button>
@@ -948,7 +977,7 @@ function loadSharedAssets() {
   if (!document.querySelector('link[data-entomo-design-tokens]')) {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = `${base}/css/design-tokens.css?v=7`;
+    link.href = `${base}/css/design-tokens.css?v=20260903`;
     link.dataset.entomoDesignTokens = '1';
     document.head.appendChild(link);
   }

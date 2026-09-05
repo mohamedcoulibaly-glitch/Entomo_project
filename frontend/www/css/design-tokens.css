@@ -23,6 +23,146 @@
   color-scheme: dark;
 }
 
+/* Harmonise les anciens tokens de maquette avec le thème partagé. */
+.analysis-page .bg-card-light,
+.analysis-page .bg-white {
+  background-color: var(--color-surface-elevated);
+}
+
+.dark .analysis-page .bg-card-dark,
+.dark .analysis-page .bg-white {
+  background-color: var(--color-surface-elevated);
+}
+
+.analysis-page .border-border-light,
+.analysis-page .border-gray-200 {
+  border-color: #e2e8f0;
+}
+
+.dark .analysis-page .border-border-dark,
+.dark .analysis-page .border-gray-200 {
+  border-color: #334155;
+}
+
+.analysis-page .text-text-light-secondary {
+  color: #64748b;
+}
+
+.dark .analysis-page .text-dark-secondary,
+.dark .analysis-page .text-text-light-secondary {
+  color: #cbd5e1;
+}
+
+.analysis-page {
+  background-color: var(--color-surface);
+}
+
+.analysis-page > .flex > main > header {
+  background-color: var(--color-surface-elevated);
+}
+
+.dark .analysis-page aside {
+  background-color: #111827 !important;
+  border-color: #334155;
+}
+
+.dark .analysis-page > .flex > main > header {
+  background-color: #111827 !important;
+  border-color: #334155;
+}
+
+.dark .analysis-page .bg-background-dark,
+.dark .analysis-page .dark\:bg-background-dark {
+  background-color: #0f172a;
+}
+
+/* Les maquettes utilisent des classes Tailwind dynamiques; ces règles gardent
+   le thème cohérent même lorsque ces classes ne sont pas précompilées. */
+html.dark body {
+  background-color: #0f172a !important;
+  color: #e5e7eb;
+}
+
+html.dark body > div.flex.h-screen,
+html.dark body > div.flex.min-h-screen {
+  background-color: #0f172a;
+}
+
+html.dark body aside {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+}
+
+html.dark body main > header {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+}
+
+html.dark body .bg-white,
+html.dark body .bg-card-light {
+  background-color: #1e293b !important;
+}
+
+html.dark body .bg-gray-50,
+html.dark body .bg-gray-100,
+html.dark body .bg-background-light {
+  background-color: #0f172a !important;
+}
+
+html.dark body .bg-gray-700,
+html.dark body .bg-gray-800,
+html.dark body .bg-brand-background,
+html.dark body .bg-\[\#f0f2f4\] {
+  background-color: #334155 !important;
+}
+
+html.dark body .bg-gray-200,
+html.dark body .bg-gray-300,
+html.dark body .bg-gray-400,
+html.dark body .bg-slate-50,
+html.dark body .bg-slate-100 {
+  background-color: #1e293b !important;
+}
+
+html.dark body [class~="dark:bg-[#111418]"],
+html.dark body [class~="dark:bg-[#1C2127]"],
+html.dark body [class~="dark:bg-[#283039]"] {
+  background-color: #1e293b !important;
+}
+
+html.dark body header,
+html.dark body section,
+html.dark body article,
+html.dark body [role="dialog"] {
+  color: #e5e7eb;
+}
+
+html.dark body .border-gray-200,
+html.dark body .border-gray-300,
+html.dark body .border-border-light {
+  border-color: #334155 !important;
+}
+
+html.dark body .text-gray-900,
+html.dark body .text-gray-800,
+html.dark body .text-\[\#111418\] {
+  color: #f8fafc !important;
+}
+
+html.dark body .text-gray-500,
+html.dark body .text-gray-600,
+html.dark body .text-text-light-secondary {
+  color: #cbd5e1 !important;
+}
+
+html.dark body input,
+html.dark body select,
+html.dark body textarea {
+  background-color: #1e293b;
+  border-color: #475569;
+  color: #f8fafc;
+}
+
 html,
 body {
   transition: background-color var(--transition-base), color var(--transition-base);
@@ -121,6 +261,16 @@ main > .flex-1.overflow-y-auto {
   height: 100% !important;
 }
 
+.analysis-page .analysis-chart canvas {
+  display: block;
+  width: 100% !important;
+  height: 280px !important;
+}
+
+.analysis-page .analysis-map {
+  min-height: 20rem;
+}
+
 aside nav a {
   min-height: 2.5rem;
   transition: background-color var(--transition-fast), color var(--transition-fast),
@@ -133,6 +283,71 @@ aside nav a:hover {
 
 aside nav a.text-brand-primary {
   box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+/* Améliorations globales pour les écrans de formulaire et d'analyse. */
+body,
+main,
+section,
+article,
+.card,
+.panel,
+.surface,
+[data-card],
+[data-surface] {
+  background-color: var(--color-surface);
+}
+
+body,
+input,
+select,
+textarea,
+button,
+label,
+span,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+small,
+strong {
+  color: inherit;
+}
+
+input,
+select,
+textarea {
+  border-radius: 0.75rem !important;
+  border: 1px solid #d1d5db !important;
+  background-color: var(--color-surface-elevated) !important;
+  color: inherit !important;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  border-color: #475569 !important;
+  background-color: #1e293b !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(0, 86, 137, 0.12);
+}
+
+button:not(.material-symbols-outlined):not([class*="icon"]) {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+button:hover:not(.material-symbols-outlined):not([class*="icon"]) {
+  transform: translateY(-1px);
 }
 
 /* Formulaires générés et formulaires métier. */

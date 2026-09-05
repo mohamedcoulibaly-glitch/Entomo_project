@@ -155,7 +155,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     pushNotification('Carte exportée en GeoJSON.', 'success');
   });
 
-  document.getElementById('map-add-site')?.addEventListener('click', () => { window.location.href = 'nouveau-site.html'; });
+  document.getElementById('map-add-site')?.addEventListener('click', () => {
+  if (typeof window.openSiteModal === 'function') {
+    window.openSiteModal();
+    return;
+  }
+  window.location.href = 'nouveau-site.html';
+});
   document.getElementById('map-fullscreen')?.addEventListener('click', async () => {
     try { await document.getElementById('map-container')?.requestFullscreen?.(); leafletMap?.invalidateSize(); }
     catch { pushNotification('Le plein écran n’est pas disponible.', 'warning'); }
