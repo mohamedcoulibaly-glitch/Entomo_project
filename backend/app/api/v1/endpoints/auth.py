@@ -33,6 +33,11 @@ def login(
     db: Session = Depends(get_db),
 ):
     """Authentification — retourne un token JWT Bearer."""
+    if not form_data.username.strip() or not form_data.password:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Nom d'utilisateur et mot de passe requis",
+        )
     client_key = _client_ip(request) or form_data.username
     if not check_login_allowed(client_key):
         raise HTTPException(

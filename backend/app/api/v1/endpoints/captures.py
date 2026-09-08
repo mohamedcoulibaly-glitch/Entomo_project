@@ -147,8 +147,8 @@ def create_capture(
     site = db.query(SiteSentinelle).filter(SiteSentinelle.id == capture_in.site_id).first()
     if not site:
         raise HTTPException(status_code=404, detail="Site non trouvé")
-    if not capture_in.utilisateur_id:
-        capture_in.utilisateur_id = current_user.id
+    # The authenticated user is always the owner of a newly created capture.
+    capture_in.utilisateur_id = current_user.id
     capture = crud_capture.create(db, obj_in=capture_in)
     audit_service.log_for_user(
         db,
@@ -228,11 +228,13 @@ def update_capture(
     capture_id: int,
     capture_in: CaptureUpdate,
     db: Session = Depends(get_db),
-    _: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     capture = crud_capture.get(db, id=capture_id)
     if not capture:
         raise HTTPException(status_code=404, detail="Capture non trouvée")
+    if capture.utilisateur_id not in (None, current_user.id) and not current_user.is_superuser:
+        raise HTTPException(status_code=403, detail="Action non autorisée sur cette capture")
     return crud_capture.update(db, db_obj=capture, obj_in=capture_in)
 
 
@@ -414,6 +416,8 @@ def delete_capture(
     capture = crud_capture.get(db, id=capture_id)
     if not capture:
         raise HTTPException(status_code=404, detail="Capture non trouvée")
+    if capture.utilisateur_id not in (None, current_user.id) and not current_user.is_superuser:
+        raise HTTPException(status_code=403, detail="Action non autorisée sur cette capture")
     crud_capture.remove(db, id=capture_id)
     audit_service.log_for_user(
         db,

@@ -70,6 +70,13 @@ def update_user(
         raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
     if user.id != current_user.id and not current_user.is_superuser:
         raise HTTPException(status_code=403, detail="Action non autorisée")
+    if user.id == current_user.id and not current_user.is_superuser:
+        forbidden_fields = {"is_active", "role_id"}
+        if forbidden_fields.intersection(user_in.model_dump(exclude_unset=True)):
+            raise HTTPException(
+                status_code=403,
+                detail="Vous ne pouvez pas modifier votre statut ou votre rôle",
+            )
     return crud_user.update(db, db_obj=user, obj_in=user_in)
 
 

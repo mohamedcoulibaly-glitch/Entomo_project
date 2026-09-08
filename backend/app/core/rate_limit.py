@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import time
 from collections import defaultdict
 from threading import Lock
@@ -11,9 +10,9 @@ from typing import Dict, List
 _lock = Lock()
 _attempts: Dict[str, List[float]] = defaultdict(list)
 
-# Plus permissif en développement (tests, démos répétées)
-_IS_DEV = os.environ.get("ENVIRONMENT", "development").lower() in {"development", "dev", "test"}
-LOGIN_MAX_ATTEMPTS = 30 if _IS_DEV else 5
+# Keep the same protection in development and production. A successful login
+# clears the counter, so normal local testing is not penalized.
+LOGIN_MAX_ATTEMPTS = 5
 LOGIN_WINDOW_SECONDS = 60
 
 

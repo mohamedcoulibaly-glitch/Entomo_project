@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-entomo}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-entomo_secret}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
       POSTGRES_DB: ${POSTGRES_DB:-entomo}
     volumes:
       - entomo_pgdata:/var/lib/postgresql/data
@@ -23,9 +23,9 @@ services:
         condition: service_healthy
     environment:
       ENVIRONMENT: production
-      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-entomo}:${POSTGRES_PASSWORD:-entomo_secret}@db:5432/${POSTGRES_DB:-entomo}
-      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
-      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-entomo}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}@db:5432/${POSTGRES_DB:-entomo}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY must be set in .env}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
       ASSISTANT_PROVIDER: ${ASSISTANT_PROVIDER:-rules}
       DISABLE_REPORT_SCHEDULER: ${DISABLE_REPORT_SCHEDULER:-0}
     expose:
