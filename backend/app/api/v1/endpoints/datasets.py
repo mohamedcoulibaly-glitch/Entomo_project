@@ -24,8 +24,8 @@ def create_dataset(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
-    if not ds_in.utilisateur_id:
-        ds_in.utilisateur_id = current_user.id
+    # Never trust a client-supplied owner id.
+    ds_in.utilisateur_id = current_user.id
     return crud_dataset.create(db, obj_in=ds_in)
 
 
@@ -38,18 +38,30 @@ def get_dataset(dataset_id: int, db: Session = Depends(get_db), _: User = Depend
 
 
 @router.put("/{dataset_id}", response_model=DatasetResponse)
-def update_dataset(dataset_id: int, ds_in: DatasetUpdate, db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
+def update_dataset(dataset_id: int, ds_in: DatasetUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
     ds = crud_dataset.get(db, id=dataset_id)
     if not ds:
         raise HTTPException(status_code=404, detail="Dataset non trouvé")
+    if ds.utilisateur_id not in (None, current_user.id) and not current_user.is_superuser:
+        raise HTTPException(status_code=403, detail="Action non autorisée sur ce dataset")
     return crud_dataset.update(db, db_obj=ds, obj_in=ds_in)
 
 
 @router.delete("/{dataset_id}")
-def delete_dataset(dataset_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_active_user)):
+def delete_dataset(dataset_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)):
+    from app.models.dataset import Annotation
+
     ds = crud_dataset.get(db, id=dataset_id)
     if not ds:
         raise HTTPException(status_code=404, detail="Dataset non trouvé")
+    if ds.utilisateur_id not in (None, current_user.id) and not current_user.is_superuser:
+        raise HTTPException(status_code=403, detail="Action non autorisée sur ce dataset")
+    # Remove dependent annotations explicitly because the database relation does
+    # not guarantee an ORM/database cascade on every supported backend.
+    db.query(Annotation).filter(Annotation.dataset_id == dataset_id).delete(
+        synchronize_session=False
+    )
+    db.commit()
     crud_dataset.remove(db, id=dataset_id)
     return {"message": "Dataset supprimé"}
 
@@ -70,6 +82,5 @@ def add_annotation(
     current_user: User = Depends(get_current_active_user),
 ):
     ann_in.dataset_id = dataset_id
-    if not ann_in.utilisateur_id:
-        ann_in.utilisateur_id = current_user.id
+    ann_in.utilisateur_id = current_user.id
     return crud_annotation.create(db, obj_in=ann_in)

@@ -592,21 +592,21 @@ function openModal(title, bodyHTML, { onConfirm, confirmLabel = 'Confirmer', con
   }
 
   modal.innerHTML = `
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col overflow-hidden
                 transform transition-all duration-200 scale-95 opacity-0" id="modal-inner">
-      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex shrink-0 items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <h3 class="text-2xl font-black text-[#111418] dark:text-white">${title}</h3>
-        <button id="modal-close" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+        <button type="button" id="modal-close" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
-      <div class="px-6 py-5 text-sm text-gray-700 dark:text-gray-300">${bodyHTML}</div>
-      <div class="flex justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40">
-        <button id="modal-cancel" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600
+      <div class="min-h-0 flex-1 overflow-y-auto px-6 py-5 text-sm text-gray-700 dark:text-gray-300">${bodyHTML}</div>
+      <div class="flex shrink-0 justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40">
+        ${cancelLabel ? `<button type="button" id="modal-cancel" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600
                 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
           ${cancelLabel}
-        </button>
-        <button id="modal-confirm" class="px-4 py-2 rounded-lg text-sm font-bold ${confirmClass}
+        </button>` : ''}
+        <button type="button" id="modal-confirm" class="px-4 py-2 rounded-lg text-sm font-bold ${confirmClass}
                 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
           ${confirmLabel}
         </button>
@@ -627,7 +627,7 @@ function openModal(title, bodyHTML, { onConfirm, confirmLabel = 'Confirmer', con
   };
 
   modal.querySelector('#modal-close').addEventListener('click', closeModal);
-  modal.querySelector('#modal-cancel').addEventListener('click', closeModal);
+  modal.querySelector('#modal-cancel')?.addEventListener('click', closeModal);
   modal.querySelector('#modal-confirm').addEventListener('click', async () => {
     const confirmButton = modal.querySelector('#modal-confirm');
     confirmButton.disabled = true;
