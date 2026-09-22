@@ -36,6 +36,10 @@ class CaptureCreate(CaptureBase):
 
 
 class CaptureUpdate(BaseModel):
+    # Corrige une erreur de saisie sur l'espèce d'origine (faute de frappe de
+    # l'agent terrain) — distinct de espece_corrigee, qui est la correction
+    # officielle posée par le laboratoire via le workflow de validation.
+    espece: Optional[str] = None
     espece_corrigee: Optional[str] = None
     nombre_individus: Optional[int] = None
     sexe: Optional[str] = None

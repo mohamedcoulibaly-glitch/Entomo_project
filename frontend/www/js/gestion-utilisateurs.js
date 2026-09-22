@@ -145,8 +145,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     editingId = id;
     const u = id ? users.find(x => x.id === id) : null;
 
+    // L'API renvoie "name", pas "nom" — cause du "undefined" qui s'affichait ici.
     const roleOptions = roles.length
-      ? roles.map(r => `<option value="${r.id}" ${u && (u.role_id === r.id || u.role === r.nom) ? 'selected' : ''}>${r.nom}</option>`).join('')
+      ? roles.map(r => `<option value="${r.id}" ${u && (u.role_id === r.id || u.role === (r.name || r.nom)) ? 'selected' : ''}>${r.name || r.nom}</option>`).join('')
       : `<option value="">Sélectionner un rôle</option>`;
 
     const body = `
@@ -160,6 +161,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Email *</label>
           <input id="f-email" type="email" value="${u?.email || ''}"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nom d'utilisateur${id ? '' : ' *'}</label>
+          <input id="f-username" type="text" value="${u?.username || ''}" ${id ? 'disabled' : ''}
+            placeholder="généré depuis l'email si laissé vide"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60"/>
+        </div>
+        ${!id ? `
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Mot de passe initial *</label>
+          <div class="flex gap-2">
+            <input id="f-password" type="text" value=""
+              placeholder="Saisir ou générer un mot de passe"
+              class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
+                     bg-white dark:bg-gray-700 text-sm px-3 font-mono focus:outline-none focus:ring-2 focus:ring-primary"/>
+            <button type="button" id="f-password-generate" class="shrink-0 rounded-lg border border-gray-300 dark:border-gray-600 px-3 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-gray-700">Générer</button>
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Communiquez-le à l'utilisateur — il ne sera plus affiché ensuite.</p>
+        </div>` : ''}
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Téléphone</label>
+          <input id="f-telephone" type="tel" value="${u?.telephone || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
                    bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
         </div>
@@ -204,7 +230,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       onConfirm: async () => {
         const nom = document.getElementById('f-nom')?.value.trim();
         const email = document.getElementById('f-email')?.value.trim();
-        if (!nom || !email) {
+        const password = document.getElementById('f-password')?.value.trim() || '';
+        if (!nom || !email || (!id && !password)) {
           document.getElementById('f-error')?.classList.remove('hidden');
           return;
         }
@@ -217,6 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           etablissement: document.getElementById('f-etab')?.value.trim(),
           region: document.getElementById('f-region')?.value.trim(),
           district: document.getElementById('f-district')?.value.trim(),
+          telephone: document.getElementById('f-telephone')?.value.trim() || undefined,
           is_active: document.getElementById('f-statut')?.value === 'Actif',
         };
         try {
@@ -228,10 +256,11 @@ document.addEventListener('DOMContentLoaded', async () => {
               pushNotification(`Utilisateur "${nom}" modifié avec succès.`, 'success');
             }
           } else {
-            const res = await apiUsers.create({ ...data, username: email.split('@')[0], password: 'ChangeMe123!' });
+            const username = document.getElementById('f-username')?.value.trim() || email.split('@')[0];
+            const res = await apiUsers.create({ ...data, username, password });
             if (res !== null) {
               await loadUsers();
-              pushNotification(`Utilisateur "${nom}" ajouté avec succès.`, 'success');
+              pushNotification(`Utilisateur "${nom}" ajouté — identifiant : ${username}.`, 'success');
             }
           }
           hideLoader();
@@ -241,7 +270,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       },
     });
+
+    if (!id) {
+      setTimeout(() => {
+        document.getElementById('f-password-generate')?.addEventListener('click', () => {
+          const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';
+          let pwd = '';
+          const bytes = new Uint32Array(12);
+          (window.crypto || window.msCrypto).getRandomValues(bytes);
+          for (let i = 0; i < 12; i++) pwd += chars[bytes[i] % chars.length];
+          const input = document.getElementById('f-password');
+          if (input) { input.type = 'text'; input.value = pwd; }
+        });
+      }, 50);
+    }
   }
+
+  window.openUserModal = openUserModal;
 
   const addBtn = document.querySelector('button:has(> .truncate)');
   if (addBtn) addBtn.addEventListener('click', () => openUserModal());
@@ -263,7 +308,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!p) return;
       const text = p.textContent || '';
       if (text.startsWith('Rôle')) {
-        const options = ['Tous', ...roles.map(r => r.nom)];
+        const options = ['Tous', ...roles.map(r => r.name || r.nom)];
         showFilterDD(btn, options, val => { filters.role = val; p.textContent = `Rôle: ${val}`; applyFilters(); });
       } else if (text.startsWith('Région')) {
         const regions = [...new Set(users.map(u => u.region).filter(Boolean))];

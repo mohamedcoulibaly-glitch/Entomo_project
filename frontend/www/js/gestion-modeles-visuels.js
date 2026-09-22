@@ -3,11 +3,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.style.cursor = 'zoom-in';
     el.addEventListener('click', () => {
       const overlay = document.createElement('div');
-      overlay.className = 'fixed inset-0 z-[9999] bg-black/85 flex items-center justify-center cursor-zoom-out';
+      overlay.className = 'fixed inset-0 bg-black/85 flex items-center justify-center cursor-zoom-out';
+      overlay.style.zIndex = '9999';
       const src = el.tagName === 'IMG' ? el.src : (el.style.backgroundImage.match(/url\("?(.+?)"?\)/)?.[1] || '');
       overlay.innerHTML = `
-        <div class="relative max-w-3xl max-h-[85vh] rounded-xl overflow-hidden">
-          <img src="${src}" class="max-w-full max-h-[80vh] object-contain rounded-xl" alt="Aperçu"/>
+        <div class="relative max-w-3xl rounded-xl overflow-hidden" style="max-height:85vh">
+          <img src="${src}" class="max-w-full object-contain rounded-xl" style="max-height:80vh" alt="Aperçu"/>
           <button class="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1 hover:bg-black/70">
             <span class="material-symbols-outlined">close</span>
           </button>

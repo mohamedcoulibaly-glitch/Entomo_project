@@ -4,21 +4,26 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 # None = route publique, "AUTH" = authentification sans permission spécifique
 PUBLIC = None
 AUTH_ONLY = "AUTH"
+
+# Une règle peut exiger une permission unique, ou un tuple de permissions dont
+# une seule suffit (ex : action de validation qui nécessite soit la gestion
+# DHIS2 complète, soit simplement le droit de valider des captures).
+RoutePermission = Optional[Union[str, tuple[str, ...]]]
 
 
 @dataclass(frozen=True)
 class RoutePermissionRule:
     pattern: re.Pattern[str]
     methods: frozenset[str]
-    permission: Optional[str]
+    permission: RoutePermission
 
 
-def _rule(path: str, methods: set[str], permission: Optional[str]) -> RoutePermissionRule:
+def _rule(path: str, methods: set[str], permission: RoutePermission) -> RoutePermissionRule:
     return RoutePermissionRule(
         pattern=re.compile(path),
         methods=frozenset(methods),
@@ -59,10 +64,12 @@ ROUTE_PERMISSION_RULES: tuple[RoutePermissionRule, ...] = (
     _rule(r"^/api/v1/captures/\d+/valider$", {"POST"}, "captures:valider"),
     _rule(r"^/api/v1/captures/\d+/upload-image$", {"POST"}, "captures:modifier"),
     _rule(r"^/api/v1/captures/\d+/upload-audio$", {"POST"}, "captures:modifier"),
-    # Sites
-    _rule(r"^/api/v1/sites/?$", {"GET"}, "sites:voir"),
+    # Sites — la lecture (liste/détail) est aussi ouverte à captures:voir : de
+    # nombreuses pages (captures, audio, rapports, interventions...) listent
+    # les sites uniquement pour peupler un filtre/dropdown, pas pour les gérer.
+    _rule(r"^/api/v1/sites/?$", {"GET"}, ("sites:voir", "captures:voir")),
     _rule(r"^/api/v1/sites/?$", {"POST"}, "sites:creer"),
-    _rule(r"^/api/v1/sites/\d+$", {"GET"}, "sites:voir"),
+    _rule(r"^/api/v1/sites/\d+$", {"GET"}, ("sites:voir", "captures:voir")),
     _rule(r"^/api/v1/sites/\d+$", {"PUT"}, "sites:modifier"),
     _rule(r"^/api/v1/sites/\d+$", {"DELETE"}, "sites:supprimer"),
     _rule(r"^/api/v1/sites/\d+/activites$", {"GET", "POST"}, "sites:modifier"),
@@ -79,8 +86,13 @@ ROUTE_PERMISSION_RULES: tuple[RoutePermissionRule, ...] = (
     _rule(r"^/api/v1/datasets", {"POST", "PUT", "DELETE"}, "datasets:gestion"),
     # Modèles ML
     _rule(r"^/api/v1/modeles", {"GET", "POST", "PUT", "DELETE"}, "modeles:gestion"),
-    # DHIS2
-    _rule(r"^/api/v1/dhis2/sync/capture/\d+$", {"POST"}, "dhis2:gestion"),
+    # DHIS2 — la validation d'une capture (labo) implique de consulter la file
+    # d'attente et de pousser CETTE capture vers DHIS2 ; ces trois routes
+    # acceptent donc aussi "captures:valider", sans donner accès à la config,
+    # aux identifiants ou aux mappings DHIS2 (restés dhis2:gestion uniquement).
+    _rule(r"^/api/v1/dhis2/pending$", {"GET"}, ("dhis2:gestion", "captures:valider")),
+    _rule(r"^/api/v1/dhis2/status$", {"GET"}, ("dhis2:gestion", "captures:valider")),
+    _rule(r"^/api/v1/dhis2/sync/capture/\d+$", {"POST"}, ("dhis2:gestion", "captures:valider")),
     _rule(r"^/api/v1/dhis2", {"GET", "POST", "PUT", "DELETE"}, "dhis2:gestion"),
     # Rapports
     _rule(r"^/api/v1/rapports", {"GET"}, "rapports:voir"),
@@ -106,8 +118,9 @@ ROUTE_PERMISSION_RULES: tuple[RoutePermissionRule, ...] = (
     _rule(r"^/api/v1/reference/[^/]+/[^/]+$", {"PUT", "DELETE"}, "reference:gestion"),
     # Import
     _rule(r"^/api/v1/import", {"GET", "POST"}, "datasets:gestion"),
-    # Cartographie
-    _rule(r"^/api/v1/cartographie", {"GET"}, "sites:voir"),
+    # Cartographie — alignée sur la page frontend (accessible avec sites:voir
+    # OU captures:voir, ex : un labo qui suit ses spécimens géographiquement).
+    _rule(r"^/api/v1/cartographie", {"GET"}, ("sites:voir", "captures:voir")),
     # Support
     _rule(r"^/api/v1/support", {"GET", "POST", "PUT"}, AUTH_ONLY),
     # Assistant
@@ -115,7 +128,7 @@ ROUTE_PERMISSION_RULES: tuple[RoutePermissionRule, ...] = (
 )
 
 
-def resolve_route_permission(method: str, path: str) -> Optional[str]:
+def resolve_route_permission(method: str, path: str) -> RoutePermission:
     """Retourne la permission requise, AUTH_ONLY, ou PUBLIC (None)."""
     normalized = path.rstrip("/") or "/"
     if normalized.endswith("/") and normalized != "/":

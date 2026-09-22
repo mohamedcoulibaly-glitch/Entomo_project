@@ -106,7 +106,8 @@ def enforce_route_access(
         return
 
     if not user_has_permission(user, permission):
+        needed = permission if isinstance(permission, str) else " ou ".join(permission)
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Permission refusée : {permission}",
+            detail=f"Permission refusée : {needed}",
         )

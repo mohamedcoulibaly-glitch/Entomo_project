@@ -69,7 +69,11 @@ const EntomoOfflineSync = (() => {
       await purgeExpiredCache();
       await flushLocalCaptures();
       if (typeof apiDhis2 !== 'undefined') await apiDhis2.syncIfReady({ silent: true });
-      if (typeof apiSync !== 'undefined') await apiSync.processQueue();
+      // silencieux : synchronisation automatique en arrière-plan, ne doit jamais
+      // afficher de toast d'erreur si l'utilisateur n'a pas la permission
+      // sync:gestion (ex : agent terrain, laboratoire) — ce n'est pas une action
+      // qu'il a demandée.
+      if (typeof apiSync !== 'undefined') await apiSync.processQueue(true);
       registerSuccess();
     } catch {
       registerFailure();

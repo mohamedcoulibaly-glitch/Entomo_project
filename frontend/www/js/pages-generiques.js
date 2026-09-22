@@ -18,8 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return handler;
     }
 
+    // Plus de page autonome de repli (supprimées au profit des modales) :
+    // si le module de la page n'a pas encore exposé sa modale, on informe
+    // plutôt que de naviguer vers une page qui n'existe plus.
     return () => {
-      window.location.href = fallbackHref;
+      pushNotification("Ce formulaire n'est disponible que depuis sa page de gestion dédiée.", 'warning');
     };
   };
 
@@ -68,7 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
         window.openDatasetModal();
         return;
       }
-      window.location.href = href;
+      if (key === 'nouvel-utilisateur' && typeof window.openUserModal === 'function') {
+        window.openUserModal();
+        return;
+      }
+      // Les anciennes pages autonomes (nouvelle-capture.html, etc.) ont été
+      // supprimées au profit des modales — plus de repli par navigation.
+      pushNotification("Ce formulaire n'est disponible que depuis sa page de gestion dédiée.", 'warning');
     });
   });
 

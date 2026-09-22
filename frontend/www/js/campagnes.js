@@ -171,13 +171,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       confirmLabel: id ? 'Enregistrer' : 'Créer',
       onConfirm: async () => {
         const titre = document.getElementById('f-titre')?.value.trim();
+        const dateDebut = document.getElementById('f-date-debut')?.value;
+        const dateFin = document.getElementById('f-date-fin')?.value;
         if (!titre) { pushNotification('Le titre est obligatoire.', 'error'); return; }
+        if (!dateDebut) { pushNotification('La date de début est obligatoire.', 'error'); return; }
+        if (dateFin && dateFin < dateDebut) { pushNotification('La date de fin doit être postérieure à la date de début.', 'error'); return; }
         const data = {
           nom: titre,
           type_campagne: document.getElementById('f-type')?.value || 'collecte',
           region: document.getElementById('f-region')?.value.trim() || '',
-          date_debut: document.getElementById('f-date-debut')?.value,
-          date_fin: document.getElementById('f-date-fin')?.value,
+          date_debut: dateDebut,
+          date_fin: dateFin || undefined,
           responsable: document.getElementById('f-responsable')?.value.trim() || '',
           description: document.getElementById('f-description')?.value.trim(),
         };
