@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   function renderCapture() {
     const c = capture;
     const code = c.code || c.id_specimen_code || `SPN-${String(c.id || 0).padStart(5, '0')}`;
-    const imageUrl = c.specimen_image || c.image_url || c.photo_url || '';
+    const imageUrl = resolveMediaUrl(c.specimen_image || c.image_url || c.photo_url || c.image_path) || '';
     const espece = c.espece_identifiee || c.espece || c.identification_ia || 'Non identifié';
     const confiance = c.confiance || c.confidence || 0;
     const confiancePct = c.confiance ? `${Math.round(c.confiance * 100)}%` : c.confidence_pct || '0%';
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (imageUrl) {
         imgEl.innerHTML = `<img src="${imageUrl}" alt="${code}" class="w-full h-full object-contain cursor-pointer" id="capture-img-tag">`;
         document.getElementById('capture-img-tag')?.addEventListener('click', () => {
-          openModal('Image — ' + code, `<img src="${imageUrl}" alt="${code}" class="max-w-full max-h-[80vh] mx-auto">`, { confirmLabel: 'Fermer', cancelLabel: '' });
+          openModal('Image — ' + code, `<img src="${imageUrl}" alt="${code}" class="max-w-full mx-auto" style="max-height:80vh">`, { confirmLabel: 'Fermer', cancelLabel: '' });
         });
       } else {
         imgEl.innerHTML = '<div class="flex items-center justify-center h-full text-gray-400"><span class="material-symbols-outlined text-6xl">image</span></div>';

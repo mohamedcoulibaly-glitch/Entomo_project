@@ -301,6 +301,7 @@ const apiRoles = {
   create(data)     { return apiRequest('POST', '/roles/', data); },
   update(id, data) { return apiRequest('PUT', `/roles/${id}`, data); },
   delete(id)       { return apiRequest('DELETE', `/roles/${id}`); },
+  permissions()    { return apiRequest('GET', '/roles/permissions'); },
 };
 
 // ─── Datasets ─────────────────────────────────────────────────────────────────
@@ -515,7 +516,7 @@ const apiSync = {
   resolveConflict(itemId, strategy) {
     return apiRequest('POST', `/sync/queue/${itemId}/resolve`, { strategy });
   },
-  processQueue()       { return apiRequest('POST', '/sync/queue/process'); },
+  processQueue(silent = false) { return apiRequest('POST', '/sync/queue/process', null, false, { silent }); },
 };
 
 // ─── Assistant IA ─────────────────────────────────────────────────────────────
@@ -537,7 +538,9 @@ function showApiStatus(connected) {
   if (!badge) {
     badge = document.createElement('div');
     badge.id = 'api-status-badge';
-    badge.className = 'fixed bottom-4 left-4 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow';
+    // pointer-events-none : badge purement informatif, ne doit jamais intercepter
+    // les clics sur les éléments en-dessous (ex : dernier lien de la sidebar).
+    badge.className = 'fixed bottom-4 left-4 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow pointer-events-none';
     document.body.appendChild(badge);
   }
   badge.dataset.status = connected ? 'ok' : 'error';

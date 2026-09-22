@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
   let captures = [];
+  let ncPendingImageFile = null;
+  let ncPendingAudioFile = null;
+  let ncRecordingTimer = null;
 
   const STATUT_LABEL = {
     'a_valider': 'À valider',
@@ -25,7 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       ...c,
       id_specimen: c.id_specimen || c.id || 0,
       code: c.code || c.id_specimen_code || `SPN-${String(c.id || 0).padStart(5, '0')}`,
-      specimen_image: c.specimen_image || c.image_url || c.photo_url || '',
+      // Le backend renvoie un chemin relatif (image_path), pas une URL absolue —
+      // resolveMediaUrl() (api.js) le transforme en URL réellement chargeable.
+      specimen_image: resolveMediaUrl(c.specimen_image || c.image_url || c.photo_url || c.image_path) || '',
       identification_ia: c.identification_ia || c.espece_identifiee || c.espece || 'Non identifié',
       confiance: c.confiance || c.confidence || 0,
       confiance_pct: c.confiance ? `${Math.round(c.confiance * 100)}%` : c.confidence_pct || '0%',
@@ -53,6 +58,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderTable(captures);
   }
 
+  // Certaines captures (données de démo) référencent un chemin d'image qui
+  // n'existe pas réellement sur le disque. Comme on utilise background-image
+  // (pas <img>), il n'y a pas d'événement onerror natif : on précharge donc
+  // chaque vignette en JS et on retombe sur l'icône générique si ça échoue.
+  function verifyThumbnails(container) {
+    container.querySelectorAll('[data-img-check]').forEach((el) => {
+      const url = el.dataset.imgCheck;
+      if (!url) return;
+      const probe = new Image();
+      probe.onerror = () => {
+        el.style.backgroundImage = 'none';
+        el.style.backgroundColor = '#e5e7eb';
+        el.style.display = 'flex';
+        el.style.alignItems = 'center';
+        el.style.justifyContent = 'center';
+        el.innerHTML = `<span class="material-symbols-outlined text-gray-400 ${el.dataset.imgIconSize || 'text-lg'}">bug_report</span>`;
+      };
+      probe.src = url;
+    });
+  }
+
   function renderTable(data) {
     const tbody = document.querySelector('table tbody');
     if (!tbody) return;
@@ -67,6 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <tr class="border-t border-t-[#dbe0e6] dark:border-t-white/10 hover:bg-primary/5 dark:hover:bg-primary/10 cursor-pointer" data-id="${c.id}">
         <td class="h-[72px] px-4 py-2 w-16">
           <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-md w-10 h-10"
+               data-img-check="${c.specimen_image || ''}" data-img-icon-size="text-lg"
                style="${c.specimen_image ? `background-image: url('${c.specimen_image}')` : 'background-color: #e5e7eb; display:flex; align-items:center; justify-content:center;'}">
             ${!c.specimen_image ? '<span class="material-symbols-outlined text-gray-400 text-lg">bug_report</span>' : ''}
           </div>
@@ -78,6 +105,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUT_COLORS[c.statut] || 'bg-gray-100 text-gray-700'}">${c.statut}</span>
         </td>
       </tr>`).join('');
+
+    verifyThumbnails(tbody);
 
     tbody.querySelectorAll('tr[data-id]').forEach(row => {
       row.addEventListener('click', () => {
@@ -94,6 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       <div class="space-y-4">
         <div class="flex items-start gap-4">
           <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg w-20 h-20 flex-shrink-0"
+               data-img-check="${c.specimen_image || ''}" data-img-icon-size="text-3xl"
                style="${c.specimen_image ? `background-image: url('${c.specimen_image}')` : 'background-color: #e5e7eb; display:flex; align-items:center; justify-content:center;'}">
             ${!c.specimen_image ? '<span class="material-symbols-outlined text-gray-400 text-3xl">bug_report</span>' : ''}
           </div>
@@ -104,6 +134,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div><span class="text-gray-500">Statut:</span> <strong>${c.statut}</strong></div>
             ${c.site ? `<div class="col-span-2"><span class="text-gray-500">Site:</span> <strong>${c.site}</strong></div>` : ''}
             ${c.date_capture ? `<div class="col-span-2"><span class="text-gray-500">Date:</span> <strong>${new Date(c.date_capture).toLocaleDateString('fr-FR')}</strong></div>` : ''}
+            <div class="col-span-2">
+              <button type="button" id="btn-modifier-details" class="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline">
+                <span class="material-symbols-outlined text-sm">edit</span>Modifier les détails du spécimen
+              </button>
+            </div>
           </div>
         </div>
         <div class="border-t border-gray-200 dark:border-gray-700 pt-3">
@@ -140,9 +175,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const commentaire = document.getElementById('f-commentaire')?.value.trim() || '';
         const especeCorrigee = document.getElementById('f-espece-corrigee')?.value || '';
 
+        // Le backend attend { statut, notes, espece_corrigee } (schéma CaptureValidate),
+        // pas { action, commentaire } — c'était le bug : chaque validation échouait
+        // avec un 422 "Field required: statut", silencieusement pour l'utilisateur.
+        const STATUT_PAR_ACTION = { valider: 'valide', corriger: 'corrige', rejeter: 'rejete' };
         const validationData = {
-          action,
-          commentaire,
+          statut: STATUT_PAR_ACTION[action],
+          notes: commentaire || undefined,
           espece_corrigee: action === 'corriger' ? especeCorrigee : undefined,
         };
 
@@ -160,6 +199,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       },
     });
+
+    verifyThumbnails(document);
 
     setTimeout(() => {
       const validerBtn = document.getElementById('val-action-valider');
@@ -192,6 +233,130 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (validerBtn) validerBtn.addEventListener('click', () => setAction(validerBtn));
       if (corrigerBtn) corrigerBtn.addEventListener('click', () => setAction(corrigerBtn));
       if (rejeterBtn) rejeterBtn.addEventListener('click', () => setAction(rejeterBtn));
+
+      document.getElementById('btn-modifier-details')?.addEventListener('click', () => {
+        openEditCaptureModal(c);
+      });
+    }, 50);
+  }
+
+  // Modifier les détails d'une capture (nombre d'individus, sexe, stade,
+  // méthode, température, humidité, notes). Le site, la date et l'espèce
+  // d'origine ne sont pas modifiables après création (schéma CaptureUpdate
+  // côté backend — seule l'espèce corrigée peut être fixée via la validation).
+  function openEditCaptureModal(c) {
+    let edPendingImageFile = null;
+    const currentImage = resolveMediaUrl(c.specimen_image || c.image_path) || '';
+    const body = `
+      <div class="grid grid-cols-1 gap-4 text-sm">
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Espèce</label>
+          <input id="ed-espece" type="text" value="${c.espece || c.identification_ia || ''}" placeholder="ex: An. gambiae"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
+          <p class="mt-1 text-xs text-gray-500">Corrige une erreur de saisie de l'agent — distinct de la correction officielle du laboratoire.</p>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Photo du spécimen</label>
+          <div class="flex items-center gap-3">
+            <div id="ed-image-preview" class="h-16 w-16 shrink-0 rounded-lg border bg-gray-100 dark:bg-gray-700 bg-center bg-cover bg-no-repeat flex items-center justify-center"
+                 style="${currentImage ? `background-image:url('${currentImage}')` : ''}">
+              ${!currentImage ? '<span class="material-symbols-outlined text-gray-400">image</span>' : ''}
+            </div>
+            <input type="file" id="ed-image-file" accept="image/*" capture="environment"
+              class="flex-1 text-xs file:mr-2 file:rounded-lg file:border-0 file:bg-brand-primary file:px-3 file:py-1.5 file:text-white file:font-semibold"/>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nb. individus</label>
+            <input id="ed-nb" type="number" min="1" value="${c.nombre_individus ?? 1}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Sexe</label>
+            <select id="ed-sexe" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3">
+              <option value="" ${!c.sexe ? 'selected' : ''}>Non déterminé</option>
+              <option value="F" ${c.sexe === 'F' ? 'selected' : ''}>Femelle</option>
+              <option value="M" ${c.sexe === 'M' ? 'selected' : ''}>Mâle</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Stade</label>
+            <select id="ed-stade" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3">
+              ${['adulte', 'larve', 'nymphe', 'oeuf'].map(v => `<option value="${v}" ${c.stade === v ? 'selected' : ''}>${v.charAt(0).toUpperCase() + v.slice(1)}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Méthode de capture</label>
+            <select id="ed-methode" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3">
+              ${['CDC Light Trap', 'BG-Sentinel', 'Filet à moustiques', 'Aspirateur à bouche', 'PSC', 'Pièges lumineux'].map(v => `<option value="${v}" ${c.methode_capture === v ? 'selected' : ''}>${v}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Température (°C)</label>
+            <input id="ed-temperature" type="number" step="any" value="${c.temperature ?? ''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Humidité (%)</label>
+            <input id="ed-humidite" type="number" min="0" max="100" step="any" value="${c.humidite ?? ''}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Notes</label>
+          <textarea id="ed-notes" rows="3" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 resize-none">${c.notes || ''}</textarea>
+        </div>
+        <p class="text-xs text-gray-500">Le site et la date de capture ne peuvent pas être modifiés après la création.</p>
+      </div>`;
+
+    openModal(`Modifier — ${c.code}`, body, {
+      confirmLabel: 'Enregistrer',
+      confirmClass: 'bg-brand-primary text-white',
+      onConfirm: async () => {
+        const temperature = document.getElementById('ed-temperature')?.value;
+        const humidite = document.getElementById('ed-humidite')?.value;
+        const espece = document.getElementById('ed-espece')?.value.trim();
+        const data = {
+          espece: espece || undefined,
+          nombre_individus: parseInt(document.getElementById('ed-nb')?.value) || 1,
+          sexe: document.getElementById('ed-sexe')?.value || undefined,
+          stade: document.getElementById('ed-stade')?.value || undefined,
+          methode_capture: document.getElementById('ed-methode')?.value || undefined,
+          temperature: temperature !== '' ? Number(temperature) : undefined,
+          humidite: humidite !== '' ? Number(humidite) : undefined,
+          notes: document.getElementById('ed-notes')?.value.trim() || '',
+        };
+        try {
+          showLoader();
+          const res = await apiCaptures.update(c.id, data);
+          if (res !== null) {
+            if (edPendingImageFile) {
+              try { await apiCaptures.uploadImage(c.id, edPendingImageFile); }
+              catch { pushNotification('Modifié, mais l\'envoi de la photo a échoué.', 'warning'); }
+            }
+            await loadCaptures();
+            pushNotification(`Spécimen ${c.code} modifié avec succès.`, 'success');
+          }
+          hideLoader();
+        } catch (err) {
+          hideLoader();
+          pushNotification('Erreur lors de la modification.', 'error');
+        }
+      },
+    });
+
+    setTimeout(() => {
+      document.getElementById('ed-image-file')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        edPendingImageFile = file || null;
+        const preview = document.getElementById('ed-image-preview');
+        if (file && preview) {
+          preview.style.backgroundImage = `url('${URL.createObjectURL(file)}')`;
+          preview.innerHTML = '';
+        }
+      });
     }, 50);
   }
 
@@ -202,7 +367,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           const data = await apiCaptures.aValider();
           if (data && data.length) {
             for (const c of data) {
-              await apiCaptures.valider(c.id, { action: 'valider' });
+              await apiCaptures.valider(c.id, { statut: 'valide' });
             }
             await loadCaptures();
             pushNotification(`${data.length} spécimen(s) validé(s) en masse.`, 'success');
@@ -228,7 +393,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch(e) {}
     hideLoader();
 
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    const nowLocal = now.toISOString().slice(0, 16);
+    ncPendingImageFile = null;
+    ncPendingAudioFile = null;
+
     const body = `
       <div class="grid grid-cols-1 gap-4 text-sm">
         <div>
@@ -238,8 +408,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           </select>
         </div>
         <div>
-          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Date de capture *</label>
-          <input id="nc-date" type="date" value="${today}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Date et heure de capture *</label>
+          <input id="nc-date" type="datetime-local" value="${nowLocal}" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
@@ -249,6 +419,25 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div>
             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nb. individus *</label>
             <input id="nc-nb" type="number" min="1" value="1" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Sexe</label>
+            <select id="nc-sexe" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3">
+              <option value="">Non déterminé</option>
+              <option value="F">Femelle</option>
+              <option value="M">Mâle</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Stade</label>
+            <select id="nc-stade" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3">
+              <option value="adulte">Adulte</option>
+              <option value="larve">Larve</option>
+              <option value="nymphe">Nymphe</option>
+              <option value="oeuf">Œuf</option>
+            </select>
           </div>
         </div>
         <div>
@@ -262,9 +451,48 @@ document.addEventListener('DOMContentLoaded', async () => {
             <option value="Pièges lumineux">Pièges lumineux</option>
           </select>
         </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Température (°C)</label>
+            <input id="nc-temperature" type="number" step="any" placeholder="ex: 28.5" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Humidité (%)</label>
+            <input id="nc-humidite" type="number" min="0" max="100" step="any" placeholder="ex: 72" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3"/>
+          </div>
+        </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Notes</label>
           <textarea id="nc-notes" rows="2" placeholder="Observations complémentaires..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 resize-none"></textarea>
+        </div>
+        <div class="rounded-xl border border-dashed border-brand-primary/30 bg-sky-50 dark:bg-slate-800 p-4">
+          <p class="text-xs font-bold text-brand-primary mb-3 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">perm_media</span>Médias terrain (optionnel)
+          </p>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Photo du spécimen</span>
+              <input type="file" id="nc-image-file" accept="image/*" capture="environment"
+                class="mt-1 w-full text-xs file:mr-2 file:rounded-lg file:border-0 file:bg-brand-primary file:px-3 file:py-1.5 file:text-white file:font-semibold" />
+              <img id="nc-image-preview" class="mt-2 hidden max-h-28 rounded-lg border object-cover" alt="Aperçu" />
+            </label>
+            <div>
+              <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Enregistrement audio</span>
+              <div class="mt-1 flex flex-wrap gap-2">
+                <button type="button" id="nc-audio-record" class="rounded-lg bg-brand-primary px-3 py-1.5 text-xs font-bold text-white flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">mic</span>Démarrer
+                </button>
+                <button type="button" id="nc-audio-stop" class="hidden rounded-lg border border-red-300 bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700">
+                  <span class="material-symbols-outlined text-sm">stop</span>Arrêter
+                </button>
+                <label class="inline-flex cursor-pointer items-center gap-1 rounded-lg border px-3 py-1.5 text-xs font-semibold dark:border-slate-600">
+                  <span class="material-symbols-outlined text-sm">upload_file</span>Fichier
+                  <input type="file" id="nc-audio-file" accept="audio/*" class="hidden" />
+                </label>
+              </div>
+              <p id="nc-audio-status" class="mt-1 text-xs text-gray-500"></p>
+            </div>
+          </div>
         </div>
         <p id="nc-error" class="text-red-500 text-xs hidden">Veuillez remplir tous les champs obligatoires.</p>
       </div>`;
@@ -281,19 +509,31 @@ document.addEventListener('DOMContentLoaded', async () => {
           document.getElementById('nc-error')?.classList.remove('hidden');
           return;
         }
+        const temperature = document.getElementById('nc-temperature')?.value;
+        const humidite = document.getElementById('nc-humidite')?.value;
         const data = {
           site_id: siteId,
           date_capture: dateCapture,
           espece,
           nombre_individus: nb,
+          sexe: document.getElementById('nc-sexe')?.value || undefined,
+          stade: document.getElementById('nc-stade')?.value || undefined,
           methode_capture: document.getElementById('nc-methode')?.value || 'CDC Light Trap',
+          temperature: temperature !== '' ? Number(temperature) : undefined,
+          humidite: humidite !== '' ? Number(humidite) : undefined,
           notes: document.getElementById('nc-notes')?.value.trim() || '',
           statut: 'a_valider',
         };
         try {
           showLoader();
           const res = await apiCaptures.create(data);
-          if (res) {
+          if (res && res.id) {
+            try {
+              if (ncPendingImageFile) await apiCaptures.uploadImage(res.id, ncPendingImageFile);
+              if (ncPendingAudioFile) await apiCaptures.uploadAudio(res.id, ncPendingAudioFile);
+            } catch {
+              pushNotification('Capture créée mais erreur lors de l\'upload des médias.', 'warning');
+            }
             await loadCaptures();
             pushNotification('Capture enregistrée avec succès.', 'success');
           }
@@ -304,6 +544,56 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       },
     });
+
+    setTimeout(() => {
+      document.getElementById('nc-image-file')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        ncPendingImageFile = file || null;
+        const preview = document.getElementById('nc-image-preview');
+        if (file && preview) {
+          preview.src = URL.createObjectURL(file);
+          preview.classList.remove('hidden');
+        }
+      });
+
+      document.getElementById('nc-audio-file')?.addEventListener('change', (e) => {
+        ncPendingAudioFile = e.target.files?.[0] || null;
+        const status = document.getElementById('nc-audio-status');
+        if (status && ncPendingAudioFile) status.textContent = `Fichier : ${ncPendingAudioFile.name}`;
+      });
+
+      const recordBtn = document.getElementById('nc-audio-record');
+      const stopBtn = document.getElementById('nc-audio-stop');
+      const status = document.getElementById('nc-audio-status');
+
+      recordBtn?.addEventListener('click', async () => {
+        if (!window.EntomoAudioRecorder?.isSupported()) {
+          pushNotification('Enregistrement micro non disponible sur ce navigateur.', 'warning');
+          return;
+        }
+        try {
+          await EntomoAudioRecorder.start();
+          recordBtn.classList.add('hidden');
+          stopBtn?.classList.remove('hidden');
+          if (status) status.textContent = 'Enregistrement en cours…';
+          let sec = 0;
+          ncRecordingTimer = setInterval(() => { sec += 1; if (status) status.textContent = `Enregistrement : ${sec}s`; }, 1000);
+        } catch {
+          pushNotification('Impossible d\'accéder au micro.', 'error');
+        }
+      });
+
+      stopBtn?.addEventListener('click', async () => {
+        clearInterval(ncRecordingTimer);
+        const result = await EntomoAudioRecorder.stop();
+        recordBtn?.classList.remove('hidden');
+        stopBtn?.classList.add('hidden');
+        if (result?.file) {
+          ncPendingAudioFile = result.file;
+          if (status) status.textContent = `Audio enregistré (${Math.round(result.durationMs / 1000)}s) — ${result.file.name}`;
+        }
+      });
+    }, 50);
   }
 
   window.openCreateCaptureModal = openCreateCaptureModal;
@@ -376,7 +666,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (data && data.length) {
           buttonLoading(btnValiderMasse, true);
           for (const c of data) {
-            await apiCaptures.valider(c.id, { action: 'valider' });
+            await apiCaptures.valider(c.id, { statut: 'valide' });
           }
           await loadCaptures();
           pushNotification(`${data.length} spécimen(s) validé(s) en masse.`, 'success');

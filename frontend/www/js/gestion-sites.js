@@ -198,9 +198,24 @@ document.addEventListener('DOMContentLoaded', async () => {
           </select>
         </div>
         <div>
-          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Coordonnées GPS</label>
-          <input id="f-coord" value="${s?.coord || ''}" placeholder="ex: 12.5574°N 12.1752°W"
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Latitude</label>
+          <input id="f-latitude" type="number" step="any" value="${s?.latitude ?? ''}" placeholder="ex: 12.5574"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 font-mono"/>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Longitude</label>
+          <input id="f-longitude" type="number" step="any" value="${s?.longitude ?? ''}" placeholder="ex: -12.1752"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 font-mono"/>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Responsable</label>
+          <input id="f-responsable" value="${s?.responsable || ''}" placeholder="Nom du responsable de site"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Contact</label>
+          <input id="f-contact" value="${s?.contact || ''}" placeholder="Téléphone ou email"
+            class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3"/>
         </div>
         <div class="col-span-2">
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Notes / Description</label>
@@ -215,6 +230,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const code = document.getElementById('f-code')?.value.trim();
         const nom = document.getElementById('f-nom')?.value.trim();
         if (!code || !nom) { pushNotification('Code et nom obligatoires.', 'error'); return; }
+        const lat = document.getElementById('f-latitude')?.value;
+        const lng = document.getElementById('f-longitude')?.value;
         const data = {
           code, nom,
           region: document.getElementById('f-region')?.value || '',
@@ -222,8 +239,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           type_zone: document.getElementById('f-type')?.value || '',
           environnement: document.getElementById('f-env')?.value || '',
           actif: document.getElementById('f-statut')?.value === 'Actif',
-          coordonnees: document.getElementById('f-coord')?.value.trim() || '',
-          notes: document.getElementById('f-notes')?.value.trim() || '',
+          latitude: lat !== '' ? Number(lat) : undefined,
+          longitude: lng !== '' ? Number(lng) : undefined,
+          responsable: document.getElementById('f-responsable')?.value.trim() || '',
+          contact: document.getElementById('f-contact')?.value.trim() || '',
+          // "notes" n'est pas un champ du modèle SiteSentinelle — seul "description" existe.
+          description: document.getElementById('f-notes')?.value.trim() || '',
         };
         try {
           showLoader();

@@ -19,7 +19,6 @@ const STATIC_ASSETS = [
   '/pages/centre-application.html',
   '/pages/dashboard-entomo.html',
   '/pages/gestion-captures.html',
-  '/pages/nouvelle-capture.html',
   '/pages/gestion-hors-ligne.html',
   '/pages/validation-dhis2.html',
   '/pages/statut-sync.html',

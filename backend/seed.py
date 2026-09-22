@@ -160,11 +160,13 @@ try:
         },
         {
             "name": "Gestionnaire de Terrain",
-            "description": "Gérer les captures, les sites et les interventions",
+            "description": "Gérer les captures, les sites, les interventions et les campagnes",
             "is_system": "non",
             "permission_ids": [
-                p.id for p in permissions_created if p.module in ["captures", "sites", "interventions"]
-                and p.action in ["voir", "creer", "modifier"]
+                p.id for p in permissions_created if (
+                    (p.module in ["captures", "sites"] and p.action in ["voir", "creer", "modifier"])
+                    or p.code in ["interventions:gestion", "campagnes:gestion", "dashboard:voir"]
+                )
             ]
         },
         {
@@ -173,7 +175,7 @@ try:
             "is_system": "non",
             "permission_ids": [
                 p.id for p in permissions_created if p.code in [
-                    "captures:voir", "captures:valider", "captures:modifier"
+                    "captures:voir", "captures:valider", "captures:modifier", "dashboard:voir"
                 ]
             ]
         },
@@ -194,7 +196,7 @@ try:
             "is_system": "non",
             "permission_ids": [
                 p.id for p in permissions_created if p.code in [
-                    "captures:voir", "captures:creer", "sites:voir"
+                    "captures:voir", "captures:creer", "sites:voir", "dashboard:voir"
                 ]
             ]
         },

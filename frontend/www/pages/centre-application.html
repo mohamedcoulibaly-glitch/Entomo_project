@@ -6,16 +6,16 @@
   <header class="sticky top-0 z-20 border-b bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95"><div class="mx-auto flex max-w-7xl items-center gap-4 px-5 py-4"><a href="../index.html" class="flex items-center gap-2 font-black text-brand-primary"><span class="material-symbols-outlined">hub</span>Ento-App</a><div class="relative flex-1"><span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400">search</span><input id="screen-search" type="search" placeholder="Rechercher un écran, une action ou un module…" class="w-full rounded-xl border border-slate-300 bg-slate-50 py-2.5 pl-11 pr-4 outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 dark:border-slate-700 dark:bg-slate-800"></div><button id="theme-toggle" class="rounded-xl border p-2.5 dark:border-slate-700"><span id="theme-icon" class="material-symbols-outlined">dark_mode</span></button></div></header>
   <main class="mx-auto max-w-7xl px-5 py-8">
     <section class="overflow-hidden rounded-3xl bg-gradient-to-br from-[#003f66] via-[#005689] to-[#078838] p-8 text-white shadow-xl"><div class="max-w-3xl"><p class="text-sm font-bold uppercase tracking-[.2em] text-cyan-100">Navigation complète</p><h1 class="mt-3 text-4xl font-black sm:text-5xl">Centre de l’application</h1><p class="mt-3 text-lg text-cyan-50">Tous les métiers, formulaires, tableaux de bord et réglages enfin accessibles depuis un seul écran.</p></div><div class="mt-7 grid gap-3 sm:grid-cols-3"><div class="rounded-2xl bg-white/10 p-4 backdrop-blur"><p id="screen-count" class="text-3xl font-black">0</p><p class="text-sm text-cyan-50">écrans accessibles</p></div><div class="rounded-2xl bg-white/10 p-4 backdrop-blur"><p id="category-count" class="text-3xl font-black">0</p><p class="text-sm text-cyan-50">domaines métier</p></div><div class="rounded-2xl bg-white/10 p-4 backdrop-blur"><p class="text-3xl font-black">6</p><p class="text-sm text-cyan-50">nouveaux formulaires</p></div></div></section>
-    <section class="mt-8"><div class="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 class="text-2xl font-black">Actions rapides</h2><p class="text-sm text-slate-500">Créer une nouvelle ressource sans détour.</p></div></div><div id="quick-create" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"></div></section>
     <section class="mt-10"><div class="mb-5 flex items-end justify-between"><div><h2 class="text-2xl font-black">Tous les écrans</h2><p id="result-count" class="text-sm text-slate-500"></p></div><select id="category-filter" class="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-800"><option value="">Tous les domaines</option></select></div><div id="screen-groups" class="space-y-9"></div><div id="screen-empty" class="hidden rounded-2xl border border-dashed p-12 text-center text-slate-400"><span class="material-symbols-outlined text-5xl">search_off</span><p class="mt-2 font-semibold">Aucun écran ne correspond à cette recherche.</p></div></section>
   </main>
 
     <!-- Ento-App Scripts -->
     <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js"></script>
-    <script src="../js/core.js?v=20260903"></script>
+    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/permission-guard.js?v=2"></script>
+    <script src="../js/core.js?v=20260922h"></script>
     <script src="../js/i18n.js"></script>
-    <script src="../js/pages-generiques.js"></script>
-    <script src="../js/centre-application.js"></script>
+    <script src="../js/pages-generiques.js?v=7"></script>
+    <script src="../js/centre-application.js?v=20260922j"></script>
     <!-- /Ento-App Scripts -->
 </body></html>

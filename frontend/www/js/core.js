@@ -3,7 +3,7 @@
  * Ento-App Afrique
  */
 
-const APP_ASSET_VERSION = '20260903-b';
+const APP_ASSET_VERSION = '20260922e';
 
 if (!document.querySelector('meta[http-equiv="Cache-Control"]')) {
   const metaNoCache = document.createElement('meta');
@@ -124,7 +124,8 @@ function initTheme() {
     toggle = document.createElement('button');
     toggle.id = 'theme-toggle';
     toggle.type = 'button';
-    toggle.className = 'entomo-theme-toggle fixed right-5 top-5 z-[9999] inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100';
+    toggle.className = 'entomo-theme-toggle fixed right-5 top-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100';
+    toggle.style.zIndex = '9999';
     toggle.setAttribute('aria-label', 'Activer le mode sombre');
     toggle.innerHTML = '<span class="material-symbols-outlined" id="theme-icon">dark_mode</span>';
     document.body.appendChild(toggle);
@@ -308,7 +309,8 @@ function showToast(msg, type = 'info') {
   if (!container) {
     container = document.createElement('div');
     container.id = 'toast-container';
-    container.className = 'fixed bottom-4 right-4 z-[9999] flex flex-col gap-2';
+    container.className = 'fixed bottom-4 right-4 flex flex-col gap-2';
+    container.style.zIndex = '9999';
     document.body.appendChild(container);
   }
 
@@ -587,20 +589,27 @@ function openModal(title, bodyHTML, { onConfirm, confirmLabel = 'Confirmer', con
   if (!modal) {
     modal = document.createElement('div');
     modal.id = 'universal-modal';
-    modal.className = 'fixed inset-0 z-[9998] flex items-center justify-center bg-black/45 backdrop-blur-[2px]';
+    modal.className = 'fixed inset-0 flex items-center justify-center bg-black/45 backdrop-blur-[2px]';
+    modal.style.zIndex = '9998';
     document.body.appendChild(modal);
   }
 
+  // max-height/overflow en style inline plutôt qu'en classes Tailwind
+  // arbitraires (max-h-[90vh]) : ce template n'existe que dans du HTML généré
+  // en JS, jamais scanné par le build Tailwind statique — la classe n'a donc
+  // aucune règle correspondante dans tailwind.min.css et la modale débordait
+  // du viewport sans qu'on puisse jamais atteindre les boutons.
   modal.innerHTML = `
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col overflow-hidden
-                transform transition-all duration-200 scale-95 opacity-0" id="modal-inner">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col overflow-hidden
+                transform transition-all duration-200 scale-95 opacity-0"
+         style="max-height:90vh" id="modal-inner">
       <div class="flex shrink-0 items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <h3 class="text-2xl font-black text-[#111418] dark:text-white">${title}</h3>
         <button type="button" id="modal-close" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
-      <div class="min-h-0 flex-1 overflow-y-auto px-6 py-5 text-sm text-gray-700 dark:text-gray-300">${bodyHTML}</div>
+      <div class="flex-1 overflow-y-auto px-6 py-5 text-sm text-gray-700 dark:text-gray-300" style="min-height:0">${bodyHTML}</div>
       <div class="flex shrink-0 justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40">
         ${cancelLabel ? `<button type="button" id="modal-cancel" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600
                 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -763,8 +772,9 @@ function showLoader() {
   if (!l) {
     l = document.createElement('div');
     l.id = 'global-loader';
-    l.className = `fixed inset-0 z-[9997] bg-white/60 dark:bg-black/60 backdrop-blur-sm
+    l.className = `fixed inset-0 bg-white/60 dark:bg-black/60 backdrop-blur-sm
                    flex items-center justify-center`;
+    l.style.zIndex = '9997';
     l.innerHTML = `<div class="flex flex-col items-center gap-3">
       <div class="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
       <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Chargement...</p>
@@ -907,11 +917,17 @@ function initEntryAnimations() {
 function initAppLauncher() {
   if (window.location.pathname.includes('login.html') || window.location.pathname.includes('centre-application.html')) return;
   if (document.getElementById('app-launcher')) return;
+  // Réservé aux administrateurs : les autres rôles n'ont besoin que de leur
+  // propre sidebar, déjà filtrée par permission.
+  const user = typeof Auth !== 'undefined' && Auth.getUser ? Auth.getUser() : null;
+  const isAdmin = !!(user && (user.is_superuser || (user.permissions || []).includes('admin')));
+  if (!isAdmin) return;
   const launcher = document.createElement('a');
   launcher.id = 'app-launcher';
   launcher.href = '/pages/centre-application.html';
   launcher.title = "Ouvrir le centre de l'application";
-  launcher.className = 'fixed bottom-5 right-5 z-[9990] inline-flex items-center gap-2 rounded-full bg-brand-primary px-4 py-3 text-sm font-bold text-white shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-brand-primary/30';
+  launcher.className = 'fixed bottom-5 right-5 inline-flex items-center gap-2 rounded-full bg-brand-primary px-4 py-3 text-sm font-bold text-white shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-brand-primary/30';
+  launcher.style.zIndex = '9990';
   launcher.innerHTML = '<span class="material-symbols-outlined text-xl">apps</span><span class="hidden sm:inline">Tous les écrans</span>';
   document.body.appendChild(launcher);
 }
@@ -939,11 +955,18 @@ function initPWA() {
 
 function initOfflineModules() {
   const base = window.location.pathname.includes('/pages/') ? '../js/' : 'js/';
-  const files = ['entomo-events.js', 'offline-store.js', 'offline-sync.js', 'permission-guard.js'];
+  // permission-guard.js n'est plus chargé ici : son injection dynamique/asynchrone
+  // était une source d'instabilité (délai variable selon navigateur/extensions,
+  // limitation des timers en arrière-plan...). Il est maintenant inclus
+  // statiquement dans le <head> de chaque page, juste après api.js.
+  const files = ['entomo-events.js', 'offline-store.js', 'offline-sync.js'];
   files.forEach((file) => {
     if (document.querySelector(`script[data-entomo="${file}"]`)) return;
     const s = document.createElement('script');
-    s.src = base + file;
+    // Cache-bust aligné sur APP_ASSET_VERSION : sans ça, ces fichiers injectés
+    // dynamiquement (jamais présents en dur dans le HTML) peuvent rester
+    // indéfiniment en cache navigateur sans jamais reprendre une correction.
+    s.src = `${base}${file}?v=${APP_ASSET_VERSION}`;
     s.dataset.entomo = file;
     s.onload = () => {
       if (file === 'offline-sync.js' && window.EntomoOfflineSync && typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
@@ -990,6 +1013,64 @@ function loadSharedAssets() {
   }
 }
 
+// ─── Attendre que PermissionGuard soit chargé (injecté dynamiquement, de façon
+// asynchrone, par initOfflineModules ci-dessous) avant de filtrer un contenu
+// selon les permissions. Toute page qui liste des écrans/liens conditionnés
+// par permission doit passer par ici plutôt que de lire window.PermissionGuard
+// directement dans son propre DOMContentLoaded — sinon la vérification arrive
+// trop tôt (PermissionGuard pas encore chargé) et rien n'est filtré.
+function onPermissionGuardReady(callback, attempt = 0) {
+  if (window.PermissionGuard) { callback(); return; }
+  if (attempt < 200) { setTimeout(() => onPermissionGuardReady(callback, attempt + 1), 50); return; }
+  console.error('[Entomo] PermissionGuard non chargé après 10s — affichage non filtré par sécurité.');
+  callback(); // dernier recours : on affiche non filtré plutôt que de bloquer la page indéfiniment
+}
+
+// ─── Masquer les liens de navigation vers des pages non autorisées ───────────
+// Évite qu'un utilisateur clique sur un lien (sidebar, accueil...) pour se voir
+// immédiatement redirigé avec un toast « Accès refusé » — le lien n'apparaît
+// simplement pas s'il n'a pas la permission requise pour la page cible.
+//
+// Chaque clic recharge la page entière (pas de SPA), donc la sidebar est
+// réinjectée à zéro à chaque navigation et ce filtrage doit se refaire à
+// chaque fois. Le temps qu'il s'applique (chargement asynchrone de
+// PermissionGuard), la zone est masquée via visibility:hidden — pas
+// display:none, pour ne pas faire sauter la mise en page — afin d'éviter
+// tout flash des liens non autorisés avant qu'ils ne soient retirés.
+function applyNavPermissionFilter(scope, attempt = 0) {
+  if (typeof Auth === 'undefined' || !Auth.isLoggedIn || !Auth.isLoggedIn()) {
+    scope.style.visibility = '';
+    return;
+  }
+  if (!window.PermissionGuard) {
+    if (attempt < 200) { setTimeout(() => applyNavPermissionFilter(scope, attempt + 1), 50); return; }
+    console.error('[Entomo] PermissionGuard non chargé après 10s — sidebar affichée non filtrée par sécurité.');
+    scope.style.visibility = ''; // dernier recours : révéler non filtré plutôt que bloquer indéfiniment
+    return;
+  }
+  scope.querySelectorAll('a[href$=".html"]').forEach(link => {
+    const page = link.getAttribute('href').split('/').pop().split('?')[0];
+    if (page === 'index.html' || page === 'login.html') return;
+    if (!PermissionGuard.canAccessPage(page)) {
+      // link.hidden seul ne suffit pas : les classes Tailwind (flex, block...)
+      // présentes sur ces liens imposent display:flex avec une spécificité qui
+      // l'emporte sur la règle UA [hidden]{display:none}. On force donc le
+      // style en plus de l'attribut (gardé pour l'accessibilité/aria).
+      link.hidden = true;
+      link.style.display = 'none';
+      link.setAttribute('aria-hidden', 'true');
+    }
+  });
+  scope.style.visibility = '';
+}
+
+function filterNavByPermission() {
+  document.querySelectorAll('[data-permission-scope]').forEach((scope) => {
+    scope.style.visibility = 'hidden';
+    applyNavPermissionFilter(scope);
+  });
+}
+
 // ─── Initialisation globale ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadSharedAssets();
@@ -1005,10 +1086,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initAppLauncher();
   initPWA();
   initOfflineModules();
+  filterNavByPermission();
   if (window.EntomoI18n) EntomoI18n.init().catch(() => {});
 });
 
 document.addEventListener('entomo-sidebar-ready', () => {
   initActiveNav();
   initMobileMenu();
+  filterNavByPermission();
 });
