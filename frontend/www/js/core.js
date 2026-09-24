@@ -492,7 +492,13 @@ function showLoginModal() {
 
 
 function initNotificationBell() {
-  const bellBtn = document.querySelector('button:has(> span[class*="notifications"])');
+  // `notifications` est le CONTENU du span (nom de la ligature Material
+  // Symbols), pas sa classe — `span[class*="notifications"]` ne correspondait
+  // donc jamais à rien : la cloche n'a jamais fonctionné, sur aucune page.
+  const bellBtn = [...document.querySelectorAll('header button')].find(b => {
+    const icon = b.querySelector(':scope > span.material-symbols-outlined');
+    return icon && icon.textContent.trim() === 'notifications';
+  });
   if (!bellBtn) return;
 
   const badge = document.createElement('span');
@@ -584,7 +590,7 @@ function initNotificationBell() {
 }
 
 // ─── Modale universelle ──────────────────────────────────────────────────────
-function openModal(title, bodyHTML, { onConfirm, confirmLabel = 'Confirmer', confirmClass = 'bg-primary text-white', cancelLabel = 'Annuler' } = {}) {
+function openModal(title, bodyHTML, { onConfirm, confirmLabel = 'Confirmer', confirmClass = 'bg-brand-primary text-white', cancelLabel = 'Annuler' } = {}) {
   let modal = document.getElementById('universal-modal');
   if (!modal) {
     modal = document.createElement('div');
@@ -616,7 +622,7 @@ function openModal(title, bodyHTML, { onConfirm, confirmLabel = 'Confirmer', con
           ${cancelLabel}
         </button>` : ''}
         <button type="button" id="modal-confirm" class="px-4 py-2 rounded-lg text-sm font-bold ${confirmClass}
-                hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
           ${confirmLabel}
         </button>
       </div>
@@ -842,8 +848,9 @@ function initPagination(tbodySelector, pageSize = 10) {
       r.style.display = (i >= (currentPage - 1) * pageSize && i < currentPage * pageSize) ? '' : 'none';
     });
 
-    // Mettre à jour le texte "Affiche X à Y sur Z"
-    const info = paginationEl.querySelector('p');
+    // Mettre à jour le texte "Affiche X à Y sur Z" — certaines pages (ex.
+    // gestion-sites.html) utilisent un <span> plutôt qu'un <p> pour ce texte.
+    const info = paginationEl.querySelector('p') || paginationEl.querySelector('span');
     if (info) {
       const from = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
       const to   = Math.min(currentPage * pageSize, total);

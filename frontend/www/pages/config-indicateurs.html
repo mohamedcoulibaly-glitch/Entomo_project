@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -108,14 +107,14 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="numerator">Numérateur</label>
-                                        <select class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" id="numerator" name="numerator">
+                                        <select class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-brand-primary focus:ring-brand-primary sm:text-sm" id="numerator" name="numerator">
                                             <option>Nb. moustiques capturés (An. gambiae)</option>
                                             <option>Nb. moustiques capturés (An. funestus)</option>
                                         </select>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="denominator">Dénominateur</label>
-                                        <select class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" id="denominator" name="denominator">
+                                        <select class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-brand-primary focus:ring-brand-primary sm:text-sm" id="denominator" name="denominator">
                                             <option>Nb. de nuits de capture</option>
                                             <option>Nb. de personnes-nuit</option>
                                         </select>
@@ -126,7 +125,7 @@
                             <div class="flex flex-col gap-4">
                                 <h3 class="text-lg font-semibold text-[#111418] dark:text-white">Formule de Calcul</h3>
                                 <div class="relative">
-                                    <input id="ind-formule" class="w-full bg-gray-100 dark:bg-gray-700 rounded-md border-gray-300 dark:border-gray-600 font-mono text-sm p-3 focus:ring-primary focus:border-primary" placeholder="ex: ( [Donnée A] / [Donnée B] ) * 100" type="text" value="([Numérateur] / [Dénominateur]) * 1"/>
+                                    <input id="ind-formule" class="w-full bg-gray-100 dark:bg-gray-700 rounded-md border-gray-300 dark:border-gray-600 font-mono text-sm p-3 focus:ring-brand-primary focus:border-brand-primary" placeholder="ex: ( [Donnée A] / [Donnée B] ) * 100" type="text" value="([Numérateur] / [Dénominateur]) * 1"/>
                                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-success">
                                         <span class="material-symbols-outlined">verified</span>
                                     </div>
@@ -138,22 +137,22 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                                     <div class="flex flex-col gap-1">
                                         <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Bas (&lt;)</label>
-                                        <input id="seuil-bas" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" type="number" value="10"/>
+                                        <input id="seuil-bas" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-brand-primary focus:ring-brand-primary sm:text-sm" type="number" value="10"/>
                                     </div>
                                     <div class="flex flex-col gap-1">
                                         <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Moyen (&lt;)</label>
-                                        <input id="seuil-moyen" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" type="number" value="50"/>
+                                        <input id="seuil-moyen" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-brand-primary focus:ring-brand-primary sm:text-sm" type="number" value="50"/>
                                     </div>
                                     <div class="flex flex-col gap-1">
                                         <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Élevé (≥)</label>
-                                        <input id="seuil-eleve" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" type="number" value="50"/>
+                                        <input id="seuil-eleve" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-brand-primary focus:ring-brand-primary sm:text-sm" type="number" value="50"/>
                                     </div>
                                 </div>
                             </div>
                             <!-- Action Bar -->
                             <div class="mt-auto pt-6 border-t border-gray-200 dark:border-gray-700 flex justify-end items-center gap-3">
                                 <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-[#111418] dark:text-white text-sm font-bold">Annuler</button>
-                                <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold">Enregistrer</button>
+                                <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-brand-primary text-white text-sm font-bold">Enregistrer</button>
                             </div>
                         </div>
                     </div>
@@ -188,15 +187,15 @@
                                     <span class="text-danger font-medium">Élevé</span>
                                 </div>
                             </div>
-                            <div class="mt-4 flex flex-col gap-2 p-3 bg-primary/10 rounded-lg">
+                            <div class="mt-4 flex flex-col gap-2 p-3 bg-brand-primary/10 rounded-lg">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-sm font-medium text-primary dark:text-primary/90">Notifications</span>
+                                    <span class="text-sm font-medium text-brand-primary dark:text-brand-primary/90">Notifications</span>
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <input id="notif-toggle" checked="" class="sr-only peer" type="checkbox" value=""/>
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-primary"></div>
                                     </label>
                                 </div>
-                                <p class="text-xs text-primary/80 dark:text-primary/70">Les alertes seront envoyées lorsque la valeur calculée dépasse un seuil.</p>
+                                <p class="text-xs text-brand-primary/80 dark:text-brand-primary/70">Les alertes seront envoyées lorsque la valeur calculée dépasse un seuil.</p>
                             </div>
                         </div>
                     </div>
@@ -206,14 +205,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/config-indicateurs.js"></script>
+    <script src="../js/config-indicateurs.js?v=20260922z"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

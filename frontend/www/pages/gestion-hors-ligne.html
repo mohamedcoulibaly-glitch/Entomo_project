@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -137,7 +136,7 @@
             <p id="page-subtitle" class="text-[#617589] dark:text-gray-400 text-sm font-normal leading-normal">Chargement des statistiques...</p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
-            <button id="btn-sync" class="flex items-center gap-2 rounded-lg h-10 bg-primary hover:bg-primary/90 text-white px-4 text-sm font-bold transition-colors">
+            <button id="btn-sync" class="flex items-center gap-2 rounded-lg h-10 bg-brand-primary hover:bg-brand-primary/90 text-white px-4 text-sm font-bold transition-colors">
                 <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1">cloud_sync</span>
                 <span class="truncate">Synchroniser</span>
             </button>
@@ -192,7 +191,7 @@
             <table class="w-full text-sm text-left">
                 <thead class="text-xs text-[#111418] dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-800">
                     <tr>
-                        <th class="p-4" scope="col"><input id="select-all" class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary" type="checkbox"/></th>
+                        <th class="p-4" scope="col"><input id="select-all" class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-brand-primary focus:ring-brand-primary" type="checkbox"/></th>
                         <th class="px-6 py-3" scope="col">Statut</th>
                         <th class="px-6 py-3" scope="col">Type de Donnée</th>
                         <th class="px-6 py-3" scope="col">Identifiant</th>
@@ -234,14 +233,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/gestion-hors-ligne.js"></script>
+    <script src="../js/gestion-hors-ligne.js?v=20260922aa"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

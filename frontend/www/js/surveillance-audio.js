@@ -152,6 +152,71 @@ document.addEventListener('DOMContentLoaded', async () => {
         } finally {
           buttonLoading(btn, false);
         }
+        return;
+      }
+
+      if (btn.classList.contains('btn-audio-valider')) {
+        e.preventDefault();
+        openModal('Confirmer la validation',
+          `<p class="text-sm">Valider l'enregistrement <strong>${title}</strong> ?</p>`,
+          {
+            confirmLabel: 'Valider',
+            confirmClass: 'bg-brand-primary text-white',
+            onConfirm: async () => {
+              const res = await apiCaptures.valider(id, { statut: 'valide' });
+              if (res) {
+                pushNotification(`Enregistrement "${title}" validé.`, 'success');
+                await Promise.all([loadAudioStats(), loadAudioCaptures()]);
+              }
+            },
+          }
+        );
+        return;
+      }
+
+      if (btn.classList.contains('btn-audio-corriger')) {
+        e.preventDefault();
+        const especes = await loadReferenceData('especes');
+        const capture = cachedCaptures.find(x => String(x.id) === String(id));
+        openModal('Corriger l\'espèce',
+          `<label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Espèce corrigée</label>
+           <select id="audio-espece-corrigee" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+             ${especes.map(sp => `<option ${capture?.espece_detectee === sp.label ? 'selected' : ''}>${sp.label}</option>`).join('')}
+           </select>`,
+          {
+            confirmLabel: 'Corriger',
+            confirmClass: 'bg-yellow-500 text-white',
+            onConfirm: async () => {
+              const espece_corrigee = document.getElementById('audio-espece-corrigee')?.value;
+              const res = await apiCaptures.valider(id, { statut: 'corrige', espece_corrigee });
+              if (res) {
+                pushNotification(`Enregistrement "${title}" corrigé.`, 'success');
+                await Promise.all([loadAudioStats(), loadAudioCaptures()]);
+              }
+            },
+          }
+        );
+        return;
+      }
+
+      if (btn.classList.contains('btn-audio-rejeter')) {
+        e.preventDefault();
+        openModal('Rejeter l\'enregistrement',
+          `<label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Motif du rejet</label>
+           <textarea id="audio-reject-notes" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3 py-2 h-20 resize-none" placeholder="Ex: enregistrement inexploitable, bruit ambiant..."></textarea>`,
+          {
+            confirmLabel: 'Rejeter',
+            confirmClass: 'bg-red-600 text-white',
+            onConfirm: async () => {
+              const notes = document.getElementById('audio-reject-notes')?.value.trim() || '';
+              const res = await apiCaptures.valider(id, { statut: 'rejete', notes: notes || undefined });
+              if (res) {
+                pushNotification(`Enregistrement "${title}" rejeté.`, 'warning');
+                await Promise.all([loadAudioStats(), loadAudioCaptures()]);
+              }
+            },
+          }
+        );
       }
     });
   }
@@ -218,7 +283,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${statut.className}">${statut.label}</span>
         </div>
         ${c.espece_detectee ? `<p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Espèce détectée: <strong>${c.espece_detectee}</strong> (confiance: ${c.confiance ? (c.confiance * 100).toFixed(1) + '%' : 'N/A'})</p>` : ''}
-        <div class="flex items-center justify-between text-xs">
+        <div class="flex items-center justify-between text-xs mb-2">
           <span class="text-gray-400">Durée: ${dureeLabel}</span>
           <div class="flex gap-1">
             <button class="px-2 py-1 text-xs rounded-lg bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20"><span class="material-symbols-outlined text-sm align-text-bottom">play_circle</span> Écouter</button>
@@ -226,6 +291,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             <button class="px-2 py-1 text-xs rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400">Analyser</button>
           </div>
         </div>
+        ${c.statut === 'a_valider' ? `
+        <div class="flex gap-1 pt-2 border-t border-gray-100 dark:border-gray-700">
+          <button class="btn-audio-valider flex-1 px-2 py-1 text-xs rounded-lg font-medium bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300">Valider</button>
+          <button class="btn-audio-corriger flex-1 px-2 py-1 text-xs rounded-lg font-medium bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300">Corriger</button>
+          <button class="btn-audio-rejeter flex-1 px-2 py-1 text-xs rounded-lg font-medium bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300">Rejeter</button>
+        </div>` : ''}
       </div>`;
   }
 

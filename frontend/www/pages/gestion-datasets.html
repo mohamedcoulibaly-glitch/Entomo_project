@@ -25,7 +25,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -77,7 +76,7 @@
 <p class="text-gray-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Gestion des Datasets Annotés</p>
 <p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Parcourez, gérez et versionnez tous les jeux de données d'images entomologiques.</p>
 </div>
-<button id="btn-nouveau-dataset" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-accent hover:bg-orange-600 text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2">
+<button id="btn-nouveau-dataset" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-brand-primary hover:bg-brand-primary/90 text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2">
 <span class="material-symbols-outlined text-xl">add</span>
 <span class="truncate">Nouveau Jeu de Données</span>
 </button>
@@ -87,7 +86,7 @@
 <div class="flex flex-wrap items-center gap-3">
 <div class="relative flex-1 min-w-[200px] md:flex-auto">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-<input class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Rechercher par nom..." type="search"/>
+<input class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 pl-10 pr-4 text-sm focus:ring-2 focus:ring-brand-primary focus:border-brand-primary" placeholder="Rechercher par nom..." type="search"/>
 </div>
 <button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-4">
 <p class="text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Source</p>
@@ -129,7 +128,7 @@
 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">Validé</span>
 </td>
 <td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
-<a class="text-primary hover:underline" href="details-dataset.html?id=1">Voir Détails</a>
+<a class="text-brand-primary hover:underline" href="details-dataset.html?id=1">Voir Détails</a>
 </td>
 </tr>
 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
@@ -142,7 +141,7 @@
 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300">En Révision</span>
 </td>
 <td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
-<a class="text-primary hover:underline" href="details-dataset.html?id=2">Voir Détails</a>
+<a class="text-brand-primary hover:underline" href="details-dataset.html?id=2">Voir Détails</a>
 </td>
 </tr>
 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
@@ -155,7 +154,7 @@
 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">Validé</span>
 </td>
 <td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
-<a class="text-primary hover:underline" href="details-dataset.html?id=3">Voir Détails</a>
+<a class="text-brand-primary hover:underline" href="details-dataset.html?id=3">Voir Détails</a>
 </td>
 </tr>
 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
@@ -168,7 +167,7 @@
 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">Validé</span>
 </td>
 <td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
-<a class="text-primary hover:underline" href="details-dataset.html?id=4">Voir Détails</a>
+<a class="text-brand-primary hover:underline" href="details-dataset.html?id=4">Voir Détails</a>
 </td>
 </tr>
 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
@@ -181,7 +180,7 @@
 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300">Erreur</span>
 </td>
 <td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
-<a class="text-primary hover:underline" href="details-dataset.html?id=5">Voir Détails</a>
+<a class="text-brand-primary hover:underline" href="details-dataset.html?id=5">Voir Détails</a>
 </td>
 </tr>
 </tbody>
@@ -200,14 +199,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/gestion-datasets.js"></script>
+    <script src="../js/gestion-datasets.js?v=20260922z"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

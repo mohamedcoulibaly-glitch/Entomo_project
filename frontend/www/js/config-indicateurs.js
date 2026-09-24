@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function loadIndicateurs() {
     try {
-      const data = await apiRequest('GET', '/indicateurs');
+      const data = await apiRequest('GET', '/indicateurs/');
       if (data && data.length) indicateurs = data;
     } catch (err) {
       pushNotification('Erreur lors du chargement des indicateurs', 'error');
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!container) return;
     container.innerHTML = indicateurs.map(ind => `
       <div class="flex items-center gap-4 px-4 min-h-[72px] py-2 cursor-pointer indicator-item
-        ${selectedId === ind.id ? 'bg-primary/10 dark:bg-primary/20 border-l-4 border-primary' : 'bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50'}"
+        ${selectedId === ind.id ? 'bg-brand-primary/10 dark:bg-brand-primary/20 border-l-4 border-brand-primary' : 'bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50'}"
         data-id="${ind.id}">
         <div class="flex items-center gap-4">
           <div class="flex items-center justify-center rounded-lg shrink-0 size-12
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             </span>
           </div>
           <div class="flex flex-col justify-center">
-            <p class="text-base font-medium leading-normal line-clamp-1 ${selectedId === ind.id ? 'text-primary' : 'text-[#111418] dark:text-white'}">${ind.nom}</p>
+            <p class="text-base font-medium leading-normal line-clamp-1 ${selectedId === ind.id ? 'text-brand-primary' : 'text-[#111418] dark:text-white'}">${ind.nom}</p>
             <p class="text-sm font-normal leading-normal line-clamp-2
               ${ind.statut === 'configure' ? 'text-success' : ind.statut === 'brouillon' ? 'text-warning' : 'text-[#617589] dark:text-gray-400'}">
               ${ind.statut === 'configure' ? 'Configuré' : ind.statut === 'brouillon' ? 'Brouillon' : 'Non configuré'}
@@ -48,6 +48,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Les <select> Numérateur/Dénominateur n'ont que 2 options codées en dur
+  // dans le HTML — si la valeur enregistrée ne correspond à aucune des deux
+  // (cas de tous les indicateurs autres que HBR), le select retombe sur le
+  // premier <option> sans le signaler, laissant croire au champ d'être vide.
+  // On ajoute dynamiquement l'option manquante pour toujours refléter la vraie valeur.
+  function setSelectValue(select, value) {
+    if (!select || !value) return;
+    const hasOption = Array.from(select.options).some(o => o.value === value);
+    if (!hasOption) {
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = value;
+      select.appendChild(opt);
+    }
+    select.value = value;
+  }
+
   function selectIndicator(id) {
     selectedId = id;
     const ind = indicateurs.find(x => x.id === id);
@@ -59,8 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       panel.classList.remove('hidden');
       document.getElementById('ind-nom').textContent = ind.nom;
       document.getElementById('ind-desc').textContent = ind.description || '';
-      document.getElementById('numerator').value = ind.numerateur || '';
-      document.getElementById('denominator').value = ind.denominateur || '';
+      setSelectValue(document.getElementById('numerator'), ind.numerateur);
+      setSelectValue(document.getElementById('denominator'), ind.denominateur);
       const formuleInput = document.getElementById('ind-formule');
       if (formuleInput) formuleInput.value = ind.formule || '';
       document.getElementById('seuil-bas').value = ind.seuil_bas || 10;

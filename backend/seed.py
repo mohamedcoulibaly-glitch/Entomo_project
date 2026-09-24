@@ -186,7 +186,10 @@ try:
             "permission_ids": [
                 p.id for p in permissions_created if p.code in [
                     "dashboard:voir", "rapports:voir", "rapports:creer",
-                    "indicateurs:gestion", "datasets:gestion"
+                    "indicateurs:gestion", "datasets:gestion",
+                    # Les dashboards analytiques (Rapports OMS, cartographie...)
+                    # ont besoin de lire captures/sites pour leurs widgets.
+                    "captures:voir", "sites:voir",
                 ]
             ]
         },

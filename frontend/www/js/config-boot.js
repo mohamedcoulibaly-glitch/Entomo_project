@@ -31,14 +31,23 @@
     return resolveApiBase().replace(/\/api\/v1\/?$/, '');
   }
 
+  // Les fichiers uploads/ n'ont pas de Cache-Control explicite côté backend,
+  // donc un navigateur qui a déjà vu une URL de capture peut continuer à
+  // servir l'ancienne image depuis son cache disque même après remplacement
+  // du fichier. On force un cache-bust global : à bumper à chaque fois que
+  // les images du dossier uploads sont remplacées en masse hors upload normal.
+  const MEDIA_CACHE_BUST = 'v=20260923g';
+
   function resolveMediaUrl(path) {
     if (!path) return null;
     if (/^https?:\/\//i.test(path)) return path;
     const normalized = String(path).replace(/\\/g, '/');
     const origin = apiOrigin();
-    if (normalized.startsWith('/uploads/')) return `${origin}${normalized}`;
-    if (normalized.startsWith('uploads/')) return `${origin}/${normalized}`;
-    return `${origin}/uploads/${normalized.replace(/^\/+/, '')}`;
+    let url;
+    if (normalized.startsWith('/uploads/')) url = `${origin}${normalized}`;
+    else if (normalized.startsWith('uploads/')) url = `${origin}/${normalized}`;
+    else url = `${origin}/uploads/${normalized.replace(/^\/+/, '')}`;
+    return `${url}${url.includes('?') ? '&' : '?'}${MEDIA_CACHE_BUST}`;
   }
 
   window.ENTOMO_CONFIG = {
