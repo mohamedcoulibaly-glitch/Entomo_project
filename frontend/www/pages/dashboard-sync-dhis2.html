@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -75,7 +74,7 @@
 <p class="text-gray-900 dark:text-white text-3xl font-bold leading-tight tracking-tight">Tableau de Bord de Synchronisation DHIS2</p>
 <p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Surveillez l'état et l'historique des transferts de données.</p>
 </div>
-<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-primary/90 transition-colors">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-brand-primary text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-brand-primary/90 transition-colors">
 <span class="material-symbols-outlined text-xl">play_arrow</span>
 <span class="truncate">Lancer une synchronisation manuelle</span>
 </button>
@@ -106,7 +105,7 @@
 <!-- ToolBar & Chips -->
 <div class="p-4 border-b border-gray-200 dark:border-gray-800 flex flex-wrap items-center justify-between gap-4">
 <div class="flex items-center gap-2 overflow-x-auto">
-<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 px-3">
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-brand-primary/10 dark:bg-brand-primary/20 text-brand-primary dark:text-brand-primary-300 px-3">
 <p class="text-sm font-semibold leading-normal">Tous</p>
 </div>
 <div class="flex h-9 shrink-0 cursor-pointer items-center justify-center gap-x-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-3">
@@ -119,7 +118,7 @@
 <div class="flex gap-2 items-center w-full sm:w-auto">
 <div class="relative flex-1">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">search</span>
-<input class="w-full sm:w-48 h-9 pl-10 pr-3 rounded-lg bg-gray-100 dark:bg-gray-800 border-transparent focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Rechercher par ID..." type="text"/>
+<input class="w-full sm:w-48 h-9 pl-10 pr-3 rounded-lg bg-gray-100 dark:bg-gray-800 border-transparent focus:ring-2 focus:ring-brand-primary focus:border-transparent text-sm" placeholder="Rechercher par ID..." type="text"/>
 </div>
 <button class="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
 <span class="material-symbols-outlined text-xl">calendar_month</span>
@@ -165,7 +164,7 @@
 </td>
 <td class="px-6 py-4">1.1 MB</td>
 <td class="px-6 py-4">
-<button class="text-primary dark:text-primary-400 hover:underline font-medium">Voir l'erreur</button>
+<button class="text-brand-primary dark:text-brand-primary-400 hover:underline font-medium">Voir l'erreur</button>
 </td>
 <td class="px-6 py-4 text-right">
 <button class="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
@@ -207,7 +206,7 @@
 </td>
 <td class="px-6 py-4">3.9 MB</td>
 <td class="px-6 py-4">
-<button class="text-primary dark:text-primary-400 hover:underline font-medium">Voir l'erreur</button>
+<button class="text-brand-primary dark:text-brand-primary-400 hover:underline font-medium">Voir l'erreur</button>
 </td>
 <td class="px-6 py-4 text-right">
 <button class="p-1.5 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
@@ -225,18 +224,18 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../vendor/chart.js/chart.umd.min.js"></script>
     <script src="../vendor/leaflet/leaflet.js"></script>
-    <script src="../js/utils/analytics-charts.js"></script>
+    <script src="../js/utils/analytics-charts.js?v=20260922fix"></script>
     <script src="../js/utils/analytics-maps.js"></script>
-    <script src="../js/dashboard-sync-dhis2.js"></script>
+    <script src="../js/dashboard-sync-dhis2.js?v=20260922aa"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

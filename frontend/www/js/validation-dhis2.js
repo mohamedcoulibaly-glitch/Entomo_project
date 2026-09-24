@@ -15,11 +15,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const anophelesCount = anopheles.reduce((s, d) => s + Number(d.nombre_individus || 0), 0);
     const densityRate = totalMosquitoes > 0 ? ((anophelesCount / totalMosquitoes) * 100) : 0;
 
-    const parityItems = data.filter(d => d.parite === true || d.parite === 1 || (d.statut_parite && d.statut_parite !== 'non'));
-    const parityRate = data.length > 0 ? ((parityItems.length / data.length) * 100) : 0;
-
-    const infected = data.filter(d => d.sporozoite === true || d.sporozoite === 1 || d.infecte === true);
-    const infectionRate = totalMosquitoes > 0 ? ((infected.reduce((s, d) => s + Number(d.nombre_individus || 0), 0) / totalMosquitoes) * 100) : 0;
+    // Ce système ne stocke aucune donnée de dissection (parturité) ni de
+    // test ELISA (sporozoïte) sur les captures : ces indicateurs ne sont
+    // jamais mesurables ici. On l'affiche honnêtement plutôt que d'annoncer
+    // un faux 0%.
+    const hasParityData = data.some(d => d.parite !== undefined || d.statut_parite !== undefined);
+    const hasInfectionData = data.some(d => d.sporozoite !== undefined || d.infecte !== undefined);
 
     function setStat(key, value, fmt) {
       const el = document.querySelector(`[data-stat="${key}"] p.tracking-light`);
@@ -35,13 +36,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     setStat('total-mosquitoes', totalMosquitoes, v => v.toLocaleString('fr-FR'));
     setStat('density-rate', densityRate, v => v.toFixed(1) + '%');
-    setStat('parity-rate', parityRate, v => Math.round(v) + '%');
-    setStat('infection-rate', infectionRate, v => v.toFixed(1) + '%');
-
     setChange('total-mosquitoes', data.length, v => v + ' en attente');
     setChange('density-rate', anopheles.length, v => v + ' Anopheles');
-    setChange('parity-rate', parityItems.length, v => v + ' parviens');
-    setChange('infection-rate', infected.length, v => v + ' sporozoite+');
+
+    if (hasParityData) {
+      const parityItems = data.filter(d => d.parite === true || d.parite === 1 || (d.statut_parite && d.statut_parite !== 'non'));
+      setStat('parity-rate', data.length > 0 ? (parityItems.length / data.length) * 100 : 0, v => Math.round(v) + '%');
+      setChange('parity-rate', parityItems.length, v => v + ' parviens');
+    } else {
+      setStat('parity-rate', 'N/A');
+      setChange('parity-rate', 'Non suivi dans ce système');
+    }
+
+    if (hasInfectionData) {
+      const infected = data.filter(d => d.sporozoite === true || d.sporozoite === 1 || d.infecte === true);
+      const infectionRate = totalMosquitoes > 0 ? (infected.reduce((s, d) => s + Number(d.nombre_individus || 0), 0) / totalMosquitoes) * 100 : 0;
+      setStat('infection-rate', infectionRate, v => v.toFixed(1) + '%');
+      setChange('infection-rate', infected.length, v => v + ' sporozoite+');
+    } else {
+      setStat('infection-rate', 'N/A');
+      setChange('infection-rate', 'Non suivi dans ce système');
+    }
   }
 
   updateStatsCards(pendingItems);

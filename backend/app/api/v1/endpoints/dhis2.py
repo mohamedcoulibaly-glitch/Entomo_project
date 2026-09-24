@@ -145,6 +145,7 @@ def list_pending_captures(db: Session = Depends(get_db), _: User = Depends(get_c
             statut=capture.statut,
             espece=capture.espece,
             site_nom=capture.site_nom,
+            nombre_individus=capture.nombre_individus,
             date_capture=capture.date_capture,
             modified_at=capture.updated_at or capture.date_capture,
         )

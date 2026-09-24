@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -75,7 +74,7 @@
 <p class="text-[#111418] dark:text-white text-3xl font-bold leading-tight">Gestion des Rôles et Permissions</p>
 <p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal">Définissez les accès et les actions pour chaque type d'utilisateur.</p>
 </div>
-<button class="flex min-w-[84px] items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<button class="flex min-w-[84px] items-center justify-center gap-2 rounded-lg h-10 px-4 bg-brand-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-brand-primary/90 transition-colors">
 <span class="material-symbols-outlined">add</span>
 <span class="truncate">Ajouter un nouveau rôle</span>
 </button>
@@ -87,14 +86,14 @@
 <h2 class="text-[#111418] dark:text-white text-xl font-bold leading-tight px-4 pb-3">Liste des Rôles</h2>
 <div class="flex flex-col gap-2">
 <!-- ListItem (Active) -->
-<div class="flex cursor-pointer items-center gap-4 rounded-lg bg-primary/10 dark:bg-primary/20 border border-primary/50 dark:border-primary/70 px-4 min-h-[72px] py-2 justify-between">
+<div class="flex cursor-pointer items-center gap-4 rounded-lg bg-brand-primary/10 dark:bg-brand-primary/20 border border-brand-primary/50 dark:border-brand-primary/70 px-4 min-h-[72px] py-2 justify-between">
 <div class="flex items-center gap-4">
-<div class="text-primary flex items-center justify-center rounded-lg bg-white dark:bg-background-dark shrink-0 size-12">
+<div class="text-brand-primary flex items-center justify-center rounded-lg bg-white dark:bg-background-dark shrink-0 size-12">
 <span class="material-symbols-outlined text-3xl">science</span>
 </div>
 <div class="flex flex-col justify-center">
-<p class="text-primary text-base font-semibold leading-normal line-clamp-1">Laborantin / Entomologiste de référence</p>
-<p class="text-primary/80 text-sm font-normal leading-normal line-clamp-2">3 modules activés</p>
+<p class="text-brand-primary text-base font-semibold leading-normal line-clamp-1">Laborantin / Entomologiste de référence</p>
+<p class="text-brand-primary/80 text-sm font-normal leading-normal line-clamp-2">3 modules activés</p>
 </div>
 </div>
 </div>
@@ -157,38 +156,38 @@
 <!-- Module Row -->
 <tr class="border-b border-gray-200 dark:border-gray-700">
 <td class="p-3 font-medium text-[#111418] dark:text-white">Collecte Terrain</td>
-<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-brand-primary focus:ring-brand-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" type="checkbox"/></td>
 </tr>
 <!-- Module Row -->
 <tr class="border-b border-gray-200 dark:border-gray-700">
 <td class="p-3 font-medium text-[#111418] dark:text-white">Analyse Labo</td>
-<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
-<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
-<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
-<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-brand-primary focus:ring-brand-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-brand-primary focus:ring-brand-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-brand-primary focus:ring-brand-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-brand-primary focus:ring-brand-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" type="checkbox"/></td>
 </tr>
 <!-- Module Row -->
 <tr class="border-b border-gray-200 dark:border-gray-700">
 <td class="p-3 font-medium text-[#111418] dark:text-white">Tableaux de Bord</td>
-<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input checked="" class="rounded text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-brand-primary focus:ring-brand-primary" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input checked="" class="rounded text-brand-primary focus:ring-brand-primary" type="checkbox"/></td>
 </tr>
 <!-- Module Row -->
 <tr>
 <td class="p-3 font-medium text-[#111418] dark:text-white">Gestion Utilisateurs</td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
-<td class="p-3 text-center"><input class="rounded text-primary focus:ring-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
+<td class="p-3 text-center"><input class="rounded text-brand-primary focus:ring-brand-primary" disabled="" type="checkbox"/></td>
 </tr>
 </tbody>
 </table>
@@ -201,7 +200,7 @@
 <button class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-gray-200 dark:bg-white/10 text-[#111418] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">
                     Annuler
                  </button>
-<button class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<button class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-brand-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-brand-primary/90 transition-colors">
                     Enregistrer
                  </button>
 </div>
@@ -214,14 +213,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/gestion-roles.js?v=20260922"></script>
+    <script src="../js/gestion-roles.js?v=20260922z"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

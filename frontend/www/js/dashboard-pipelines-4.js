@@ -175,8 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       activeFilter = btn.dataset.pipelineFilter;
       document.querySelectorAll('[data-pipeline-filter]').forEach(b => {
-        b.classList.toggle('border-b-primary', b === btn);
-        b.classList.toggle('text-primary', b === btn);
+        b.classList.toggle('border-b-brand-primary', b === btn);
+        b.classList.toggle('text-brand-primary', b === btn);
         b.classList.toggle('border-b-transparent', b !== btn);
         b.classList.toggle('text-gray-500', b !== btn);
         b.classList.toggle('dark:text-[#9dabb9]', b !== btn);

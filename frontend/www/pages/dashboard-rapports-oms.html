@@ -24,7 +24,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -73,7 +72,7 @@
 <!-- PageHeading -->
 <div class="flex flex-wrap justify-between gap-4 items-center mb-6">
 <div class="flex flex-col gap-1">
-<h1 class="text-gray-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.03em]">Tableau de Bord - Surveillance Entomologique</h1>
+<h1 class="text-gray-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.03em]">Rapports OMS</h1>
 <p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Aperçu des indicateurs clés du paludisme selon les normes de l'OMS.</p>
 </div>
 <button id="oms-generate-report" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-bold leading-normal tracking-[0.015em] border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -169,7 +168,7 @@
 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
 <div class="flex justify-between items-center mb-4">
 <h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Données Détaillées des Captures</h2>
-<button id="oms-export-csv" class="flex items-center gap-2 text-sm font-medium text-primary dark:text-primary hover:underline">
+<button id="oms-export-csv" class="flex items-center gap-2 text-sm font-medium text-brand-primary dark:text-brand-primary hover:underline">
                                     Exporter les données (CSV)
                                     <span class="material-symbols-outlined !text-base">file_download</span>
 </button>
@@ -196,7 +195,7 @@
 <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
 <div class="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
 <h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Rapports Générés</h2>
-<a href="generateur-rapports.html" class="flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+<a href="generateur-rapports.html" class="flex items-center gap-2 text-sm font-medium text-brand-primary hover:underline">
 <span class="material-symbols-outlined !text-base">add</span>
 Nouveau Rapport
 </a>
@@ -231,18 +230,18 @@ Chargement des rapports...
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../vendor/chart.js/chart.umd.min.js"></script>
     <script src="../vendor/leaflet/leaflet.js"></script>
-    <script src="../js/utils/analytics-charts.js?v=2"></script>
+    <script src="../js/utils/analytics-charts.js?v=20260922fix"></script>
     <script src="../js/utils/analytics-maps.js?v=2"></script>
-    <script src="../js/dashboard-rapports-oms.js?v=2"></script>
+    <script src="../js/dashboard-rapports-oms.js?v=20260922z"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -75,7 +74,7 @@
 <h1 class="text-gray-900 dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Tableau de Bord des Pipelines MLOps</h1>
 <p class="text-gray-500 dark:text-[#9dabb9] text-base font-normal leading-normal">Supervisez et gérez les pipelines automatisés de réentraînement des modèles.</p>
 </div>
-<button data-pipeline-create-btn class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer rounded-lg h-11 px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<button data-pipeline-create-btn class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer rounded-lg h-11 px-5 bg-brand-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-brand-primary/90 transition-colors">
 <span class="material-symbols-outlined">add</span>
 <span class="truncate">Nouveau Pipeline</span>
 </button>
@@ -104,13 +103,13 @@
 <!-- Tabs -->
 <div class="pb-3 px-4">
 <div class="flex border-b border-gray-200 dark:border-[#3b4754] gap-8">
-<button type="button" data-pipeline-filter="all" class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-primary pb-[13px] pt-4">
+<button type="button" data-pipeline-filter="all" class="flex flex-col items-center justify-center border-b-[3px] border-b-brand-primary text-brand-primary pb-[13px] pt-4">
 <p class="text-sm font-bold leading-normal tracking-[0.015em]">Tous les pipelines</p>
 </button>
-<button type="button" data-pipeline-filter="scheduled" class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-primary dark:hover:text-white">
+<button type="button" data-pipeline-filter="scheduled" class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-brand-primary dark:hover:text-white">
 <p class="text-sm font-bold leading-normal tracking-[0.015em]">Planifiés</p>
 </button>
-<button type="button" data-pipeline-filter="history" class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-primary dark:hover:text-white">
+<button type="button" data-pipeline-filter="history" class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-gray-500 dark:text-[#9dabb9] pb-[13px] pt-4 hover:text-brand-primary dark:hover:text-white">
 <p class="text-sm font-bold leading-normal tracking-[0.015em]">Historique</p>
 </button>
 </div>
@@ -142,14 +141,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/dashboard-pipelines-1.js"></script>
+    <script src="../js/dashboard-pipelines-1.js?v=20260922z"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     data-id="${u.id}" title="${u.statut === 'Actif' ? 'Désactiver' : 'Activer'}">
               <span class="material-symbols-outlined" style="font-size:20px">${u.statut === 'Actif' ? 'person_off' : 'person_check'}</span>
             </button>
-            <button class="btn-edit text-primary hover:text-primary/80 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+            <button class="btn-edit text-brand-primary hover:text-brand-primary/80 p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
                     data-id="${u.id}" title="Modifier">
               <span class="material-symbols-outlined" style="font-size:20px">edit</span>
             </button>
@@ -156,20 +156,20 @@ document.addEventListener('DOMContentLoaded', async () => {
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nom complet *</label>
           <input id="f-nom" type="text" value="${u?.nom || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-brand-primary"/>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Email *</label>
           <input id="f-email" type="email" value="${u?.email || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-brand-primary"/>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Nom d'utilisateur${id ? '' : ' *'}</label>
           <input id="f-username" type="text" value="${u?.username || ''}" ${id ? 'disabled' : ''}
             placeholder="généré depuis l'email si laissé vide"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60"/>
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:opacity-60"/>
         </div>
         ${!id ? `
         <div>
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <input id="f-password" type="text" value=""
               placeholder="Saisir ou générer un mot de passe"
               class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                     bg-white dark:bg-gray-700 text-sm px-3 font-mono focus:outline-none focus:ring-2 focus:ring-primary"/>
+                     bg-white dark:bg-gray-700 text-sm px-3 font-mono focus:outline-none focus:ring-2 focus:ring-brand-primary"/>
             <button type="button" id="f-password-generate" class="shrink-0 rounded-lg border border-gray-300 dark:border-gray-600 px-3 text-xs font-semibold hover:bg-gray-50 dark:hover:bg-gray-700">Générer</button>
           </div>
           <p class="mt-1 text-xs text-gray-500">Communiquez-le à l'utilisateur — il ne sera plus affiché ensuite.</p>
@@ -187,12 +187,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Téléphone</label>
           <input id="f-telephone" type="tel" value="${u?.telephone || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-brand-primary"/>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Rôle</label>
           <select id="f-role" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary">
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-brand-primary">
             ${roleOptions}
           </select>
         </div>
@@ -200,24 +200,24 @@ document.addEventListener('DOMContentLoaded', async () => {
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Établissement</label>
           <input id="f-etab" type="text" value="${u?.etablissement || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-brand-primary"/>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Région</label>
           <input id="f-region" type="text" value="${u?.region || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-brand-primary"/>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">District</label>
           <input id="f-district" type="text" value="${u?.district || ''}"
             class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary"/>
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-brand-primary"/>
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Statut</label>
           <select id="f-statut" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600
-                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-primary">
+                   bg-white dark:bg-gray-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-brand-primary">
             <option ${!u || u.statut === 'Actif' ? 'selected' : ''}>Actif</option>
             <option ${u?.statut === 'Inactif' ? 'selected' : ''}>Inactif</option>
           </select>

@@ -11,7 +11,7 @@ VALID_IMAGE_EXT = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"}
 VALID_AUDIO_EXT = {".wav", ".mp3", ".ogg", ".flac", ".m4a", ".webm"}
 VALID_DOC_EXT = {".pdf", ".xlsx", ".xls", ".csv", ".json", ".pt", ".onnx", ".h5", ".pkl"}
 
-MAX_IMAGE_BYTES = 5 * 1024 * 1024
+MAX_IMAGE_BYTES = 10 * 1024 * 1024
 MAX_AUDIO_BYTES = 10 * 1024 * 1024
 MAX_DOC_BYTES = 10 * 1024 * 1024
 

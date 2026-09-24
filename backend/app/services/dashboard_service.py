@@ -48,6 +48,7 @@ def _base_capture_query(
     *,
     region: Optional[str] = None,
     espece: Optional[str] = None,
+    environnement: Optional[str] = None,
     period: Optional[str] = None,
     date_debut: Optional[str] = None,
     date_fin: Optional[str] = None,
@@ -62,6 +63,8 @@ def _base_capture_query(
             query = query.filter(SiteSentinelle.region.ilike(f"%{region}%"))
     if espece and espece.lower() not in {"toutes", "all", ""}:
         query = query.filter(Capture.espece.ilike(f"%{espece}%"))
+    if environnement and environnement.lower() not in {"tous", "toutes", "all", ""}:
+        query = query.filter(SiteSentinelle.environnement.ilike(f"%{environnement}%"))
     if statut:
         query = query.filter(Capture.statut == statut)
     if methode:
@@ -208,12 +211,13 @@ def get_stats(
     *,
     region: Optional[str] = None,
     espece: Optional[str] = None,
+    environnement: Optional[str] = None,
     period: Optional[str] = None,
     date_debut: Optional[str] = None,
     date_fin: Optional[str] = None,
 ) -> Dict[str, Any]:
     cap_q = _base_capture_query(
-        db, region=region, espece=espece, period=period,
+        db, region=region, espece=espece, environnement=environnement, period=period,
         date_debut=date_debut, date_fin=date_fin,
     )
     captures = cap_q.all()
@@ -340,9 +344,10 @@ def densite_evolution(
     granularity: str = "week",
     region: Optional[str] = None,
     espece: Optional[str] = None,
+    environnement: Optional[str] = None,
     period: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
-    captures = _base_capture_query(db, region=region, espece=espece, period=period or "1A").all()
+    captures = _base_capture_query(db, region=region, espece=espece, environnement=environnement, period=period or "1A").all()
     buckets: Dict[str, Dict[str, Any]] = defaultdict(lambda: {"captures": 0, "individus": 0})
 
     for cap in captures:

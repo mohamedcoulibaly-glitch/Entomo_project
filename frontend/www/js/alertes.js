@@ -39,18 +39,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
+  // Les notifications de la table `notifications` ne sont créées qu'une fois
+  // par le seed — rien dans le backend n'en génère de nouvelles quand un
+  // évènement réel se produit (capture créée, site critique, échec DHIS2...).
+  // Cette page semblait donc figée depuis le premier jour. En attendant un
+  // vrai système d'évènements côté backend, on fusionne avec le moteur
+  // d'alertes déjà calculé en direct ailleurs dans l'app (dashboard), pour
+  // que la page reflète l'état réel actuel du système.
+  const NIVEAU_TO_TYPE = { critique: 'error', eleve: 'alerte', moyen: 'warning', faible: 'info' };
+  const ALERTE_TITRES = {
+    epidemiologique: 'Alerte épidémiologique', validation: 'Validations en attente',
+    espece: 'Espèce invasive détectée', sync: 'Échec de synchronisation DHIS2',
+  };
+
+  function mapLiveAlert(a, idx) {
+    return {
+      id: `live-${idx}`,
+      _live: true,
+      type_notification: NIVEAU_TO_TYPE[a.niveau] || 'alerte',
+      titre: ALERTE_TITRES[a.type] || 'Alerte active',
+      message: a.message,
+      date_creation: a.date,
+      lu: false,
+      site_nom: a.localisation,
+    };
+  }
+
   async function loadAllData() {
     try {
       showLoader();
-      const [notifData, statsData] = await Promise.all([
+      const [notifData, statsData, alertesData] = await Promise.all([
         apiNotifications.list().catch(() => null),
-        apiDashboard.stats().catch(() => null)
+        apiDashboard.stats().catch(() => null),
+        apiDashboard.alertes().catch(() => null),
       ]);
 
-      if (notifData) {
-        allNotifications = notifData;
-        notifications = notifData;
-      }
+      const live = (alertesData || []).map(mapLiveAlert);
+      const persisted = notifData || [];
+      allNotifications = [...live, ...persisted];
+      notifications = allNotifications;
 
       updateStats(statsData);
       updateFilterBadges();
@@ -152,9 +179,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     container.querySelectorAll('.notification-item').forEach(el => {
       el.addEventListener('click', async () => {
-        const id = parseInt(el.dataset.id);
-        const n = notifications.find(x => x.id === id);
-        if (!n || n.lu) return;
+        const id = el.dataset.id;
+        const n = notifications.find(x => String(x.id) === id);
+        // Les alertes calculées en direct (site critique, backlog de
+        // validation...) ne sont pas des lignes en base : rien à "marquer lu".
+        if (!n || n.lu || n._live) return;
         try {
           await apiNotifications.markRead(id);
           n.lu = true;
@@ -172,7 +201,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await apiNotifications.markAllRead();
       if (res !== null) {
-        notifications.forEach(n => n.lu = true);
+        // Les alertes live ne sont pas concernées : elles reflètent l'état
+        // actuel du système, "tout marquer lu" ne les fait pas disparaître.
+        notifications.forEach(n => { if (!n._live) n.lu = true; });
         applyFilter();
         updateStats();
         updateFilterBadges();

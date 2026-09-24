@@ -81,5 +81,6 @@ class DHIS2PendingCapture(BaseModel):
     statut: str
     espece: Optional[str] = None
     site_nom: Optional[str] = None
+    nombre_individus: Optional[int] = None
     date_capture: Optional[datetime] = None
     modified_at: Optional[datetime] = None
