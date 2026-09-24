@@ -24,7 +24,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -103,7 +102,7 @@
 <!-- Tabs -->
 <div class="border-b border-border-light dark:border-border-dark">
 <nav aria-label="Tabs" class="flex space-x-8 -mb-px">
-<a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-primary border-primary" href="#analysis-raw">Analyse des Données Brutes</a>
+<a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-brand-primary border-brand-primary" href="#analysis-raw">Analyse des Données Brutes</a>
 <a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-text-light-secondary dark:text-dark-secondary border-transparent hover:text-text-light-primary dark:hover:text-dark-primary hover:border-border-dark" href="#analysis-performance">Performance des Modèles</a>
 <a class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-text-light-secondary dark:text-dark-secondary border-transparent hover:text-text-light-primary dark:hover:text-dark-primary hover:border-border-dark" href="#analysis-charts">Analyse Comparative</a>
 </nav>
@@ -125,6 +124,34 @@
 <div id="analysis-map" class="analysis-map h-80 bg-background-light dark:bg-background-dark rounded overflow-hidden">
 </div>
 </div>
+<!-- Composition des Espèces -->
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
+<h3 class="text-lg font-bold mb-4">Composition des Espèces</h3>
+<div class="analysis-chart h-64 bg-background-light dark:bg-background-dark rounded p-4">
+<canvas id="chart-analysis-espece" aria-label="Composition des espèces"></canvas>
+</div>
+</div>
+<!-- Méthodes de Capture -->
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
+<h3 class="text-lg font-bold mb-4">Méthodes de Capture</h3>
+<div class="analysis-chart h-64 bg-background-light dark:bg-background-dark rounded p-4">
+<canvas id="chart-analysis-methode" aria-label="Répartition par méthode de capture"></canvas>
+</div>
+</div>
+<!-- Statuts de Validation -->
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
+<h3 class="text-lg font-bold mb-4">Statuts de Validation</h3>
+<div class="analysis-chart h-64 bg-background-light dark:bg-background-dark rounded p-4">
+<canvas id="chart-analysis-statut" aria-label="Répartition par statut de validation"></canvas>
+</div>
+</div>
+<!-- Evolution de la Densite -->
+<div class="lg:col-span-2 bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark">
+<h3 class="text-lg font-bold mb-4">Évolution de la Densité des Vecteurs</h3>
+<div class="analysis-chart h-64 bg-background-light dark:bg-background-dark rounded p-4">
+<canvas id="chart-analysis-evolution" aria-label="Évolution de la densité des vecteurs"></canvas>
+</div>
+</div>
 </div>
 <!-- Data Table -->
 <div id="analysis-raw" class="mt-8 bg-card-light dark:bg-card-dark p-6 rounded-lg border border-border-light dark:border-border-dark scroll-mt-6">
@@ -132,7 +159,7 @@
 <h3 class="text-lg font-bold">Données Brutes Anonymisées</h3>
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-light-secondary dark:text-dark-secondary">search</span>
-<input id="analysis-search" class="pl-10 w-64 rounded border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary" placeholder="Espèce, méthode, notes..." type="search"/>
+<input id="analysis-search" class="pl-10 w-64 rounded border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-brand-primary focus:border-brand-primary" placeholder="Espèce, méthode, notes..." type="search"/>
 </div>
 </div>
 <div class="mb-5 grid gap-3 rounded-xl bg-slate-50 p-4 dark:bg-slate-800/60 sm:grid-cols-2 lg:grid-cols-5">
@@ -144,7 +171,7 @@
 <input id="analysis-date-start" type="date" class="mt-1 w-full rounded-lg border-gray-300 bg-white text-sm dark:border-gray-600 dark:bg-gray-800"/></label>
 <label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Au
 <input id="analysis-date-end" type="date" class="mt-1 w-full rounded-lg border-gray-300 bg-white text-sm dark:border-gray-600 dark:bg-gray-800"/></label>
-<div class="flex items-end gap-2"><button id="analysis-reset" type="button" class="h-10 flex-1 rounded-lg border border-gray-300 bg-white px-3 text-sm font-semibold hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700">Réinitialiser</button><button id="analysis-export" type="button" class="h-10 rounded-lg bg-primary px-3 text-sm font-bold text-white"><span class="material-symbols-outlined align-middle text-base">download</span> CSV</button></div>
+<div class="flex items-end gap-2"><button id="analysis-reset" type="button" class="h-10 flex-1 rounded-lg border border-gray-300 bg-white px-3 text-sm font-semibold hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700">Réinitialiser</button><button id="analysis-export" type="button" class="h-10 rounded-lg bg-brand-primary px-3 text-sm font-bold text-white"><span class="material-symbols-outlined align-middle text-base">download</span> CSV</button></div>
 </div>
 <div class="overflow-x-auto">
 <table class="w-full text-left text-sm">
@@ -178,16 +205,16 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../vendor/chart.js/chart.umd.min.js"></script>
     <script src="../vendor/leaflet/leaflet.js"></script>
-    <script src="../js/utils/analytics-charts.js"></script>
+    <script src="../js/utils/analytics-charts.js?v=20260922fix"></script>
     <script src="../js/utils/analytics-maps.js"></script>
     <script src="../js/analyse-donnees.js"></script>
     <!-- /Ento-App Scripts -->

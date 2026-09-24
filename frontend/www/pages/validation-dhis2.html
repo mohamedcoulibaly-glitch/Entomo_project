@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -73,95 +72,60 @@
 <!-- PageHeading Component -->
 <div class="flex flex-wrap justify-between gap-4 items-center">
 <div class="flex min-w-72 flex-col gap-2">
-<p class="text-gray-900 dark:text-white text-3xl font-black tracking-[-0.033em]">DHIS2 Data Transfer: Preview &amp; Validation</p>
-<p class="text-gray-500 dark:text-gray-400 text-base font-normal">Review, validate, and approve aggregated entomological data before its final push to the DHIS2 platform.</p>
+<p class="text-gray-900 dark:text-white text-3xl font-black tracking-[-0.033em]">Transfert DHIS2 : Aperçu et Validation</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal">Vérifiez, validez et approuvez les indicateurs entomologiques agrégés avant leur envoi final vers la plateforme DHIS2.</p>
 </div>
 <button id="btn-date-range" type="button" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 text-sm font-bold gap-2">
 <span class="material-symbols-outlined text-lg">calendar_month</span>
-<span class="truncate">Select Date Range</span>
+<span class="truncate">Sélectionner une période</span>
 </button>
 </div>
 <!-- SectionHeader for Stats -->
-<h2 class="text-gray-900 dark:text-white text-[22px] font-bold tracking-[-0.015em] pt-5">Summary of Aggregated Indicators</h2>
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold tracking-[-0.015em] pt-5">Résumé des indicateurs agrégés</h2>
 <!-- Stats Component -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 <div data-stat="total-mosquitoes" class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-<p class="text-base font-medium text-gray-600 dark:text-gray-300">Total Mosquitoes Collected</p>
+<p class="text-base font-medium text-gray-600 dark:text-gray-300">Total de moustiques collectés</p>
 <p class="tracking-light text-3xl font-bold text-gray-900 dark:text-white">&mdash;</p>
 <p data-stat-change="total-mosquitoes" class="text-gray-400 text-base font-medium">&mdash;</p>
 </div>
 <div data-stat="density-rate" class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-<p class="text-base font-medium text-gray-600 dark:text-gray-300">Anopheles Density Rate</p>
+<p class="text-base font-medium text-gray-600 dark:text-gray-300">Taux de densité Anophèles</p>
 <p class="tracking-light text-3xl font-bold text-gray-900 dark:text-white">&mdash;</p>
 <p data-stat-change="density-rate" class="text-gray-400 text-base font-medium">&mdash;</p>
 </div>
 <div data-stat="parity-rate" class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-<p class="text-base font-medium text-gray-600 dark:text-gray-300">Parity Rate</p>
+<p class="text-base font-medium text-gray-600 dark:text-gray-300">Taux de parturité</p>
 <p class="tracking-light text-3xl font-bold text-gray-900 dark:text-white">&mdash;</p>
 <p data-stat-change="parity-rate" class="text-gray-400 text-base font-medium">&mdash;</p>
 </div>
 <div data-stat="infection-rate" class="flex flex-col gap-2 rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-<p class="text-base font-medium text-gray-600 dark:text-gray-300">Infection Rate (Sporozoite)</p>
+<p class="text-base font-medium text-gray-600 dark:text-gray-300">Taux d'infection (Sporozoïte)</p>
 <p class="tracking-light text-3xl font-bold text-gray-900 dark:text-white">&mdash;</p>
 <p data-stat-change="infection-rate" class="text-gray-400 text-base font-medium">&mdash;</p>
 </div>
 </div>
 <!-- SectionHeader for Data Table -->
-<h2 class="text-gray-900 dark:text-white text-[22px] font-bold tracking-[-0.015em] pt-5">Detailed Data for DHIS2 Transfer</h2>
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold tracking-[-0.015em] pt-5">Données détaillées pour le transfert DHIS2</h2>
 <!-- Data Table -->
 <div class="w-full overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
 <div class="overflow-x-auto">
 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
 <thead class="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700">
 <tr>
-<th class="px-6 py-3" scope="col">Indicator Name</th>
-<th class="px-6 py-3" scope="col">District</th>
-<th class="px-6 py-3" scope="col">Health Post</th>
-<th class="px-6 py-3 text-right" scope="col">Value</th>
-<th class="px-6 py-3" scope="col">DHIS2 Period</th>
-<th class="px-6 py-3 text-center" scope="col">Status</th>
+<th class="px-6 py-3" scope="col">Donnée</th>
+<th class="px-6 py-3" scope="col">Type</th>
+<th class="px-6 py-3" scope="col">Date</th>
+<th class="px-6 py-3" scope="col">Statut</th>
+<th class="px-6 py-3" scope="col">Actions</th>
 </tr>
 </thead>
 <tbody>
-<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Anopheles Density</th>
-<td class="px-6 py-4">Dakar</td>
-<td class="px-6 py-4">Medina</td>
-<td class="px-6 py-4 text-right">12.3%</td>
-<td class="px-6 py-4">2023Q4</td>
-<td class="px-6 py-4 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ready</span></td>
-</tr>
-<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Sporozoite Index</th>
-<td class="px-6 py-4">Thiès</td>
-<td class="px-6 py-4">Pout</td>
-<td class="px-6 py-4 text-right">1.8%</td>
-<td class="px-6 py-4">2023Q4</td>
-<td class="px-6 py-4 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ready</span></td>
-</tr>
-<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Parity Rate</th>
-<td class="px-6 py-4">Kaolack</td>
-<td class="px-6 py-4">Nioro</td>
-<td class="px-6 py-4 text-right">58%</td>
-<td class="px-6 py-4">2023Q4</td>
-<td class="px-6 py-4 text-center"><span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"><span class="material-symbols-outlined text-sm">warning</span>Needs Review</span></td>
-</tr>
-<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Total Collected</th>
-<td class="px-6 py-4">Ziguinchor</td>
-<td class="px-6 py-4">Bignona</td>
-<td class="px-6 py-4 text-right">312</td>
-<td class="px-6 py-4">2023Q4</td>
-<td class="px-6 py-4 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ready</span></td>
-</tr>
-<tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
-<th class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap" scope="row">Anopheles Density</th>
-<td class="px-6 py-4">Saint-Louis</td>
-<td class="px-6 py-4">Richard Toll</td>
-<td class="px-6 py-4 text-right">5.5%</td>
-<td class="px-6 py-4">2023Q4</td>
-<td class="px-6 py-4 text-center"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Ready</span></td>
+<tr>
+<td colspan="5" class="text-center py-10 text-gray-400">
+<span class="material-symbols-outlined text-3xl block mb-1">hourglass_empty</span>
+Chargement...
+</td>
 </tr>
 </tbody>
 </table>
@@ -172,15 +136,15 @@
 <div class="flex flex-1 gap-3 flex-wrap justify-end">
 <button id="btn-export-validation" type="button" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold gap-2">
 <span class="material-symbols-outlined text-lg">download</span>
-<span class="truncate">Export as CSV</span>
+<span class="truncate">Exporter en CSV</span>
 </button>
 <button id="btn-flag-review" type="button" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold gap-2">
 <span class="material-symbols-outlined text-lg">flag</span>
-<span class="truncate">Flag for Review</span>
+<span class="truncate">Signaler pour révision</span>
 </button>
-<button id="btn-validate-push" type="button" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold gap-2">
+<button id="btn-validate-push" type="button" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-brand-primary text-white text-sm font-bold gap-2">
 <span class="material-symbols-outlined text-lg">send</span>
-<span class="truncate">Validate and Push to DHIS2</span>
+<span class="truncate">Valider et envoyer à DHIS2</span>
 </button>
 </div>
 </div>
@@ -191,14 +155,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/validation-dhis2.js"></script>
+    <script src="../js/validation-dhis2.js?v=20260922a"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  initTheme();
-  initActiveNav();
-  initMobileMenu();
-
+  // initTheme()/initActiveNav()/initMobileMenu() sont déjà appelées globalement
+  // par core.js sur chaque page — les rappeler ici double les gestionnaires de
+  // clic (ex: le bouton clair/sombre bascule puis re-bascule aussitôt dans le
+  // même clic, sans effet visible).
   updateConnStatus();
   window.addEventListener('online', () => { updateConnStatus(); loadAll(); });
   window.addEventListener('offline', updateConnStatus);
@@ -222,12 +222,12 @@ function renderOfflineTable(data) {
     const replayId = d.queue_item_id || '';
 
     return `<tr class="bg-white dark:bg-gray-900 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800" data-id="${d.id}">
-      <td class="w-4 p-4"><input class="offline-checkbox h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-primary focus:ring-primary" type="checkbox" data-id="${d.id}" data-queue-id="${replayId}"/></td>
+      <td class="w-4 p-4"><input class="offline-checkbox h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-brand-primary focus:ring-brand-primary" type="checkbox" data-id="${d.id}" data-queue-id="${replayId}"/></td>
       <td class="px-6 py-4">${statusBadge}</td>
       <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">${escapeHtml(dataType)}</td>
       <td class="px-6 py-4 text-gray-500 dark:text-gray-400">${escapeHtml(identifier)}</td>
       <td class="px-6 py-4 text-gray-500 dark:text-gray-400">${date ? formatDate(date) : '—'}</td>
-      <td class="px-6 py-4 text-right"><a class="font-medium text-primary hover:underline" href="${detailUrl}">${actionLabel}</a></td>
+      <td class="px-6 py-4 text-right"><a class="font-medium text-brand-primary hover:underline" href="${detailUrl}">${actionLabel}</a></td>
     </tr>`;
   }).join('');
 

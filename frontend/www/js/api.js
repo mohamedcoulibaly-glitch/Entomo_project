@@ -19,9 +19,11 @@ function resolveMediaUrl(path) {
   if (/^https?:\/\//i.test(path)) return path;
   const normalized = String(path).replace(/\\/g, '/');
   const origin = apiOrigin();
-  if (normalized.startsWith('/uploads/')) return `${origin}${normalized}`;
-  if (normalized.startsWith('uploads/')) return `${origin}/${normalized}`;
-  return `${origin}/uploads/${normalized.replace(/^\/+/, '')}`;
+  let url;
+  if (normalized.startsWith('/uploads/')) url = `${origin}${normalized}`;
+  else if (normalized.startsWith('uploads/')) url = `${origin}/${normalized}`;
+  else url = `${origin}/uploads/${normalized.replace(/^\/+/, '')}`;
+  return `${url}${url.includes('?') ? '&' : '?'}v=20260923g`;
 }
 
 // ─── Gestion du token JWT ─────────────────────────────────────────────────────

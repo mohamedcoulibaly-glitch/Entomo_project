@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <td class="table-col-7 h-[72px] px-4 py-2 text-sm font-medium">
           <div class="flex items-center gap-2">
             <a class="text-brand-primary hover:underline text-sm" href="details-dataset.html?id=${d.id}">Détails</a>
-            <button class="btn-edit text-primary hover:underline text-sm" data-id="${d.id}">Modifier</button>
+            <button class="btn-edit text-brand-primary hover:underline text-sm" data-id="${d.id}">Modifier</button>
             <button class="btn-annotate text-purple-600 hover:underline text-sm" data-id="${d.id}">Annoter</button>
             <button class="btn-delete text-red-600 hover:underline text-sm" data-id="${d.id}">Supprimer</button>
           </div>

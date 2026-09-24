@@ -54,39 +54,75 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function renderReportsList() {
-    const container = document.querySelector('[data-oms-reports]');
+    // Le conteneur réel est la table #reports-list (6 colonnes), pas un
+    // [data-oms-reports] qui n'existe nulle part dans le HTML — la liste ne
+    // s'affichait donc jamais, quel que soit le filtre.
+    const container = document.getElementById('reports-list');
     if (!container) return;
-    const filtered = activeFilter === 'all' ? mergedReports : mergedReports.filter(r => r.statut === activeFilter);
+    // Les chips filtrent par TYPE de rapport (oms/entomo/personnalise), pas
+    // par statut — data-filter-type dans le HTML, pas data-oms-filter.
+    const filtered = activeFilter === 'all' ? mergedReports : mergedReports.filter(r => r.type === activeFilter);
     container.innerHTML = filtered.length
-      ? filtered.map(r => `<div class="flex items-center justify-between p-4 rounded-lg border dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50"><div><p class="font-medium">${escapeHtml(r.titre || r.nom || 'Rapport')}</p><p class="text-xs text-gray-500">${r.date_creation ? new Date(r.date_creation).toLocaleDateString('fr-FR') : ''}</p></div><span class="text-xs rounded-full px-2 py-1 ${r.statut === 'soumis' ? 'bg-green-100 text-green-700' : 'bg-gray-100'}">${r.statut || '—'}</span></div>`).join('')
-      : '<p class="text-center py-8 text-gray-500">Aucun rapport.</p>';
+      ? filtered.map(r => `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+          <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${escapeHtml(r.titre || r.nom || 'Rapport')}</td>
+          <td class="px-6 py-4">${escapeHtml(r.type || '—')}</td>
+          <td class="px-6 py-4">${r.date_creation || r.created_at ? new Date(r.date_creation || r.created_at).toLocaleDateString('fr-FR') : '—'}</td>
+          <td class="px-6 py-4 uppercase">${escapeHtml(r.format_fichier || '—')}</td>
+          <td class="px-6 py-4"><span class="rounded-full px-2 py-1 text-xs ${r.statut === 'soumis' || r.statut === 'valide' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}">${escapeHtml(r.statut || '—')}</span></td>
+          <td class="px-6 py-4 text-right">
+            <a href="details-rapport.html?id=${r.id}" class="text-brand-primary hover:underline text-sm font-medium">Voir</a>
+          </td>
+        </tr>`).join('')
+      : '<tr><td colspan="6" class="text-center py-10 text-gray-400">Aucun rapport.</td></tr>';
   }
 
   async function loadData() {
+    // Promise.allSettled plutôt que Promise.all : un rôle qui n'a par exemple
+    // pas captures:voir (Analyste de Données avant correction du rôle) ne doit
+    // pas empêcher l'affichage des rapports OMS eux-mêmes — chaque source de
+    // données est indépendante et se dégrade proprement si elle échoue.
+    const [capturesR, sitesR, mapDataR, omsReportsR, allReportsR] = await Promise.allSettled([
+      apiCaptures.list({ limit: 500 }),
+      apiSites.list({ limit: 200 }),
+      apiCartography.data(),
+      apiReports?.list?.({ type: 'oms' }) || [],
+      apiReports?.list?.() || [],
+    ]);
+    captures = capturesR.value || [];
+    sites = sitesR.value || [];
+    mapData = mapDataR.value || { sites: [], statistiques: {} };
+    omsReports = omsReportsR.value || [];
+    allReports = allReportsR.value || [];
+    mergedReports = [...(omsReports || []), ...(allReports || [])];
+
+    try { renderEntoStats(); } catch (err) { console.warn('[oms] stats', err); }
+    try { renderReportStats(); } catch (err) { console.warn('[oms] report-stats', err); }
+    try { renderCapturesTable(); } catch (err) { console.warn('[oms] table', err); }
+    try { renderReportsList(); } catch (err) { console.warn('[oms] reports-list', err); }
+    try { await Promise.all([renderMap(), renderTrend()]); } catch (err) { console.warn('[oms] charts', err); }
     try {
-      [captures, sites, mapData, omsReports, allReports] = await Promise.all([
-        apiCaptures.list({ limit: 500 }),
-        apiSites.list({ limit: 200 }),
-        apiCartography.data(),
-        apiReports?.list?.({ type: 'oms' }) || [],
-        apiReports?.list?.() || [],
-      ]);
-      mergedReports = [...(omsReports || []), ...(allReports || [])];
-      renderEntoStats();
-      renderReportStats();
-      renderCapturesTable();
-      renderReportsList();
-      await Promise.all([renderMap(), renderTrend()]);
       const parEspece = await apiDashboard.capturesParEspece();
       if (parEspece?.length) EntomoCharts?.doughnut('oms-espece-chart', parEspece.map(d => d.espece), parEspece.map(d => d.count));
-    } catch (err) { console.warn('[oms]', err); }
+    } catch (err) { console.warn('[oms] espece-chart', err); }
   }
 
-  document.querySelectorAll('[data-oms-filter]').forEach(btn => {
+  // Le bouton "Nouveau Rapport" n'avait aucun gestionnaire — il ne faisait
+  // rien au clic. Renvoie vers le générateur de rapports dédié.
+  document.getElementById('oms-generate-report')?.addEventListener('click', () => {
+    window.location.href = 'generateur-rapports.html';
+  });
+
+  // Les puces de filtre portent data-filter-type dans le HTML (pas
+  // data-oms-filter) — les gestionnaires ne s'attachaient donc jamais.
+  document.querySelectorAll('[data-filter-type]').forEach(btn => {
     btn.addEventListener('click', () => {
-      activeFilter = btn.dataset.omsFilter || 'all';
-      document.querySelectorAll('[data-oms-filter]').forEach(b => b.classList.remove('bg-brand-primary', 'text-white'));
-      btn.classList.add('bg-brand-primary', 'text-white');
+      activeFilter = btn.dataset.filterType || 'all';
+      document.querySelectorAll('[data-filter-type]').forEach(b => {
+        b.classList.remove('bg-brand-primary', 'text-white', 'border-brand-primary');
+        b.classList.add('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700');
+      });
+      btn.classList.remove('bg-white', 'dark:bg-gray-800', 'border-gray-200', 'dark:border-gray-700');
+      btn.classList.add('bg-brand-primary', 'text-white', 'border-brand-primary');
       renderReportsList();
     });
   });

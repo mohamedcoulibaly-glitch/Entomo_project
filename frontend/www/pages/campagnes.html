@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -85,179 +84,20 @@
                     </button>
                     <button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-brand-background dark:bg-gray-700 pl-4 pr-3 text-[#111418] dark:text-gray-200" id="filter-planifiees">
                         <p class="text-sm font-medium leading-normal">Planifiées</p>
-                        <span class="text-xs font-semibold bg-brand-alert-warning/10 text-brand-alert-warning px-1.5 py-0.5 rounded-full">2</span>
+                        <span class="text-xs font-semibold bg-brand-alert-warning/10 text-brand-alert-warning px-1.5 py-0.5 rounded-full" id="count-planifiees">0</span>
                     </button>
                     <button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-brand-background dark:bg-gray-700 pl-4 pr-3 text-[#111418] dark:text-gray-200" id="filter-en-cours">
                         <p class="text-sm font-medium leading-normal">En cours</p>
-                        <span class="text-xs font-semibold bg-brand-primary/10 text-brand-primary px-1.5 py-0.5 rounded-full">1</span>
+                        <span class="text-xs font-semibold bg-brand-primary/10 text-brand-primary px-1.5 py-0.5 rounded-full" id="count-en-cours">0</span>
                     </button>
                     <button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-brand-background dark:bg-gray-700 pl-4 pr-3 text-[#111418] dark:text-gray-200" id="filter-terminees">
                         <p class="text-sm font-medium leading-normal">Terminées</p>
-                        <span class="text-xs font-semibold bg-brand-success/10 text-brand-success px-1.5 py-0.5 rounded-full">3</span>
+                        <span class="text-xs font-semibold bg-brand-success/10 text-brand-success px-1.5 py-0.5 rounded-full" id="count-terminees">0</span>
                     </button>
                 </div>
 
                 <div id="campagnes-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-semibold bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded-full">En cours</span>
-                            <span class="text-xs text-gray-400">CMP-001</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#111418] dark:text-white mb-2">Campagne IRS Saison Humide 2025</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Pulvérisation intra-domiciliaire dans les régions à haute transmission.</p>
-                        <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                            <span class="material-symbols-outlined text-sm">calendar_month</span>
-                            <span>01/06/2025 - 31/08/2025</span>
-                        </div>
-                        <div class="mb-3">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="text-gray-500 dark:text-gray-400">Progression</span>
-                                <span class="font-semibold text-[#111418] dark:text-white">45%</span>
-                            </div>
-                            <div class="w-full h-2 rounded-full bg-gray-200 dark:bg-gray-700">
-                                <div class="h-2 rounded-full bg-brand-primary" style="width: 45%"></div>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="flex items-center gap-1 h-8 px-3 text-xs rounded bg-brand-success/10 text-brand-success hover:bg-brand-success/20 font-semibold" id="btn-term-camp-1">Terminer</button>
-                            <button class="flex items-center gap-1 h-8 px-3 text-xs rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 font-semibold" id="btn-modif-camp-1">Modifier</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-semibold bg-brand-alert-warning/10 text-brand-alert-warning px-2 py-0.5 rounded-full">Planifiée</span>
-                            <span class="text-xs text-gray-400">CMP-002</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#111418] dark:text-white mb-2">Distribution MII Région Sud</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Distribution de moustiquaires imprégnées à Kédougou et Kolda.</p>
-                        <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                            <span class="material-symbols-outlined text-sm">calendar_month</span>
-                            <span>01/09/2025 - 30/09/2025</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="flex items-center gap-1 h-8 px-3 text-xs rounded bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20 font-semibold" id="btn-demarrer-camp-2">Démarrer</button>
-                            <button class="flex items-center gap-1 h-8 px-3 text-xs rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 font-semibold">Modifier</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 opacity-75">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-semibold bg-brand-success/10 text-brand-success px-2 py-0.5 rounded-full">Terminée</span>
-                            <span class="text-xs text-gray-400">CMP-003</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#111418] dark:text-white mb-2">Surveillance Larvaire Q1 2025</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Collecte de données larvaires dans les sites sentinelles.</p>
-                        <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                            <span class="material-symbols-outlined text-sm">calendar_month</span>
-                            <span>01/01/2025 - 31/03/2025</span>
-                        </div>
-                        <div class="mb-3">
-                            <div class="w-full h-2 rounded-full bg-gray-200 dark:bg-gray-700">
-                                <div class="h-2 rounded-full bg-brand-success" style="width: 100%"></div>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="flex items-center gap-1 h-8 px-3 text-xs rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 font-semibold">Voir rapport</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 opacity-75">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-semibold bg-brand-success/10 text-brand-success px-2 py-0.5 rounded-full">Terminée</span>
-                            <span class="text-xs text-gray-400">CMP-004</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#111418] dark:text-white mb-2">Formation Entomologistes</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Formation à l'identification morphologique des Anophèles.</p>
-                        <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                            <span class="material-symbols-outlined text-sm">calendar_month</span>
-                            <span>15/03/2025 - 20/03/2025</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="flex items-center gap-1 h-8 px-3 text-xs rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 font-semibold">Voir rapport</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 opacity-75">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-semibold bg-brand-success/10 text-brand-success px-2 py-0.5 rounded-full">Terminée</span>
-                            <span class="text-xs text-gray-400">CMP-005</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#111418] dark:text-white mb-2">Collecte Saison Sèche 2025</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Campagne de capture dans les zones à risque.</p>
-                        <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                            <span class="material-symbols-outlined text-sm">calendar_month</span>
-                            <span>01/04/2025 - 31/05/2025</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="flex items-center gap-1 h-8 px-3 text-xs rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 font-semibold">Voir rapport</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-semibold bg-brand-alert-warning/10 text-brand-alert-warning px-2 py-0.5 rounded-full">Planifiée</span>
-                            <span class="text-xs text-gray-400">CMP-006</span>
-                        </div>
-                        <h3 class="text-base font-bold text-[#111418] dark:text-white mb-2">Évaluation Résistance Insecticides</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Tests de résistance aux insecticides dans 5 régions.</p>
-                        <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                            <span class="material-symbols-outlined text-sm">calendar_month</span>
-                            <span>01/10/2025 - 30/11/2025</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="flex items-center gap-1 h-8 px-3 text-xs rounded bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20 font-semibold">Démarrer</button>
-                            <button class="flex items-center gap-1 h-8 px-3 text-xs rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 font-semibold">Modifier</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-                    <h3 class="text-lg font-bold text-[#111418] dark:text-white mb-4">Nouvelle Campagne</h3>
-                    <form id="form-nouvelle-campagne" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="camp-titre">Titre</label>
-                            <input class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="camp-titre" placeholder="Titre de la campagne" />
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="camp-type">Type</label>
-                            <select class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="camp-type">
-                                <option>IRS</option>
-                                <option>MII</option>
-                                <option>Traitement larvicide</option>
-                                <option>Surveillance</option>
-                                <option>Formation</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="camp-region">Région</label>
-                            <select class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="camp-region">
-                                <option>Dakar</option>
-                                <option>Tambacounda</option>
-                                <option>Kédougou</option>
-                                <option>Kolda</option>
-                                <option>Matam</option>
-                                <option>Toutes les régions</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="camp-date-debut">Date début</label>
-                            <input type="date" class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="camp-date-debut" />
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="camp-date-fin">Date fin</label>
-                            <input type="date" class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="camp-date-fin" />
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="camp-responsable">Responsable</label>
-                            <input class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="camp-responsable" placeholder="Nom du responsable" />
-                        </div>
-                    </form>
-                    <div class="flex justify-end mt-4">
-                        <button type="button" class="flex h-10 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-brand-primary px-6 text-sm font-bold leading-normal text-white" id="btn-creer-campagne">
-                            <span class="material-symbols-outlined text-lg">add</span> Créer la campagne
-                        </button>
-                    </div>
+                    <div class="col-span-full text-center py-10 text-gray-400">Chargement…</div>
                 </div>
 
             </div>
@@ -265,14 +105,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js?v=7"></script>
-    <script src="../js/campagnes.js?v=20260922"></script>
+    <script src="../js/campagnes.js?v=20260924c"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

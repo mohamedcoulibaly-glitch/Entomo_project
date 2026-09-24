@@ -98,6 +98,15 @@ document.addEventListener('DOMContentLoaded', () => {
     hideSections();
   }
 
+  // Comme clearFile() mais sans ré-appliquer 'hidden' au résultat/erreurs :
+  // utilisée après un import réussi, pour ne pas faire disparaître le
+  // résultat qui vient tout juste d'être affiché à l'utilisateur.
+  function resetFileSelection() {
+    selectedFile = null;
+    if (fileInfo) fileInfo.innerHTML = '';
+    if (fileInput) fileInput.value = '';
+  }
+
   function hideSections() {
     if (progressSection) progressSection.classList.add('hidden');
     if (resultSection) resultSection.classList.add('hidden');
@@ -226,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pushNotification('Erreur lors de l\'importation.', 'error');
       }
 
-      clearFile();
+      resetFileSelection();
       loadHistory();
     });
   }

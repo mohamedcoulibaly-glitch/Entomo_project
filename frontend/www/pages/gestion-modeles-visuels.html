@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -79,7 +78,7 @@
 <span class="material-symbols-outlined">stop_circle</span>
 <span class="truncate">Arrêter</span>
 </button>
-<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-x-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center gap-x-2 overflow-hidden rounded-lg h-10 px-4 bg-brand-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
 <span class="material-symbols-outlined">play_circle</span>
 <span class="truncate">Lancer l'entraînement</span>
 </button>
@@ -92,7 +91,7 @@
 <div class="p-5 flex flex-col gap-4">
 <label class="flex flex-col w-full">
 <p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Projet/Modèle</p>
-<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3 text-base font-normal leading-normal">
+<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-brand-primary h-12 p-3 text-base font-normal leading-normal">
 <option>MosquitoNet-v3</option>
 <option>Anopheles-Detector-2024</option>
 <option>Créer un nouveau modèle</option>
@@ -100,11 +99,11 @@
 </label>
 <label class="flex flex-col w-full">
 <p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Description du Modèle</p>
-<textarea class="form-textarea flex w-full min-w-0 resize-y overflow-hidden rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary min-h-24 p-3 text-base font-normal leading-normal placeholder-gray-400 dark:placeholder:text-[#9dabb9]">Modèle de détection d'espèces basé sur YOLOv8.</textarea>
+<textarea class="form-textarea flex w-full min-w-0 resize-y overflow-hidden rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-brand-primary min-h-24 p-3 text-base font-normal leading-normal placeholder-gray-400 dark:placeholder:text-[#9dabb9]">Modèle de détection d'espèces basé sur YOLOv8.</textarea>
 </label>
 <label class="flex flex-col w-full">
 <p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Architecture</p>
-<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3 text-base font-normal leading-normal">
+<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-brand-primary h-12 p-3 text-base font-normal leading-normal">
 <option>YOLOv8</option>
 <option>ResNet50</option>
 <option>EfficientNet</option>
@@ -117,15 +116,15 @@
 <div class="p-5 grid grid-cols-2 gap-4">
 <label class="flex flex-col">
 <p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Époques</p>
-<input class="form-input flex w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3" type="number" value="50"/>
+<input class="form-input flex w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-brand-primary h-12 p-3" type="number" value="50"/>
 </label>
 <label class="flex flex-col">
 <p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Batch Size</p>
-<input class="form-input flex w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3" type="number" value="32"/>
+<input class="form-input flex w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-brand-primary h-12 p-3" type="number" value="32"/>
 </label>
 <label class="flex flex-col col-span-2">
 <p class="text-gray-800 dark:text-white text-base font-medium leading-normal pb-2">Learning Rate</p>
-<input class="form-input flex w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-12 p-3" type="text" value="0.001"/>
+<input class="form-input flex w-full rounded-lg text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-brand-primary h-12 p-3" type="text" value="0.001"/>
 </label>
 </div>
 </div>
@@ -168,14 +167,14 @@
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-gray-500 dark:text-gray-400">filter_alt</span>
 <p class="text-gray-800 dark:text-white text-sm font-medium">Filtres:</p>
-<select aria-label="Filtrer par catégorie" class="form-select flex min-w-0 resize-none overflow-hidden rounded-md text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-9 px-3 text-sm font-normal">
+<select aria-label="Filtrer par catégorie" class="form-select flex min-w-0 resize-none overflow-hidden rounded-md text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-brand-primary h-9 px-3 text-sm font-normal">
 <option>Toutes espèces</option>
 <option>An. gambiae</option>
 <option>An. funestus</option>
 <option>Aedes aegypti</option>
 <option>Culex</option>
 </select>
-<select aria-label="Filtrer par catégorie" class="form-select flex min-w-0 resize-none overflow-hidden rounded-md text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-primary h-9 px-3 text-sm font-normal">
+<select aria-label="Filtrer par catégorie" class="form-select flex min-w-0 resize-none overflow-hidden rounded-md text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-[#3b4754] bg-background-light dark:bg-[#1c2127] focus:border-brand-primary h-9 px-3 text-sm font-normal">
 <option>Tout sexe</option>
 <option>Mâle</option>
 <option>Femelle</option>
@@ -218,11 +217,11 @@
 </div>
 </div>
 <div class="mt-6 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
-<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" alt="Annotated image of an Anopheles gambiae mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3zbkE3m8fmiCPTm7VCsLn2LVFlsFrwm52Y-SMU0mYdErDNv004Uni72un6p86twU0q6Sk2lkj2-5cdfEVDkZdkT-HPtj-Qlz5lrAOTdbfny-WGDJzzOb8jFZjb5-FRo5S0uQuYPQ_PATj-_l5edu_mvv74H44rinA0ETF_FWJTtOeYc_2YoR53eqldR49C9iiOS1Cv1DVnLbxpBuTUijLmVjyEi7bbf9kgJgY4t7UShYqLJLYLHQqXKgdZ__2KQpEMFuPvvCnIg"/>
-<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" alt="Annotated image of a Culex mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZbIDmtD-TyQZkoiCSBrzKRD3bJzZDsNZGmbFQIWXchLPQo_tEoQC0kYE9uFjfLYArRuDiEKJHtJOrcyUX-upnLd4yiVI-D3mY-HJ0usPj2Z_fsPbu5uxRdiovpTmuTbeWvmXn4AObfPinZjjjDMCtQ1Og4MLvr46Et5CWTRHCi1JDy48SXc8G-W-BmD4bvLeYZZkvCxrF8VKpaa8Lud-MthdC-gtcaiDXo47JBWIDxLNNlpj9lVF4JNJLpjJiKrXoU2bYD5AZ1g"/>
-<img class="aspect-square w-full rounded-md object-cover border-2 border-primary transition-all duration-200 cursor-pointer ring-2 ring-primary" alt="Annotated image of an Aedes aegypti mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAelJFFIZy5KrzALVpxr9XZloaVU3M7AvcQ0ZOyOOKxkKan8oZ4-3aycLyTO8UVOr89VTpGzdBVo4oa88u_9uPf_hdix1uT06xHLhxoeqJMuztCSoOylSBf0fpvKKaN_8Cbp_9-kP-5hoUfAmGvUtwRe2lPTss2jRoXBI5CVmXnEl3W02SyydzrhM-WNOiecjPcut7DXj5Hh1zPwqfvjcYplErSqxxnVPaYrKyKbKNBYCgwccUe-4DwaLmmjq1Dsrh3I3ep2x2wpg"/>
-<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" alt="Annotated image of an Anopheles funestus mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA0HxzRV8BOBJf2pUJRS6yhqGW0-_df5XP_JlLyeHE3rzynAL2lHj3siPwN9Xw84VQ2v_k6-tg8ywLqNruvBfTbuQ7iAlcAlUS45toKmHX3y4bCFqQV5DlNnTySd7NY18P4KWxDEPCfK4U3tS8EykQgOs75hMBQqw57RgFJ7zGT4Hb9nFJUrA7H_1wurxtMLvuPlRAK3M0HL2TNJngRuDtk05A_BTjOE24XG7ARpaHBiVDJdzscF4YeAdFUjV0EJJKZUSheLIOhQ"/>
-<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-primary transition-all duration-200 cursor-pointer" alt="Annotated image of a mosquito larva." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAShOA4OjgrlwhETrRJjhBHE0glWhLfChL-loMDcREsMY7Utfgwn3di5_hC_5LRVOGkHjyKOgWZa55SD6IxS-eb-3J2dUoSrhA10FDFDZOtvezRCO1OA1vRq2VvIjwo577tzVfjs6YDCdV7VM_5uUK3u8RlOhnQPnXhA-ALiHnzq0upozhW5DjjqDtn9iUPym_Ln0TOPHYnOBlBhU616xjo3GfEmrJcf5tDgYrxV-moLul6zHNE8wgSG403fgPfv-zn6y7J_VFwQw"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-brand-primary transition-all duration-200 cursor-pointer" alt="Annotated image of an Anopheles gambiae mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3zbkE3m8fmiCPTm7VCsLn2LVFlsFrwm52Y-SMU0mYdErDNv004Uni72un6p86twU0q6Sk2lkj2-5cdfEVDkZdkT-HPtj-Qlz5lrAOTdbfny-WGDJzzOb8jFZjb5-FRo5S0uQuYPQ_PATj-_l5edu_mvv74H44rinA0ETF_FWJTtOeYc_2YoR53eqldR49C9iiOS1Cv1DVnLbxpBuTUijLmVjyEi7bbf9kgJgY4t7UShYqLJLYLHQqXKgdZ__2KQpEMFuPvvCnIg"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-brand-primary transition-all duration-200 cursor-pointer" alt="Annotated image of a Culex mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZbIDmtD-TyQZkoiCSBrzKRD3bJzZDsNZGmbFQIWXchLPQo_tEoQC0kYE9uFjfLYArRuDiEKJHtJOrcyUX-upnLd4yiVI-D3mY-HJ0usPj2Z_fsPbu5uxRdiovpTmuTbeWvmXn4AObfPinZjjjDMCtQ1Og4MLvr46Et5CWTRHCi1JDy48SXc8G-W-BmD4bvLeYZZkvCxrF8VKpaa8Lud-MthdC-gtcaiDXo47JBWIDxLNNlpj9lVF4JNJLpjJiKrXoU2bYD5AZ1g"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-brand-primary transition-all duration-200 cursor-pointer ring-2 ring-brand-primary" alt="Annotated image of an Aedes aegypti mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAelJFFIZy5KrzALVpxr9XZloaVU3M7AvcQ0ZOyOOKxkKan8oZ4-3aycLyTO8UVOr89VTpGzdBVo4oa88u_9uPf_hdix1uT06xHLhxoeqJMuztCSoOylSBf0fpvKKaN_8Cbp_9-kP-5hoUfAmGvUtwRe2lPTss2jRoXBI5CVmXnEl3W02SyydzrhM-WNOiecjPcut7DXj5Hh1zPwqfvjcYplErSqxxnVPaYrKyKbKNBYCgwccUe-4DwaLmmjq1Dsrh3I3ep2x2wpg"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-brand-primary transition-all duration-200 cursor-pointer" alt="Annotated image of an Anopheles funestus mosquito." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA0HxzRV8BOBJf2pUJRS6yhqGW0-_df5XP_JlLyeHE3rzynAL2lHj3siPwN9Xw84VQ2v_k6-tg8ywLqNruvBfTbuQ7iAlcAlUS45toKmHX3y4bCFqQV5DlNnTySd7NY18P4KWxDEPCfK4U3tS8EykQgOs75hMBQqw57RgFJ7zGT4Hb9nFJUrA7H_1wurxtMLvuPlRAK3M0HL2TNJngRuDtk05A_BTjOE24XG7ARpaHBiVDJdzscF4YeAdFUjV0EJJKZUSheLIOhQ"/>
+<img class="aspect-square w-full rounded-md object-cover border-2 border-transparent hover:border-brand-primary transition-all duration-200 cursor-pointer" alt="Annotated image of a mosquito larva." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAShOA4OjgrlwhETrRJjhBHE0glWhLfChL-loMDcREsMY7Utfgwn3di5_hC_5LRVOGkHjyKOgWZa55SD6IxS-eb-3J2dUoSrhA10FDFDZOtvezRCO1OA1vRq2VvIjwo577tzVfjs6YDCdV7VM_5uUK3u8RlOhnQPnXhA-ALiHnzq0upozhW5DjjqDtn9iUPym_Ln0TOPHYnOBlBhU616xjo3GfEmrJcf5tDgYrxV-moLul6zHNE8wgSG403fgPfv-zn6y7J_VFwQw"/>
 <div class="aspect-square w-full rounded-md bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer text-sm">+986</div>
 </div>
 </div>
@@ -235,11 +234,11 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../js/gestion-modeles-visuels.js?v=20260922"></script>

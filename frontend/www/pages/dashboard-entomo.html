@@ -24,7 +24,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -186,14 +185,14 @@
 <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
 <h3 class="text-lg font-bold text-[#111418] dark:text-white">Évolution de la Densité des Vecteurs</h3>
 <div class="flex items-center gap-2 p-1 rounded-lg bg-brand-background dark:bg-gray-700">
-<button class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">1S</button>
-<button class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">1M</button>
-<button class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">3M</button>
-<button class="px-3 py-1 text-sm font-semibold rounded-md bg-white dark:bg-gray-600 text-brand-primary dark:text-white shadow-sm">1A</button>
-<button class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">Max</button>
+<button data-period="1S" class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">1S</button>
+<button data-period="1M" class="px-3 py-1 text-sm font-semibold rounded-md bg-white dark:bg-gray-600 text-brand-primary dark:text-white shadow-sm">1M</button>
+<button data-period="3M" class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">3M</button>
+<button data-period="1A" class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">1A</button>
+<button data-period="Max" class="px-3 py-1 text-sm font-semibold rounded-md text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-white">Max</button>
 </div>
 </div>
-<canvas id="chart-site" width="800" height="300" class="w-full"></canvas>
+<canvas id="chart-evolution" width="800" height="300" class="w-full"></canvas>
 </div>
 </div>
 </div>
@@ -202,16 +201,16 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../vendor/chart.js/chart.umd.min.js"></script>
     <script src="../vendor/leaflet/leaflet.js"></script>
-    <script src="../js/utils/analytics-charts.js?v=4"></script>
+    <script src="../js/utils/analytics-charts.js?v=20260922fix"></script>
     <script src="../js/utils/analytics-maps.js"></script>
     <script src="../js/dashboard-entomo.js"></script>
     <!-- /Ento-App Scripts -->

@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -94,15 +93,15 @@
 <h3 class="font-semibold mb-2 dark:text-gray-200">Indicateurs OMS</h3>
 <div data-indicators-container class="space-y-2 text-sm" style="--checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(255,255,255)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');">
 <label class="flex items-center gap-x-3 py-1">
-<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-300 dark:focus:border-gray-600 focus:outline-none" type="checkbox"/>
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-transparent text-brand-primary checked:bg-brand-primary checked:border-brand-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-300 dark:focus:border-gray-600 focus:outline-none" type="checkbox"/>
 <p class="text-[#111418] dark:text-gray-300">Densité anophélienne</p>
 </label>
 <label class="flex items-center gap-x-3 py-1">
-<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-300 dark:focus:border-gray-600 focus:outline-none" type="checkbox"/>
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-transparent text-brand-primary checked:bg-brand-primary checked:border-brand-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-300 dark:focus:border-gray-600 focus:outline-none" type="checkbox"/>
 <p class="text-[#111418] dark:text-gray-300">Taux de piqûre humaine</p>
 </label>
 <label class="flex items-center gap-x-3 py-1">
-<input class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-300 dark:focus:border-gray-600 focus:outline-none" type="checkbox"/>
+<input class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-transparent text-brand-primary checked:bg-brand-primary checked:border-brand-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-300 dark:focus:border-gray-600 focus:outline-none" type="checkbox"/>
 <p class="text-[#111418] dark:text-gray-300">Taux de sporozoïtes</p>
 </label>
 </div>
@@ -112,7 +111,7 @@
 <h3 class="font-semibold mb-3 dark:text-gray-200">Filtres Géographiques</h3>
 <div class="space-y-4">
 <div class="relative">
-<select id="report-region" class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary">
+<select id="report-region" class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-brand-primary focus:border-brand-primary">
 <option>Toutes les régions</option>
 <option>Dakar</option>
 <option>Thiès</option>
@@ -120,7 +119,7 @@
 <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
 </div>
 <div class="relative">
-<select id="report-district" class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary">
+<select id="report-district" class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-brand-primary focus:border-brand-primary">
 <option>Tous les districts</option>
 </select>
 <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
@@ -131,7 +130,7 @@
 <div>
 <h3 class="font-semibold mb-3 dark:text-gray-200">Format de sortie</h3>
 <div class="relative">
-<select id="report-format" class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary">
+<select id="report-format" class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-brand-primary focus:border-brand-primary">
 <option>PDF</option>
 <option>CSV</option>
 <option>Excel</option>
@@ -156,7 +155,7 @@
 <div class="bg-white dark:bg-background-dark rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-6 sticky top-8">
 <div>
 <h3 class="font-semibold mb-3 dark:text-gray-200">Génération</h3>
-<button id="report-generate" class="w-full flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90">
+<button id="report-generate" class="w-full flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-brand-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-brand-primary/90">
 <span class="material-symbols-outlined mr-2">download</span>
 <span class="truncate">Générer le rapport</span>
 </button>
@@ -167,16 +166,16 @@
 <div class="space-y-4">
 <div>
 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="report-name">Nom du rapport</label>
-<input class="w-full h-10 px-4 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary" id="report-name" placeholder="Rapport Mensuel - Dakar" type="text"/>
+<input class="w-full h-10 px-4 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-brand-primary focus:border-brand-primary" id="report-name" placeholder="Rapport Mensuel - Dakar" type="text"/>
 </div>
 <div>
 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="report-email">Email du destinataire</label>
-<input class="w-full h-10 px-4 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary" id="report-email" placeholder="exemple@sante.sn" type="email"/>
+<input class="w-full h-10 px-4 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-brand-primary focus:border-brand-primary" id="report-email" placeholder="exemple@sante.sn" type="email"/>
 </div>
 <div>
 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="report-frequency">Fréquence</label>
 <div class="relative">
-<select class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-primary focus:border-primary" id="report-frequency">
+<select class="w-full appearance-none h-10 px-4 pr-8 bg-background-light dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-[#111418] dark:text-white focus:ring-brand-primary focus:border-brand-primary" id="report-frequency">
 <option>Hebdomadaire</option>
 <option>Mensuel</option>
 <option>Trimestriel</option>
@@ -184,7 +183,7 @@
 <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
 </div>
 </div>
-<button id="report-schedule" class="w-full flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-primary/20 dark:bg-primary/30 text-primary dark:text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/30 dark:hover:bg-primary/40">
+<button id="report-schedule" class="w-full flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-brand-primary/20 dark:bg-brand-primary/30 text-brand-primary dark:text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-brand-primary/30 dark:hover:bg-brand-primary/40">
 <span class="material-symbols-outlined mr-2">event</span>
 <span class="truncate">Enregistrer et Planifier</span>
 </button>
@@ -199,14 +198,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/generateur-rapports.js"></script>
+    <script src="../js/generateur-rapports.js?v=20260922z"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

@@ -15,12 +15,14 @@ def list_interventions(
     skip: int = 0, limit: int = 100,
     statut: Optional[str] = Query(None),
     site_id: Optional[int] = Query(None),
+    campagne_id: Optional[int] = Query(None),
     db: Session = Depends(get_db), _: User = Depends(get_current_active_user)
 ):
     from app.models.intervention import Intervention
     query = db.query(Intervention)
     if statut: query = query.filter(Intervention.statut == statut)
     if site_id: query = query.filter(Intervention.site_id == site_id)
+    if campagne_id: query = query.filter(Intervention.campagne_id == campagne_id)
     return query.order_by(Intervention.date_prevue.desc()).offset(skip).limit(limit).all()
 
 @router.post("/", response_model=InterventionResponse)

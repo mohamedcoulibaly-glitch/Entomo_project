@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="../css/tailwind.min.css" />
     <link rel="stylesheet" href="../css/design-tokens.css?v=20260903" />
+    <link rel="stylesheet" href="../vendor/leaflet/leaflet.css" />
 <style type="text/tailwindcss">
         @layer base {
             .material-symbols-outlined {
@@ -25,7 +26,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -76,7 +76,7 @@
 <h1 class="text-gray-900 dark:text-white text-3xl font-bold leading-tight">Gestion des Sites Sentinelles</h1>
 <p class="text-gray-600 dark:text-[#9dabb9] text-base font-normal leading-normal">Créer, visualiser, modifier et archiver les sites de surveillance.</p>
 </div>
-<button id="btn-nouveau-site" class="flex items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<button id="btn-nouveau-site" class="flex items-center justify-center gap-2 overflow-hidden rounded-lg h-10 px-4 bg-brand-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-brand-primary/90 transition-colors">
 <span class="material-symbols-outlined text-xl">add</span>
 <span class="truncate">Nouveau Site</span>
 </button>
@@ -84,41 +84,11 @@
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 <div class="xl:col-span-1">
 <div class="bg-gray-200 dark:bg-[#111418] p-4 rounded-xl shadow-sm h-full flex flex-col gap-4">
-<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg object-cover" data-alt="Map of Senegal showing various surveillance sites as markers." data-location="Senegal" ></div>
+<div id="sites-map" class="w-full aspect-video rounded-lg overflow-hidden z-0"></div>
 <div class="flex-grow flex flex-col">
-<h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Historique du Site : <span class="font-medium">Site Kédougou-1</span></h2>
+<h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Historique du Site : <span class="font-medium" id="site-history-title">—</span></h2>
 <div class="flex-grow space-y-4 pr-2 overflow-y-auto">
-<div class="relative pl-6">
-<div class="absolute left-0 top-1 h-full w-0.5 bg-gray-300 dark:bg-gray-700"></div>
-<div class="absolute left-[-5px] top-1.5 w-3 h-3 rounded-full bg-primary"></div>
-<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">Création du site</p>
-<p class="text-xs text-gray-500 dark:text-gray-400">12 Jan 2023 par Dr. A. Fall</p>
-</div>
-<div class="relative pl-6">
-<div class="absolute left-0 top-1 h-full w-0.5 bg-gray-300 dark:bg-gray-700"></div>
-<div class="absolute left-[-5px] top-1.5 w-3 h-3 rounded-full bg-green-500"></div>
-<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">Pose de piège CDC</p>
-<p class="text-xs text-gray-500 dark:text-gray-400">15 Fév 2023 par I. Diallo</p>
-<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Campagne : SAISON-PLUIES-23</p>
-</div>
-<div class="relative pl-6">
-<div class="absolute left-0 top-1 h-full w-0.5 bg-gray-300 dark:bg-gray-700"></div>
-<div class="absolute left-[-5px] top-1.5 w-3 h-3 rounded-full bg-yellow-500"></div>
-<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">Modification des coordonnées</p>
-<p class="text-xs text-gray-500 dark:text-gray-400">02 Mar 2023 par Dr. A. Fall</p>
-</div>
-<div class="relative pl-6">
-<div class="absolute left-0 top-1 h-full w-0.5 bg-gray-300 dark:bg-gray-700"></div>
-<div class="absolute left-[-5px] top-1.5 w-3 h-3 rounded-full bg-red-500"></div>
-<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">Retrait de piège CDC</p>
-<p class="text-xs text-gray-500 dark:text-gray-400">18 Mar 2023 par I. Diallo</p>
-</div>
-<div class="relative pl-6">
-<div class="absolute left-[-5px] top-1.5 w-3 h-3 rounded-full bg-green-500"></div>
-<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">Pose de piège BG-Sentinel</p>
-<p class="text-xs text-gray-500 dark:text-gray-400">25 Avr 2023 par F. Ndiaye</p>
-<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Campagne : ETUDE-VECTEUR-23</p>
-</div>
+<p class="text-sm text-gray-400 text-center py-4">Chargement…</p>
 </div>
 </div>
 </div>
@@ -131,43 +101,31 @@
 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
 <span class="material-symbols-outlined text-gray-400 dark:text-[#9dabb9]">search</span>
 </div>
-<input class="form-input block w-full p-3 pl-10 text-sm text-gray-900 border-none rounded-lg bg-gray-300 dark:bg-[#283039] placeholder:text-gray-500 dark:placeholder:text-[#9dabb9] dark:text-white focus:ring-primary focus:border-primary" id="search-sites" placeholder="Rechercher par nom ou commentaires..." type="text"/>
+<input class="form-input block w-full p-3 pl-10 text-sm text-gray-900 border-none rounded-lg bg-gray-300 dark:bg-[#283039] placeholder:text-gray-500 dark:placeholder:text-[#9dabb9] dark:text-white focus:ring-brand-primary focus:border-brand-primary" id="search-sites" placeholder="Rechercher par nom ou commentaires..." type="text"/>
 </div>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 <div>
 <label class="sr-only" for="region-filter">Région</label>
-<select class="form-select w-full border-none text-sm rounded-lg bg-gray-300 dark:bg-[#283039] text-gray-900 dark:text-white focus:ring-primary focus:border-primary" id="region-filter">
-<option selected="">Toutes les régions</option>
-<option value="dakar">Dakar</option>
-<option value="kedougou">Kédougou</option>
-<option value="thies">Thiès</option>
-<option value="saint-louis">Saint-Louis</option>
-</select>
-</div>
-<div>
-<label class="sr-only" for="district-filter">District</label>
-<select class="form-select w-full border-none text-sm rounded-lg bg-gray-300 dark:bg-[#283039] text-gray-900 dark:text-white focus:ring-primary focus:border-primary" id="district-filter">
-<option selected="">Tous les districts</option>
-<option value="dakar-centre">Dakar Centre</option>
-<option value="pikine">Pikine</option>
-<option value="mbour">Mbour</option>
+<select class="form-select w-full border-none text-sm rounded-lg bg-gray-300 dark:bg-[#283039] text-gray-900 dark:text-white focus:ring-brand-primary focus:border-brand-primary" id="region-filter">
+<option value="" selected="">Toutes les régions</option>
 </select>
 </div>
 <div>
 <label class="sr-only" for="zone-type-filter">Type de Zone</label>
-<select class="form-select w-full border-none text-sm rounded-lg bg-gray-300 dark:bg-[#283039] text-gray-900 dark:text-white focus:ring-primary focus:border-primary" id="zone-type-filter">
-<option selected="">Tous types</option>
-<option value="urbaine">Urbaine</option>
-<option value="rurale">Rurale</option>
+<select class="form-select w-full border-none text-sm rounded-lg bg-gray-300 dark:bg-[#283039] text-gray-900 dark:text-white focus:ring-brand-primary focus:border-brand-primary" id="zone-type-filter">
+<option value="" selected="">Tous types</option>
+</select>
+</div>
+<div>
+<label class="sr-only" for="district-filter">District</label>
+<select class="form-select w-full border-none text-sm rounded-lg bg-gray-300 dark:bg-[#283039] text-gray-900 dark:text-white focus:ring-brand-primary focus:border-brand-primary" id="district-filter">
+<option value="" selected="">Tous les districts</option>
 </select>
 </div>
 <div>
 <label class="sr-only" for="environment-filter">Environnement</label>
-<select class="form-select w-full border-none text-sm rounded-lg bg-gray-300 dark:bg-[#283039] text-gray-900 dark:text-white focus:ring-primary focus:border-primary" id="environment-filter">
-<option selected="">Tous environnements</option>
-<option value="forestier">Forestier</option>
-<option value="savan">Savane</option>
-<option value="cotier">Côtier</option>
+<select class="form-select w-full border-none text-sm rounded-lg bg-gray-300 dark:bg-[#283039] text-gray-900 dark:text-white focus:ring-brand-primary focus:border-brand-primary" id="environment-filter">
+<option value="" selected="">Tous environnements</option>
 </select>
 </div>
 </div>
@@ -184,75 +142,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="border-b bg-blue-100 dark:bg-primary/20 dark:border-gray-700 cursor-pointer">
-<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" scope="row">Site Kédougou-1</th>
-<td class="px-6 py-4">Rurale</td>
-<td class="px-6 py-4">Kédougou</td>
-<td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Actif</span></td>
-<td class="px-6 py-4 text-right">
-<div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="details-site.html?id=1"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=1&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
-</div>
-</td>
-</tr>
-<tr class="border-b bg-transparent dark:border-gray-700 hover:bg-gray-300/50 dark:hover:bg-gray-600/20 transition-colors cursor-pointer">
-<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" scope="row">Site Dakar-Urbain-3</th>
-<td class="px-6 py-4">Urbaine</td>
-<td class="px-6 py-4">Dakar</td>
-<td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Actif</span></td>
-<td class="px-6 py-4 text-right">
-<div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="details-site.html?id=2"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=2&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
-</div>
-</td>
-</tr>
-<tr class="border-b bg-transparent dark:border-gray-700 hover:bg-gray-300/50 dark:hover:bg-gray-600/20 transition-colors cursor-pointer">
-<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" scope="row">Poste de Santé Richard-Toll</th>
-<td class="px-6 py-4">Rurale</td>
-<td class="px-6 py-4">Saint-Louis</td>
-<td class="px-6 py-4"><span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-300">Archivé</span></td>
-<td class="px-6 py-4 text-right">
-<div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="details-site.html?id=3"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=3&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
-</div>
-</td>
-</tr>
-<tr class="border-b bg-transparent dark:border-gray-700 hover:bg-gray-300/50 dark:hover:bg-gray-600/20 transition-colors cursor-pointer">
-<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" scope="row">Centre Mbour-2</th>
-<td class="px-6 py-4">Urbaine</td>
-<td class="px-6 py-4">Thiès</td>
-<td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Actif</span></td>
-<td class="px-6 py-4 text-right">
-<div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="details-site.html?id=4"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=4&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
-</div>
-</td>
-</tr>
-<tr class="bg-transparent hover:bg-gray-300/50 dark:hover:bg-gray-600/20 transition-colors cursor-pointer">
-<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" scope="row">Village de Tamba-Est</th>
-<td class="px-6 py-4">Rurale</td>
-<td class="px-6 py-4">Tambacounda</td>
-<td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Actif</span></td>
-<td class="px-6 py-4 text-right">
-<div class="flex gap-4 justify-end">
-<a class="font-medium text-primary hover:underline" href="details-site.html?id=5"><span class="material-symbols-outlined text-xl">edit</span></a>
-<a class="font-medium text-red-500 hover:underline" href="details-site.html?id=5&action=archive"><span class="material-symbols-outlined text-xl">archive</span></a>
-</div>
-</td>
-</tr>
+<tr><td colspan="5" class="text-center py-10 text-gray-400">Chargement…</td></tr>
 </tbody>
 </table>
 </div>
 <nav aria-label="Table navigation" class="flex items-center flex-wrap md:flex-row justify-between pt-4">
-<span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Affichage de <span class="font-semibold text-gray-900 dark:text-white">1-5</span> sur <span class="font-semibold text-gray-900 dark:text-white">100</span></span>
+<span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Affichage de <span class="font-semibold text-gray-900 dark:text-white">1-5</span> sur <span class="font-semibold text-gray-900 dark:text-white">5</span></span>
 <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
 <li><a class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="?page=prev">Précédent</a></li>
 <li><a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="?page=1">1</a></li>
-<li><a class="flex items-center justify-center px-3 h-8 text-primary border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white" href="?page=2">2</a></li>
+<li><a class="flex items-center justify-center px-3 h-8 text-brand-primary border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white" href="?page=2">2</a></li>
 <li><a class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" href="?page=next">Suivant</a></li>
 </ul>
 </nav>
@@ -265,14 +164,15 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/gestion-sites.js?v=20260922"></script>
+    <script src="../vendor/leaflet/leaflet.js"></script>
+    <script src="../js/gestion-sites.js?v=20260924b"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

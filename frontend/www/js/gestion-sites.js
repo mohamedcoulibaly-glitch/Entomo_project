@@ -2,6 +2,41 @@ document.addEventListener('DOMContentLoaded', async () => {
   let sites = [];
   let editingId = null;
   let selectedSiteId = null;
+  let sitesMap = null;
+  let sitesMarkers = null;
+
+  const SENEGAL_CENTER = [14.4974, -14.4524];
+
+  function renderMap() {
+    const container = document.getElementById('sites-map');
+    if (!container || typeof L === 'undefined') return;
+    if (!sitesMap) {
+      sitesMap = L.map(container, { zoomControl: true, scrollWheelZoom: false }).setView(SENEGAL_CENTER, 7);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(sitesMap);
+      sitesMarkers = L.layerGroup().addTo(sitesMap);
+    }
+    sitesMarkers.clearLayers();
+    const withCoords = sites.filter(s => s.latitude != null && s.longitude != null);
+    withCoords.forEach(s => {
+      const marker = L.marker([s.latitude, s.longitude]).addTo(sitesMarkers);
+      marker.bindPopup(`<strong>${s.nom}</strong><br>${s.region || ''}`);
+      marker.on('click', () => {
+        selectedSiteId = s.id;
+        loadTimeline(s.id);
+        renderTable(sites);
+      });
+    });
+    if (withCoords.length) {
+      sitesMap.fitBounds(withCoords.map(s => [s.latitude, s.longitude]), { padding: [30, 30], maxZoom: 10 });
+    }
+    // Leaflet calcule sa taille au moment de l'init : si le conteneur était
+    // caché/0px à ce moment-là, la carte reste vide tant qu'on ne force pas
+    // un recalcul après affichage.
+    setTimeout(() => sitesMap.invalidateSize(), 100);
+  }
 
   function norm(s) {
     let region = s.region || '';
@@ -34,11 +69,32 @@ document.addEventListener('DOMContentLoaded', async () => {
       hideLoader();
       pushNotification('Erreur lors du chargement des sites', 'error');
     }
+    populateFilterOptions();
     applyFilters();
+    renderMap();
     if (sites.length) {
       selectedSiteId = sites[0].id;
       loadTimeline(sites[0].id);
     }
+  }
+
+  // Les <select> de filtre étaient codés en dur avec des valeurs qui ne
+  // correspondaient jamais aux vraies données (accents différents,
+  // vocabulaire différent) — on les reconstruit à partir des valeurs
+  // réellement présentes dans les sites chargés, donc toujours cohérentes.
+  function populateFilterOptions() {
+    const fillSelect = (select, values, allLabel) => {
+      if (!select) return;
+      const current = select.value;
+      const uniqueValues = [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, 'fr'));
+      select.innerHTML = `<option value="">${allLabel}</option>` +
+        uniqueValues.map(v => `<option value="${v}">${v}</option>`).join('');
+      if (uniqueValues.includes(current)) select.value = current;
+    };
+    fillSelect(regionFilter, sites.map(s => s.region), 'Toutes les régions');
+    fillSelect(districtFilter, sites.map(s => s.district), 'Tous les districts');
+    fillSelect(zoneTypeFilter, sites.map(s => s.type_zone), 'Tous types');
+    fillSelect(envFilter, sites.map(s => s.environnement), 'Tous environnements');
   }
 
   function renderTable(data) {
@@ -49,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       ? `<tr><td colspan="5" class="text-center py-10 text-gray-400">
            <span class="material-symbols-outlined text-4xl block mb-2">location_off</span>Aucun site trouvé</td></tr>`
       : data.map(s => `
-      <tr class="border-b bg-transparent dark:border-gray-700 hover:bg-gray-300/50 dark:hover:bg-gray-600/20 transition-colors cursor-pointer ${selectedSiteId === s.id ? 'bg-primary/10 dark:bg-primary/20' : ''}" data-id="${s.id}">
+      <tr class="border-b bg-transparent dark:border-gray-700 hover:bg-gray-300/50 dark:hover:bg-gray-600/20 transition-colors cursor-pointer ${selectedSiteId === s.id ? 'bg-brand-primary/10 dark:bg-brand-primary/20' : ''}" data-id="${s.id}">
         <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" scope="row">${s.nom}</th>
         <td class="px-6 py-4">${s.type_zone}</td>
         <td class="px-6 py-4">${s.region}</td>
@@ -61,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         </td>
         <td class="px-6 py-4 text-right">
           <div class="flex gap-4 justify-end">
-            <button class="btn-edit font-medium text-primary hover:underline" data-id="${s.id}">
+            <button class="btn-edit font-medium text-brand-primary hover:underline" data-id="${s.id}">
               <span class="material-symbols-outlined text-xl">edit</span>
             </button>
             <button class="btn-delete font-medium text-red-500 hover:underline" data-id="${s.id}">
@@ -112,19 +168,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  const ACTIVITY_LABELS = {
+    visite_terrain: 'Visite terrain',
+    creation: 'Création du site',
+    modification: 'Modification des coordonnées',
+    pose_piege: 'Pose de piège',
+    retrait_piege: 'Retrait de piège',
+  };
+
   async function loadTimeline(siteId) {
+    const titleEl = document.getElementById('site-history-title');
+    const site = sites.find(x => x.id === siteId);
+    if (titleEl) titleEl.textContent = site ? site.nom : '—';
+
     const timelineContainer = document.querySelector('.flex-grow.space-y-4') || document.querySelector('.overflow-y-auto.pr-2');
     if (!timelineContainer) return;
     try {
       const data = await apiSites.activites(siteId);
       if (data && data.length) {
-        const colors = ['bg-primary', 'bg-green-500', 'bg-yellow-500', 'bg-red-500', 'bg-purple-500'];
+        const colors = ['bg-brand-primary', 'bg-green-500', 'bg-yellow-500', 'bg-red-500', 'bg-purple-500'];
         timelineContainer.innerHTML = data.map((act, i) => `
           <div class="relative pl-6">
             <div class="absolute left-0 top-1 h-full w-0.5 bg-gray-300 dark:bg-gray-700"></div>
             <div class="absolute left-[-5px] top-1.5 w-3 h-3 rounded-full ${colors[i % colors.length]}"></div>
-            <p class="text-sm font-semibold text-gray-800 dark:text-gray-200">${act.titre || act.type || 'Activité'}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400">${act.date ? new Date(act.date).toLocaleDateString('fr-FR') : ''}${act.utilisateur ? ' par ' + act.utilisateur : ''}</p>
+            <p class="text-sm font-semibold text-gray-800 dark:text-gray-200">${ACTIVITY_LABELS[act.type_activite] || act.type_activite || 'Activité'}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">${act.date_activite ? new Date(act.date_activite).toLocaleDateString('fr-FR') : ''}</p>
             ${act.description ? `<p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${act.description}</p>` : ''}
           </div>`).join('');
       } else {
@@ -322,10 +390,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const filtered = sites.filter(s => {
       const matchQ = !q || `${s.nom} ${s.code} ${s.region} ${s.district}`.toLowerCase().includes(q);
-      const matchRegion = !region || region === 'Toutes les régions' || s.region.toLowerCase() === region.toLowerCase();
-      const matchDistrict = !district || district === 'Tous les districts' || s.district.toLowerCase() === district.toLowerCase();
-      const matchType = !zoneType || zoneType === 'Tous types' || s.type_zone.toLowerCase() === zoneType.toLowerCase().replace('aine', '');
-      const matchEnv = !env || env === 'Tous environnements' || (s.environnement && s.environnement.toLowerCase() === env.toLowerCase());
+      const matchRegion = !region || s.region === region;
+      const matchDistrict = !district || s.district === district;
+      const matchType = !zoneType || s.type_zone === zoneType;
+      const matchEnv = !env || s.environnement === env;
       return matchQ && matchRegion && matchDistrict && matchType && matchEnv;
     });
     renderTable(filtered);

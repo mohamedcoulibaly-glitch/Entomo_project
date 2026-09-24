@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     tbody.innerHTML = data.map(c => `
-      <tr class="border-t border-t-[#dbe0e6] dark:border-t-white/10 hover:bg-primary/5 dark:hover:bg-primary/10 cursor-pointer" data-id="${c.id}">
+      <tr class="border-t border-t-[#dbe0e6] dark:border-t-white/10 hover:bg-brand-primary/5 dark:hover:bg-brand-primary/10 cursor-pointer" data-id="${c.id}">
         <td class="h-[72px] px-4 py-2 w-16">
           <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-md w-10 h-10"
                data-img-check="${c.specimen_image || ''}" data-img-icon-size="text-lg"
@@ -129,15 +129,18 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
           <div class="flex-1 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
             <div><span class="text-gray-500">ID:</span> <strong class="font-mono">${c.code}</strong></div>
-            <div><span class="text-gray-500">Confiance:</span> <strong>${c.confiance_pct}</strong></div>
-            <div><span class="text-gray-500">Identification IA:</span> <strong>${c.identification_ia}${c.sexe ? ' (' + c.sexe + ')' : ''}</strong></div>
+            <div><span class="text-gray-500">Confiance:</span> <strong id="val-confiance">${c.confiance_pct}</strong></div>
+            <div class="col-span-2"><span class="text-gray-500">Identification IA:</span> <strong id="val-identification-ia">${c.identification_ia}${c.sexe ? ' (' + c.sexe + ')' : ''}</strong></div>
             <div><span class="text-gray-500">Statut:</span> <strong>${c.statut}</strong></div>
             ${c.site ? `<div class="col-span-2"><span class="text-gray-500">Site:</span> <strong>${c.site}</strong></div>` : ''}
             ${c.date_capture ? `<div class="col-span-2"><span class="text-gray-500">Date:</span> <strong>${new Date(c.date_capture).toLocaleDateString('fr-FR')}</strong></div>` : ''}
-            <div class="col-span-2">
+            <div class="col-span-2 flex items-center gap-3">
               <button type="button" id="btn-modifier-details" class="inline-flex items-center gap-1 text-xs font-semibold text-brand-primary hover:underline">
                 <span class="material-symbols-outlined text-sm">edit</span>Modifier les détails du spécimen
               </button>
+              ${c.specimen_image ? `<button type="button" id="btn-analyser-image" class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline">
+                <span class="material-symbols-outlined text-sm">neurology</span>Analyser (IA)
+              </button>` : ''}
             </div>
           </div>
         </div>
@@ -237,6 +240,40 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('btn-modifier-details')?.addEventListener('click', () => {
         openEditCaptureModal(c);
       });
+
+      const analyserBtn = document.getElementById('btn-analyser-image');
+      analyserBtn?.addEventListener('click', async () => {
+        buttonLoading(analyserBtn, true);
+        try {
+          const res = await apiCaptures.analyserImage(c.id);
+          if (res) {
+            c.espece = res.espece_detectee;
+            c.identification_ia = res.espece_detectee;
+            c.confiance = res.confiance;
+            c.confiance_pct = res.confiance != null ? `${Math.round(res.confiance * 100)}%` : '0%';
+
+            const idEl = document.getElementById('val-identification-ia');
+            const confEl = document.getElementById('val-confiance');
+            if (idEl) idEl.textContent = `${c.identification_ia}${c.sexe ? ' (' + c.sexe + ')' : ''}`;
+            if (confEl) confEl.textContent = c.confiance_pct;
+
+            const inCache = captures.find(item => item.id === c.id);
+            if (inCache) {
+              inCache.espece = c.espece;
+              inCache.identification_ia = c.identification_ia;
+              inCache.confiance = c.confiance;
+              inCache.confiance_pct = c.confiance_pct;
+              renderTable(captures);
+            }
+
+            pushNotification(`Analyse IA terminée : ${res.espece_detectee} (confiance ${Math.round((res.confiance || 0) * 100)}%).`, 'success');
+          }
+        } catch (err) {
+          pushNotification(err?.message || 'Erreur lors de l\'analyse de l\'image.', 'error');
+        } finally {
+          buttonLoading(analyserBtn, false);
+        }
+      });
     }, 50);
   }
 
@@ -332,12 +369,20 @@ document.addEventListener('DOMContentLoaded', async () => {
           showLoader();
           const res = await apiCaptures.update(c.id, data);
           if (res !== null) {
+            // apiRequest() n'utilise jamais throw sur une erreur HTTP (400/413/...) —
+            // il affiche déjà la vraie raison (format/taille) et renvoie null. Le
+            // try/catch ici ne pouvait donc jamais s'activer : un envoi de photo
+            // refusé passait inaperçu et le message "modifié avec succès" s'affichait
+            // quand même juste après, masquant l'erreur réelle.
+            let photoOk = true;
             if (edPendingImageFile) {
-              try { await apiCaptures.uploadImage(c.id, edPendingImageFile); }
-              catch { pushNotification('Modifié, mais l\'envoi de la photo a échoué.', 'warning'); }
+              const uploadRes = await apiCaptures.uploadImage(c.id, edPendingImageFile);
+              photoOk = uploadRes !== null;
             }
             await loadCaptures();
-            pushNotification(`Spécimen ${c.code} modifié avec succès.`, 'success');
+            if (photoOk) {
+              pushNotification(`Spécimen ${c.code} modifié avec succès.`, 'success');
+            }
           }
           hideLoader();
         } catch (err) {

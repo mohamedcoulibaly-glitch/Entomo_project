@@ -6,18 +6,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   let campagnes = [];
+  let interventionCounts = {};
 
   async function loadCampagnes() {
     try {
       showLoader();
-      const data = await apiRequest('GET', '/campagnes/');
+      const [data, interventions] = await Promise.all([
+        apiRequest('GET', '/campagnes/'),
+        apiRequest('GET', '/interventions/'),
+      ]);
       if (data) campagnes = data;
+      interventionCounts = {};
+      (interventions || []).forEach(i => {
+        if (i.campagne_id) interventionCounts[i.campagne_id] = (interventionCounts[i.campagne_id] || 0) + 1;
+      });
       hideLoader();
     } catch (err) {
       hideLoader();
       pushNotification('Erreur lors du chargement des campagnes.', 'error');
     }
+    updateFilterCounts();
     renderCampagnes(campagnes);
+  }
+
+  function updateFilterCounts() {
+    const counts = { planifiee: 0, en_cours: 0, terminee: 0 };
+    campagnes.forEach(c => { if (counts[c.statut] !== undefined) counts[c.statut]++; });
+    const setCount = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+    setCount('count-planifiees', counts.planifiee);
+    setCount('count-en-cours', counts.en_cours);
+    setCount('count-terminees', counts.terminee);
   }
 
   function renderCampagnes(data) {
@@ -44,10 +62,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           ${c.date_debut ? `<span><span class="material-symbols-outlined text-xs align-text-bottom">calendar_today</span> ${new Date(c.date_debut).toLocaleDateString('fr-FR')}</span>` : ''}
           ${c.date_fin ? `<span>— ${new Date(c.date_fin).toLocaleDateString('fr-FR')}</span>` : ''}
           ${c.site_nom || c.site?.nom ? `<span><span class="material-symbols-outlined text-xs align-text-bottom">location_on</span> ${c.site_nom || c.site?.nom}</span>` : ''}
+          <span><span class="material-symbols-outlined text-xs align-text-bottom">emergency</span> ${interventionCounts[c.id] || 0} intervention${(interventionCounts[c.id] || 0) > 1 ? 's' : ''}</span>
         </div>
         <div class="flex gap-2 justify-end border-t border-gray-100 dark:border-gray-700 pt-3">
           <button class="btn-status text-xs text-yellow-600 hover:text-yellow-800 font-medium">Changer statut</button>
-          <button class="btn-edit text-xs text-primary hover:text-primary/80 font-medium">Modifier</button>
+          <button class="btn-edit text-xs text-brand-primary hover:text-brand-primary/80 font-medium">Modifier</button>
           <button class="btn-delete text-xs text-red-600 hover:text-red-800 font-medium">Supprimer</button>
         </div>
       </div>`;
@@ -245,35 +264,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if (searchInput) searchInput.addEventListener('input', applyFilters);
-
-  document.getElementById('btn-creer-campagne')?.addEventListener('click', async () => {
-    const nom = document.getElementById('camp-titre')?.value.trim();
-    if (!nom) { pushNotification('Le titre de la campagne est obligatoire.', 'error'); return; }
-    const dateDebut = document.getElementById('camp-date-debut')?.value;
-    const dateFin = document.getElementById('camp-date-fin')?.value;
-    if (dateDebut && dateFin && dateFin < dateDebut) {
-      pushNotification('La date de fin doit être postérieure à la date de début.', 'error');
-      return;
-    }
-    const button = document.getElementById('btn-creer-campagne');
-    buttonLoading(button, true);
-    try {
-      const created = await apiRequest('POST', '/campagnes/', {
-        nom,
-        type_campagne: document.getElementById('camp-type')?.value || 'collecte',
-        region: document.getElementById('camp-region')?.value || null,
-        date_debut: dateDebut || null,
-        date_fin: dateFin || null,
-        responsable: document.getElementById('camp-responsable')?.value.trim() || null,
-      });
-      if (created) {
-        document.getElementById('form-nouvelle-campagne')?.reset();
-        await loadCampagnes();
-        pushNotification('Campagne créée et enregistrée en base.', 'success');
-      }
-    } catch (error) { pushNotification('La création de la campagne a échoué.', 'error'); }
-    finally { buttonLoading(button, false); }
-  });
 
   document.getElementById('btn-nouvelle-campagne')?.addEventListener('click', event => {
     event.preventDefault();

@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -112,7 +111,7 @@
 <p class="text-gray-900 dark:text-white text-base font-bold leading-tight">Activer la synchronisation automatique</p>
 <p class="text-gray-600 dark:text-gray-400 text-base font-normal leading-normal">Les données seront synchronisées en arrière-plan.</p>
 </div>
-<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary">
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full border-none bg-gray-200 dark:bg-gray-700 p-0.5 has-[:checked]:justify-end has-[:checked]:bg-brand-primary">
 <div class="h-full w-[27px] rounded-full bg-white" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 8px, rgba(0, 0, 0, 0.06) 0px 3px 1px;"></div>
 <input id="sync-active" checked="" class="invisible absolute" type="checkbox"/>
 </label>
@@ -120,7 +119,7 @@
 </div>
 <div>
 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="sync-frequency">Fréquence des tentatives de synchronisation</label>
-<select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-lg" id="sync-frequency" name="sync-frequency">
+<select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-brand-primary focus:border-brand-primary sm:text-sm rounded-lg" id="sync-frequency" name="sync-frequency">
 <option value="30">Toutes les 30 minutes</option>
 <option value="60" selected="">Toutes les heures</option>
 <option value="360">Toutes les 6 heures</option>
@@ -137,7 +136,7 @@
 <fieldset class="space-y-4">
 <div class="relative flex items-start">
 <div class="flex h-6 items-center">
-<input class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="all-data" name="data-type" type="checkbox"/>
+<input class="h-4 w-4 rounded border-gray-300 text-brand-primary focus:ring-brand-primary dark:bg-gray-700 dark:border-gray-600" id="all-data" name="data-type" type="checkbox"/>
 </div>
 <div class="ml-3 text-sm leading-6">
 <label class="font-medium text-gray-900 dark:text-gray-200" for="all-data">Toutes les données</label>
@@ -145,7 +144,7 @@
 </div>
 <div class="relative flex items-start">
 <div class="flex h-6 items-center">
-<input checked="" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="new-captures" name="data-type" type="checkbox"/>
+<input checked="" class="h-4 w-4 rounded border-gray-300 text-brand-primary focus:ring-brand-primary dark:bg-gray-700 dark:border-gray-600" id="new-captures" name="data-type" type="checkbox"/>
 </div>
 <div class="ml-3 text-sm leading-6">
 <label class="font-medium text-gray-900 dark:text-gray-200" for="new-captures">Nouvelles collectes de pièges</label>
@@ -153,7 +152,7 @@
 </div>
 <div class="relative flex items-start">
 <div class="flex h-6 items-center">
-<input checked="" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="species-analysis" name="data-type" type="checkbox"/>
+<input checked="" class="h-4 w-4 rounded border-gray-300 text-brand-primary focus:ring-brand-primary dark:bg-gray-700 dark:border-gray-600" id="species-analysis" name="data-type" type="checkbox"/>
 </div>
 <div class="ml-3 text-sm leading-6">
 <label class="font-medium text-gray-900 dark:text-gray-200" for="species-analysis">Analyse des espèces</label>
@@ -161,7 +160,7 @@
 </div>
 <div class="relative flex items-start">
 <div class="flex h-6 items-center">
-<input class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="env-data" name="data-type" type="checkbox"/>
+<input class="h-4 w-4 rounded border-gray-300 text-brand-primary focus:ring-brand-primary dark:bg-gray-700 dark:border-gray-600" id="env-data" name="data-type" type="checkbox"/>
 </div>
 <div class="ml-3 text-sm leading-6">
 <label class="font-medium text-gray-900 dark:text-gray-200" for="env-data">Données environnementales
@@ -169,7 +168,7 @@
 </div>
 <div class="relative flex items-start">
 <div class="flex h-6 items-center">
-<input checked="" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="record-corrections" name="data-type" type="checkbox"/>
+<input checked="" class="h-4 w-4 rounded border-gray-300 text-brand-primary focus:ring-brand-primary dark:bg-gray-700 dark:border-gray-600" id="record-corrections" name="data-type" type="checkbox"/>
 </div>
 <div class="ml-3 text-sm leading-6">
 <label class="font-medium text-gray-900 dark:text-gray-200" for="record-corrections">Corrections des enregistrements</label>
@@ -184,10 +183,10 @@
 <div class="p-6 space-y-4">
 <p class="text-gray-600 dark:text-gray-400">Cette action remplacera le calendrier et tentera une synchronisation immédiate.</p>
 <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-<button id="btn-sync-now" type="button" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 disabled:bg-gray-400 disabled:cursor-not-allowed">
+<button id="btn-sync-now" type="button" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-brand-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 disabled:bg-gray-400 disabled:cursor-not-allowed">
 <span>Lancer la Synchronisation Maintenant</span>
 </button>
-<button id="sync-progress-button" class="hidden flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 opacity-50 cursor-not-allowed" disabled="">
+<button id="sync-progress-button" class="hidden flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-brand-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 px-6 opacity-50 cursor-not-allowed" disabled="">
 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 <path class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"></path>
@@ -202,11 +201,11 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
     <script src="../js/param-sync.js"></script>

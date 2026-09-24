@@ -1,22 +1,90 @@
 {
   "name": "entomo-image-v1",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "image",
-  "architecture": "RandomForest+histogram48",
+  "architecture": "LogisticRegression+mobilenetv2-embedding1280(imagenet,frozen)",
   "labels": [
     "Ae. aegypti",
+    "Ae. albopictus",
     "An. arabiensis",
     "An. funestus",
     "An. gambiae",
     "Cx. quinquefasciatus"
   ],
-  "feature_size": 48,
+  "feature_size": 1280,
   "metrics": {
-    "precision": 0.9381,
-    "rappel": 0.9333,
-    "f1_score": 0.9331,
-    "accuracy": 0.9333,
-    "echantillons": 150
+    "precision": 0.5917,
+    "rappel": 0.6111,
+    "f1_score": 0.5731,
+    "accuracy": 0.6471,
+    "echantillons": 67,
+    "confusion_matrix": [
+      [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        4,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        2,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        3
+      ]
+    ],
+    "confusion_matrix_labels": [
+      "Ae. aegypti",
+      "Ae. albopictus",
+      "An. arabiensis",
+      "An. funestus",
+      "An. gambiae",
+      "Cx. quinquefasciatus"
+    ],
+    "methode_evaluation": "hold-out stratifié par classe (17 image(s) de test / 50 d'entraînement — classes à 1 seul exemplaire exclues du test)"
+  },
+  "data_quality": {
+    "images_distinctes": 67,
+    "classes": 6,
+    "captures_terrain": 2,
+    "photos_reference_wikimedia": 65,
+    "conflits_labels_resolus": [],
+    "avertissement": "2 photo(s) proviennent de vraies captures, 65 sont des photos de référence Wikimedia/CDC ajoutées pour compenser le manque de données de terrain (voir data/ml_image_reference/manifest.json pour la provenance détaillée). Toujours peu de données pour certaines espèces (An. arabiensis en particulier) — à réentraîner dès que davantage de vraies photos de terrain seront disponibles."
   },
   "onnx_file": "entomo-image-v1.onnx"
 }

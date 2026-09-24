@@ -7,26 +7,107 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let interventions = [];
   let sites = [];
+  let campagnes = [];
 
   async function loadInterventions() {
     try {
       showLoader();
-      const [data, siteData] = await Promise.all([
+      const [data, siteData, campagneData] = await Promise.all([
         apiRequest('GET', '/interventions/'),
         apiSites.list({ limit: 500 }),
+        apiCampagnes.list(),
       ]);
       if (data) interventions = data;
       if (Array.isArray(siteData)) sites = siteData;
-      const siteSelect = document.getElementById('interv-site');
-      if (siteSelect) {
-        siteSelect.innerHTML = '<option value="">Sélectionner un site</option>' + sites.map(site => `<option value="${site.id}">${site.code || `SITE-${site.id}`} - ${site.nom}</option>`).join('');
-      }
+      if (Array.isArray(campagneData)) campagnes = campagneData;
       hideLoader();
     } catch (err) {
       hideLoader();
       pushNotification('Erreur lors du chargement des interventions.', 'error');
     }
     renderTable(interventions);
+  }
+
+  // Tableau en 3 colonnes par statut (Planifiées / En cours / Terminées),
+  // conforme à la maquette d'origine — l'ancien rendu remplaçait cette
+  // maquette par une simple grille plate de cartes identiques, perdant le
+  // regroupement par colonne et les actions rapides propres à chaque statut.
+  async function setStatut(id, statut, extra = {}) {
+    try {
+      const res = await apiRequest('PUT', `/interventions/${id}`, { statut, ...extra });
+      if (res !== null) {
+        const item = interventions.find(x => x.id === id);
+        if (item) Object.assign(item, res);
+        renderTable(interventions);
+        pushNotification('Statut mis à jour.', 'success');
+      }
+    } catch (err) {
+      pushNotification('Erreur lors de la mise à jour.', 'error');
+    }
+  }
+
+  function cardMeta(item) {
+    const site = sites.find(entry => entry.id === item.site_id);
+    const campagne = campagnes.find(entry => entry.id === item.campagne_id);
+    return { site, campagne };
+  }
+
+  function renderCard(item) {
+    const { site, campagne } = cardMeta(item);
+    const siteLine = `<p class="text-xs text-gray-500 dark:text-gray-400">Site: ${site?.nom || 'Non défini'}</p>`;
+    const campagneLine = campagne ? `<p class="text-xs text-brand-primary">Campagne: ${campagne.nom}</p>` : '';
+    const codeLabel = `INT-${String(item.id).padStart(3, '0')}`;
+
+    if (item.statut === 'terminee' || item.statut === 'annulee') {
+      const isCancelled = item.statut === 'annulee';
+      const icon = isCancelled
+        ? '<span class="material-symbols-outlined text-brand-alert-critical text-sm">cancel</span>'
+        : '<span class="material-symbols-outlined text-brand-success text-sm">check_circle</span>';
+      const dateLabel = isCancelled ? 'Annulée' : 'Terminée';
+      const dateVal = item.date_realisee ? new Date(item.date_realisee).toLocaleDateString('fr-FR') : (item.date_prevue ? new Date(item.date_prevue).toLocaleDateString('fr-FR') : '—');
+      return `<div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 opacity-75 cursor-pointer group relative" data-id="${item.id}">
+        <div class="flex items-center justify-between mb-1">
+          <p class="text-sm font-semibold text-[#111418] dark:text-white flex items-center gap-1">${icon} ${item.titre || item.type_intervention || 'Intervention'}</p>
+          <span class="text-xs text-gray-400">${codeLabel}</span>
+        </div>
+        ${siteLine}
+        <p class="text-xs text-gray-500 dark:text-gray-400">${dateLabel}: ${dateVal}</p>
+        ${campagneLine}
+        <button class="btn-delete absolute top-1 right-1 hidden group-hover:block text-red-500 hover:text-red-700 p-1" title="Supprimer"><span class="material-symbols-outlined text-base">delete</span></button>
+      </div>`;
+    }
+
+    if (item.statut === 'en_cours') {
+      return `<div class="p-3 rounded-lg bg-brand-primary/5 border border-brand-primary/20 cursor-pointer group relative" data-id="${item.id}">
+        <div class="flex items-center justify-between mb-1">
+          <p class="text-sm font-semibold text-[#111418] dark:text-white">${item.titre || item.type_intervention || 'Intervention'}</p>
+          <span class="text-xs text-gray-400">${codeLabel}</span>
+        </div>
+        ${siteLine}
+        <p class="text-xs text-gray-500 dark:text-gray-400">Prévue: ${item.date_prevue ? new Date(item.date_prevue).toLocaleDateString('fr-FR') : 'Non définie'}</p>
+        ${campagneLine}
+        <div class="flex gap-1 mt-2">
+          <button class="btn-terminer flex items-center gap-1 h-6 px-2 text-xs rounded bg-brand-success/10 text-brand-success hover:bg-brand-success/20">Marquer terminée</button>
+          <button class="btn-delete text-red-500 hover:text-red-700 p-1 ml-auto hidden group-hover:block" title="Supprimer"><span class="material-symbols-outlined text-base">delete</span></button>
+        </div>
+      </div>`;
+    }
+
+    // planifiee (defaut)
+    return `<div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-dashed border-gray-300 dark:border-gray-600 cursor-pointer group relative" data-id="${item.id}">
+      <div class="flex items-center justify-between mb-1">
+        <p class="text-sm font-semibold text-[#111418] dark:text-white">${item.titre || item.type_intervention || 'Intervention'}</p>
+        <span class="text-xs text-gray-400">${codeLabel}</span>
+      </div>
+      ${siteLine}
+      <p class="text-xs text-gray-500 dark:text-gray-400">Date: ${item.date_prevue ? new Date(item.date_prevue).toLocaleDateString('fr-FR') : 'Non définie'}</p>
+      ${campagneLine}
+      <div class="flex gap-1 mt-2">
+        <button class="btn-en-cours flex items-center gap-1 h-6 px-2 text-xs rounded bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20">Marquer en cours</button>
+        <button class="btn-annuler flex items-center gap-1 h-6 px-2 text-xs rounded bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500">Annuler</button>
+        <button class="btn-delete text-red-500 hover:text-red-700 p-1 ml-auto hidden group-hover:block" title="Supprimer"><span class="material-symbols-outlined text-base">delete</span></button>
+      </div>
+    </div>`;
   }
 
   function renderTable(data) {
@@ -36,30 +117,46 @@ document.addEventListener('DOMContentLoaded', async () => {
       container.innerHTML = '<div class="md:col-span-3 text-center py-10 text-gray-400"><span class="material-symbols-outlined text-4xl block mb-2">emergency</span>Aucune intervention trouvée</div>';
       return;
     }
-    container.innerHTML = data.map(item => {
-      const statusColors = { planifiee: 'bg-blue-100 text-blue-800', en_cours: 'bg-yellow-100 text-yellow-800', terminee: 'bg-green-100 text-green-800', annulee: 'bg-red-100 text-red-800' };
-      const statusLabel = { planifiee: 'Planifiée', en_cours: 'En cours', terminee: 'Terminée', annulee: 'Annulée' };
-      const site = sites.find(entry => entry.id === item.site_id);
-      return `<article class="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800" data-id="${item.id}">
-        <div class="mb-3 flex items-start justify-between gap-3">
-          <div><h3 class="font-bold text-gray-900 dark:text-white">${item.titre || 'Intervention'}</h3><p class="text-xs text-gray-500">${item.type_intervention || 'N/A'}</p></div>
-          <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[item.statut] || 'bg-gray-100 text-gray-700'}">${statusLabel[item.statut] || item.statut}</span>
-        </div>
-        <p class="text-sm text-gray-600 dark:text-gray-300"><span class="material-symbols-outlined align-middle text-base">location_on</span> ${site?.nom || `Site #${item.site_id || 'N/A'}`}</p>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300"><span class="material-symbols-outlined align-middle text-base">event</span> ${item.date_prevue ? new Date(item.date_prevue).toLocaleDateString('fr-FR') : 'Date non définie'}</p>
-        <div class="mt-4 flex gap-2 justify-end border-t border-gray-100 pt-3 dark:border-gray-700">
-            <button class="btn-status text-yellow-600 hover:text-yellow-800 p-1 rounded" title="Changer statut"><span class="material-symbols-outlined" style="font-size:20px">sync</span></button>
-            <button class="btn-edit text-primary hover:text-primary/80 p-1 rounded" title="Modifier"><span class="material-symbols-outlined" style="font-size:20px">edit</span></button>
-            <button class="btn-delete text-red-600 hover:text-red-800 p-1 rounded" title="Supprimer"><span class="material-symbols-outlined" style="font-size:20px">delete</span></button>
-        </div>
-      </article>`;
-    }).join('');
 
-    container.querySelectorAll('.btn-edit').forEach(btn => {
-      btn.addEventListener('click', () => openInterventionModal(parseInt(btn.closest('[data-id]').dataset.id)));
+    const planifiees = data.filter(i => i.statut === 'planifiee' || !i.statut);
+    const enCours = data.filter(i => i.statut === 'en_cours');
+    const terminees = data.filter(i => i.statut === 'terminee' || i.statut === 'annulee');
+
+    const columns = [
+      { titre: 'Planifiées', items: planifiees, colorText: 'text-brand-alert-warning', colorBadge: 'bg-brand-alert-warning/10 text-brand-alert-warning' },
+      { titre: 'En Cours', items: enCours, colorText: 'text-brand-primary', colorBadge: 'bg-brand-primary/10 text-brand-primary' },
+      { titre: 'Terminées', items: terminees, colorText: 'text-brand-success', colorBadge: 'bg-brand-success/10 text-brand-success' },
+    ];
+
+    container.innerHTML = columns.map(col => `
+      <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold ${col.colorText}">${col.titre}</h3>
+          <span class="text-xs font-semibold ${col.colorBadge} px-2 py-0.5 rounded-full">${col.items.length}</span>
+        </div>
+        <div class="space-y-3">
+          ${col.items.length ? col.items.map(renderCard).join('') : '<p class="text-xs text-gray-400 text-center py-4">Aucune intervention</p>'}
+        </div>
+      </div>`).join('');
+
+    container.querySelectorAll('[data-id]').forEach(card => {
+      card.addEventListener('click', e => {
+        if (e.target.closest('button')) return;
+        openInterventionModal(parseInt(card.dataset.id));
+      });
+    });
+    container.querySelectorAll('.btn-en-cours').forEach(btn => {
+      btn.addEventListener('click', e => { e.stopPropagation(); setStatut(parseInt(btn.closest('[data-id]').dataset.id), 'en_cours'); });
+    });
+    container.querySelectorAll('.btn-terminer').forEach(btn => {
+      btn.addEventListener('click', e => { e.stopPropagation(); setStatut(parseInt(btn.closest('[data-id]').dataset.id), 'terminee', { date_realisee: new Date().toISOString() }); });
+    });
+    container.querySelectorAll('.btn-annuler').forEach(btn => {
+      btn.addEventListener('click', e => { e.stopPropagation(); setStatut(parseInt(btn.closest('[data-id]').dataset.id), 'annulee'); });
     });
     container.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
         const item = interventions.find(x => x.id === parseInt(btn.closest('[data-id]').dataset.id));
         if (!item) return;
         confirmDelete(item.titre || 'intervention', async () => {
@@ -73,37 +170,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           } catch (err) {
             pushNotification('Erreur lors de la suppression.', 'error');
           }
-        });
-      });
-    });
-    container.querySelectorAll('.btn-status').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const item = interventions.find(x => x.id === parseInt(btn.closest('[data-id]').dataset.id));
-        if (!item) return;
-        openModal('Changer le statut', `
-          <div class="space-y-3">
-            <p class="text-sm text-gray-600 dark:text-gray-400">Intervention: <strong>${item.titre || item.type}</strong></p>
-            <select id="f-statut" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
-              <option value="planifiee" ${item.statut === 'planifiee' ? 'selected' : ''}>Planifiée</option>
-              <option value="en_cours" ${item.statut === 'en_cours' ? 'selected' : ''}>En cours</option>
-              <option value="terminee" ${item.statut === 'terminee' ? 'selected' : ''}>Terminée</option>
-              <option value="annulee" ${item.statut === 'annulee' ? 'selected' : ''}>Annulée</option>
-            </select>
-          </div>`, {
-          confirmLabel: 'Mettre à jour',
-          onConfirm: async () => {
-            const statut = document.getElementById('f-statut')?.value;
-            try {
-              const res = await apiRequest('PUT', `/interventions/${item.id}`, { statut });
-              if (res !== null) {
-                item.statut = statut;
-                renderTable(interventions);
-                pushNotification('Statut mis à jour.', 'success');
-              }
-            } catch (err) {
-              pushNotification('Erreur lors de la mise à jour.', 'error');
-            }
-          },
         });
       });
     });
@@ -143,6 +209,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Site</label>
           <select id="f-site" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
             <option value="">Aucun site</option>${sites.map(site => `<option value="${site.id}" ${item?.site_id === site.id ? 'selected' : ''}>${site.nom}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Campagne</label>
+          <select id="f-campagne" class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm px-3">
+            <option value="">Aucune campagne</option>${campagnes.map(c => `<option value="${c.id}" ${item?.campagne_id === c.id ? 'selected' : ''}>${c.nom}</option>`).join('')}
           </select>
         </div>
         <div>
@@ -186,6 +258,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           titre,
           type_intervention: document.getElementById('f-type')?.value,
           site_id: Number(document.getElementById('f-site')?.value) || null,
+          campagne_id: Number(document.getElementById('f-campagne')?.value) || null,
           date_prevue: document.getElementById('f-date-debut')?.value || null,
           responsable: document.getElementById('f-responsable')?.value.trim() || '',
           priorite: document.getElementById('f-priorite')?.value || 'normale',
@@ -222,6 +295,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let selectedStatus = 'tous';
   let selectedType = 'tous';
   let selectedSite = 'tous';
+  let selectedCampagne = 'tous';
   const searchInput = document.querySelector('input[type="search"], input[placeholder*="chercher"]');
 
   function applyFilters() {
@@ -232,8 +306,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       const matchStatus = statusVal === 'tous' || item.statut === statusVal;
       const matchType = typeVal === 'tous' || (item.type_intervention || item.type) === typeVal;
       const matchSite = selectedSite === 'tous' || String(item.site_id) === selectedSite;
+      const matchCampagne = selectedCampagne === 'tous' || String(item.campagne_id) === selectedCampagne;
       const matchSearch = !q || `${item.titre} ${item.type} ${item.site_nom}`.toLowerCase().includes(q);
-      return matchStatus && matchType && matchSite && matchSearch;
+      return matchStatus && matchType && matchSite && matchCampagne && matchSearch;
     });
     renderTable(filtered);
   }
@@ -258,29 +333,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   ], value => { selectedStatus = value; });
   bindFilterButton('filter-type', 'Filtrer par type', () => [{ value: 'tous', label: 'Tous les types' }, ...[...new Set(interventions.map(item => item.type_intervention).filter(Boolean))].map(value => ({ value, label: value }))], value => { selectedType = value; });
   bindFilterButton('filter-site', 'Filtrer par site', () => [{ value: 'tous', label: 'Tous les sites' }, ...sites.map(site => ({ value: String(site.id), label: site.nom }))], value => { selectedSite = value; });
-
-  document.getElementById('btn-creer-intervention')?.addEventListener('click', async () => {
-    const titre = document.getElementById('interv-titre')?.value.trim();
-    const siteId = Number(document.getElementById('interv-site')?.value) || null;
-    const datePrevue = document.getElementById('interv-date')?.value;
-    if (!titre) { pushNotification("Le titre de l'intervention est obligatoire.", 'error'); return; }
-    const button = document.getElementById('btn-creer-intervention');
-    buttonLoading(button, true);
-    try {
-      const created = await apiRequest('POST', '/interventions/', {
-        titre,
-        site_id: siteId,
-        type_intervention: document.getElementById('interv-type')?.value || 'pulverisation',
-        date_prevue: datePrevue || null,
-      });
-      if (created) {
-        document.getElementById('form-nouvelle-intervention')?.reset();
-        await loadInterventions();
-        pushNotification('Intervention créée et enregistrée en base.', 'success');
-      }
-    } catch (error) { pushNotification("La création de l'intervention a échoué.", 'error'); }
-    finally { buttonLoading(button, false); }
-  });
+  bindFilterButton('filter-campagne', 'Filtrer par campagne', () => [{ value: 'tous', label: 'Toutes les campagnes' }, ...campagnes.map(c => ({ value: String(c.id), label: c.nom }))], value => { selectedCampagne = value; });
 
   document.getElementById('btn-nouvelle-intervention')?.addEventListener('click', event => {
     event.preventDefault();

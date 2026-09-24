@@ -79,12 +79,12 @@ function updateConnStatus() {
   if (label) {
     label.textContent = online ? 'Statut : En ligne' : 'Statut : Hors ligne';
     label.className = online
-      ? 'text-status-green dark:text-status-green text-base font-medium leading-normal'
-      : 'text-status-red dark:text-status-red text-base font-medium leading-normal';
+      ? 'text-green-600 dark:text-green-600 text-base font-medium leading-normal'
+      : 'text-red-600 dark:text-red-600 text-base font-medium leading-normal';
   }
   if (dot) {
-    dot.className = dot.className.replace(/bg-status-green|bg-status-red/g, '');
-    dot.classList.add(online ? 'bg-status-green' : 'bg-status-red');
+    dot.className = dot.className.replace(/bg-green-500|bg-red-600/g, '');
+    dot.classList.add(online ? 'bg-green-500' : 'bg-red-600');
   }
 }
 

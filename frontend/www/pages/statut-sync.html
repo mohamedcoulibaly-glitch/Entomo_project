@@ -23,7 +23,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -76,13 +75,13 @@
 <!-- Connection Status Banner -->
 <div class="flex items-center gap-2">
 <span class="relative flex h-3 w-3">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-green opacity-75"></span>
-<span class="relative inline-flex rounded-full h-3 w-3 bg-status-green" id="conn-dot"></span>
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-green-500" id="conn-dot"></span>
 </span>
-<p id="conn-label" class="text-status-green dark:text-status-green text-base font-medium leading-normal">Statut : En ligne</p>
+<p id="conn-label" class="text-green-600 dark:text-green-600 text-base font-medium leading-normal">Statut : En ligne</p>
 </div>
 </div>
-<button id="btn-launch-sync" type="button" class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer overflow-hidden rounded-lg h-12 px-6 bg-institutional-blue text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed">
+<button id="btn-launch-sync" type="button" class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer overflow-hidden rounded-lg h-12 px-6 bg-brand-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed">
 <span class="material-symbols-outlined">sync</span>
 <span class="truncate">Lancer la Synchronisation</span>
 </button>
@@ -90,22 +89,22 @@
 <!-- Stats Cards -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800">
-<div class="flex items-center gap-2 text-neutral-gray-text dark:text-gray-400">
-<span class="material-symbols-outlined text-status-green" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+<div class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-green-600" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
 <p class="text-base font-medium leading-normal">Dernière Synchronisation Réussie</p>
 </div>
 <p data-last-sync class="text-[#111418] dark:text-gray-100 tracking-light text-3xl font-bold leading-tight">—</p>
 </div>
 <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800">
-<div class="flex items-center gap-2 text-neutral-gray-text dark:text-gray-400">
-<span class="material-symbols-outlined text-status-yellow" style="font-variation-settings: 'FILL' 1;">upload</span>
+<div class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-yellow-600" style="font-variation-settings: 'FILL' 1;">upload</span>
 <p class="text-base font-medium leading-normal">Données en Attente d'Envoi</p>
 </div>
 <p data-pending class="text-[#111418] dark:text-gray-100 tracking-light text-3xl font-bold leading-tight">0</p>
 </div>
 <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800">
-<div class="flex items-center gap-2 text-neutral-gray-text dark:text-gray-400">
-<span class="material-symbols-outlined text-status-green" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+<div class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-green-600" style="font-variation-settings: 'FILL' 1;">task_alt</span>
 <p class="text-base font-medium leading-normal">Conflits de Données</p>
 </div>
 <p id="stat-conflicts" data-conflicts class="text-[#111418] dark:text-gray-100 tracking-light text-3xl font-bold leading-tight">0</p>
@@ -117,16 +116,16 @@
 <div class="flex gap-6 justify-between">
 <p data-sync-status class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal">—</p>
 </div>
-<div class="w-full rounded-full bg-neutral-gray-bg dark:bg-gray-700">
-<div data-sync-progress class="h-2 rounded-full bg-institutional-blue" style="width: 0%;"></div>
+<div class="w-full rounded-full bg-gray-200 dark:bg-gray-700">
+<div data-sync-progress class="h-2 rounded-full bg-brand-primary" style="width: 0%;"></div>
 </div>
-<p class="text-neutral-gray-text dark:text-gray-400 text-sm font-normal leading-normal">—</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">—</p>
 </div>
 </div>
 <!-- Sync Log -->
 <div class="bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800 rounded-xl p-6 mb-8">
 <p class="text-[#111418] dark:text-gray-200 text-base font-medium leading-normal mb-3">Journal de Synchronisation</p>
-<div data-log-container class="space-y-1 text-xs font-mono max-h-48 overflow-y-auto text-neutral-gray-text dark:text-gray-400"></div>
+<div data-log-container class="space-y-1 text-xs font-mono max-h-48 overflow-y-auto text-gray-500 dark:text-gray-400"></div>
 </div>
 <!-- Data Conflicts Card -->
 <div id="sync-ok-card" class="bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800 rounded-xl p-4 @container">
@@ -135,22 +134,22 @@
 <div class="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-2 py-4 @xl:px-6">
 <p class="text-[#111418] dark:text-gray-100 text-lg font-bold leading-tight tracking-[-0.015em]">Aucun conflit détecté</p>
 <div class="flex items-end gap-3 justify-between">
-<p class="text-neutral-gray-text dark:text-gray-400 text-base font-normal leading-normal">Toutes vos données sont cohérentes avec le serveur central. Le travail continue sans interruption.</p>
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Toutes vos données sont cohérentes avec le serveur central. Le travail continue sans interruption.</p>
 </div>
 </div>
 </div>
 </div>
 <!-- Data Conflicts Card - Alternative State with Conflicts -->
-<div id="conflicts-card" class="hidden bg-white dark:bg-background-dark border-2 border-status-red/50 rounded-xl p-4 @container mt-8">
+<div id="conflicts-card" class="hidden bg-white dark:bg-background-dark border-2 border-red-500/50 rounded-xl p-4 @container mt-8">
 <div class="flex flex-col items-start justify-start rounded-lg @xl:flex-row @xl:items-center">
-<div class="flex-shrink-0 text-status-red p-4">
+<div class="flex-shrink-0 text-red-600 p-4">
 <span class="material-symbols-outlined" style="font-size: 48px;">error</span>
 </div>
 <div class="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-2 py-4 @xl:px-6">
-<p id="conflicts-title" class="text-status-red dark:text-status-red text-lg font-bold leading-tight tracking-[-0.015em]">0 conflit à résoudre</p>
+<p id="conflicts-title" class="text-red-600 dark:text-red-600 text-lg font-bold leading-tight tracking-[-0.015em]">0 conflit à résoudre</p>
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-<p class="text-neutral-gray-text dark:text-gray-400 text-base font-normal leading-normal">Certaines données n'ont pas pu être synchronisées automatiquement.</p>
-<button id="btn-resolve-conflicts" type="button" class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer overflow-hidden rounded-lg h-10 px-4 bg-status-red text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90">
+<p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-normal">Certaines données n'ont pas pu être synchronisées automatiquement.</p>
+<button id="btn-resolve-conflicts" type="button" class="flex items-center justify-center gap-2 min-w-[84px] cursor-pointer overflow-hidden rounded-lg h-10 px-4 bg-red-600 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90">
 <span class="truncate">Résoudre les conflits</span>
 </button>
 </div>
@@ -163,14 +162,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js"></script>
     <script src="../js/pages-generiques.js"></script>
-    <script src="../js/statut-sync.js"></script>
+    <script src="../js/statut-sync.js?v=20260922a"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

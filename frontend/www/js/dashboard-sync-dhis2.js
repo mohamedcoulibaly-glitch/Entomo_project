@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <td class="px-6 py-4">Indices agrégés</td>
           <td class="px-6 py-4"><span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-xs font-medium ${isSuccess ? 'bg-green-100 text-green-700' : isError ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}">${entry.statut}</span></td>
           <td class="px-6 py-4">${entry.nb_enregistrements || 0} val.</td>
-          <td class="px-6 py-4">${isError ? `<button class="sync-error-btn text-primary hover:underline font-medium" data-message="${(entry.message || '').replace(/"/g, '&quot;')}">Voir l'erreur</button>` : `<span class="text-gray-500">ID: sync_${entry.id}</span>`}</td>
+          <td class="px-6 py-4">${isError ? `<button class="sync-error-btn text-brand-primary hover:underline font-medium" data-message="${(entry.message || '').replace(/"/g, '&quot;')}">Voir l'erreur</button>` : `<span class="text-gray-500">ID: sync_${entry.id}</span>`}</td>
           <td class="px-6 py-4 text-right">${isError ? `<button class="sync-replay-btn p-1.5 text-gray-500 hover:bg-gray-200 rounded-md" data-config-id="${entry.config_id}"><span class="material-symbols-outlined text-lg">replay</span></button>` : ''}</td>
         </tr>`;
       }).join('');
@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('button').forEach(btn => {
     const t = btn.textContent.trim();
 
-    if ((t.includes('Synchroniser') || t.includes('Lancer sync') || t.includes('Forcer')) && !btn.dataset.bound) {
+    if ((t.includes('Synchroniser') || t.includes('Lancer sync') || t.includes('Forcer') || t.includes('synchronisation manuelle')) && !btn.dataset.bound) {
       btn.dataset.bound = '1';
       btn.addEventListener('click', async () => {
         buttonLoading(btn, true);

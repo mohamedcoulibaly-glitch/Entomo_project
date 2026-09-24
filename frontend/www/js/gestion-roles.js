@@ -76,16 +76,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     container.innerHTML = roles.map((r) => `
       <div class="flex cursor-pointer items-center gap-4 rounded-lg px-4 min-h-[72px] py-2 justify-between role-list-item
         ${selectedRoleId === r.id
-          ? 'bg-primary/10 dark:bg-primary/20 border border-primary/50 dark:border-primary/70'
+          ? 'bg-brand-primary/10 dark:bg-brand-primary/20 border border-brand-primary/50 dark:border-brand-primary/70'
           : 'bg-white dark:bg-background-dark/50 hover:bg-gray-50 dark:hover:bg-white/5'}"
         data-id="${r.id}">
         <div class="flex items-center gap-4">
-          <div class="flex items-center justify-center rounded-lg bg-white dark:bg-background-dark shrink-0 size-12 ${selectedRoleId === r.id ? 'text-primary' : 'text-[#111418] dark:text-white'}">
+          <div class="flex items-center justify-center rounded-lg bg-white dark:bg-background-dark shrink-0 size-12 ${selectedRoleId === r.id ? 'text-brand-primary' : 'text-[#111418] dark:text-white'}">
             <span class="material-symbols-outlined text-3xl">admin_panel_settings</span>
           </div>
           <div class="flex flex-col justify-center">
-            <p class="text-base font-semibold leading-normal line-clamp-1 ${selectedRoleId === r.id ? 'text-primary' : 'text-[#111418] dark:text-white'}">${r.name}</p>
-            <p class="text-sm font-normal leading-normal line-clamp-2 ${selectedRoleId === r.id ? 'text-primary/80' : 'text-[#617589] dark:text-gray-400'}">
+            <p class="text-base font-semibold leading-normal line-clamp-1 ${selectedRoleId === r.id ? 'text-brand-primary' : 'text-[#111418] dark:text-white'}">${r.name}</p>
+            <p class="text-sm font-normal leading-normal line-clamp-2 ${selectedRoleId === r.id ? 'text-brand-primary/80' : 'text-[#617589] dark:text-gray-400'}">
               ${(r.permissions ? r.permissions.length : 0)} permission(s)
             </p>
           </div>
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   if (!perm) return `<td class="p-3 text-center text-gray-300 dark:text-gray-700">—</td>`;
                   const checked = assignedIds.has(perm.id);
                   return `<td class="p-3 text-center">
-                    <input type="checkbox" class="perm-checkbox rounded text-primary focus:ring-primary"
+                    <input type="checkbox" class="perm-checkbox rounded text-brand-primary focus:ring-brand-primary"
                            data-permission-id="${perm.id}" title="${perm.code}" ${checked ? 'checked' : ''}/>
                   </td>`;
                 }).join('')}
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <button id="btn-cancel-role" class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-gray-200 dark:bg-white/10 text-[#111418] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">
           Annuler
         </button>
-        <button id="btn-save-role" class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+        <button id="btn-save-role" class="flex min-w-[84px] items-center justify-center rounded-lg h-10 px-4 bg-brand-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-brand-primary/90 transition-colors">
           Enregistrer
         </button>
       </div>`;

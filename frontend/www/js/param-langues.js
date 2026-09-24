@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     tableBody.innerHTML = items.map(lang => {
       const progress = lang.fichier_traduction ? 100 : lang.active ? 60 : 20;
-      const color = progress === 100 ? 'bg-primary' : progress >= 50 ? 'bg-yellow-400' : 'bg-red-500';
+      const color = progress === 100 ? 'bg-brand-primary' : progress >= 50 ? 'bg-yellow-400' : 'bg-red-500';
       return `<tr class="border-b dark:border-gray-700" data-id="${lang.id}">
         <th class="px-6 py-4 font-medium text-gray-900 dark:text-white">${lang.nom}</th>
         <td class="px-6 py-4">${lang.code}</td>

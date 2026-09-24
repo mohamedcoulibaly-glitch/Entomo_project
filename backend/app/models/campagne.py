@@ -19,3 +19,4 @@ class Campagne(BaseModel):
 
     # Relationships
     utilisateur = relationship("User", back_populates="campagnes")
+    interventions = relationship("Intervention", back_populates="campagne")

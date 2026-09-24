@@ -21,6 +21,7 @@ def _filters(
     date_fin: Optional[str] = None,
     statut: Optional[str] = None,
     methode: Optional[str] = None,
+    environnement: Optional[str] = None,
 ) -> dict:
     return {
         "region": region,
@@ -30,6 +31,7 @@ def _filters(
         "date_fin": date_fin,
         "statut": statut,
         "methode": methode,
+        "environnement": environnement,
     }
 
 
@@ -37,6 +39,7 @@ def _filters(
 def get_dashboard_stats(
     region: Optional[str] = Query(None),
     espece: Optional[str] = Query(None),
+    environnement: Optional[str] = Query(None),
     period: Optional[str] = Query(None),
     date_debut: Optional[str] = Query(None),
     date_fin: Optional[str] = Query(None),
@@ -44,7 +47,7 @@ def get_dashboard_stats(
     _: User = Depends(get_current_active_user),
 ):
     return ds.get_stats(
-        db, region=region, espece=espece, period=period,
+        db, region=region, espece=espece, environnement=environnement, period=period,
         date_debut=date_debut, date_fin=date_fin,
     )
 
@@ -53,39 +56,42 @@ def get_dashboard_stats(
 def captures_par_espece(
     region: Optional[str] = Query(None),
     espece: Optional[str] = Query(None),
+    environnement: Optional[str] = Query(None),
     period: Optional[str] = Query(None),
     date_debut: Optional[str] = Query(None),
     date_fin: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
-    return ds.captures_par_espece(db, **_filters(region, espece, period, date_debut, date_fin))
+    return ds.captures_par_espece(db, **_filters(region, espece, period, date_debut, date_fin, environnement=environnement))
 
 
 @router.get("/captures-par-site")
 def captures_par_site(
     region: Optional[str] = Query(None),
     espece: Optional[str] = Query(None),
+    environnement: Optional[str] = Query(None),
     period: Optional[str] = Query(None),
     date_debut: Optional[str] = Query(None),
     date_fin: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
-    return ds.captures_par_site(db, **_filters(region, espece, period, date_debut, date_fin))
+    return ds.captures_par_site(db, **_filters(region, espece, period, date_debut, date_fin, environnement=environnement))
 
 
 @router.get("/captures-par-region")
 def captures_par_region(
     region: Optional[str] = Query(None),
     espece: Optional[str] = Query(None),
+    environnement: Optional[str] = Query(None),
     period: Optional[str] = Query(None),
     date_debut: Optional[str] = Query(None),
     date_fin: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
-    return ds.captures_par_region(db, **_filters(region, espece, period, date_debut, date_fin))
+    return ds.captures_par_region(db, **_filters(region, espece, period, date_debut, date_fin, environnement=environnement))
 
 
 @router.get("/captures-par-methode")
@@ -113,12 +119,14 @@ def densite_evolution(
     granularity: str = Query("week", pattern="^(day|week|month)$"),
     region: Optional[str] = Query(None),
     espece: Optional[str] = Query(None),
+    environnement: Optional[str] = Query(None),
     period: Optional[str] = Query("1A"),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
     return ds.densite_evolution(
-        db, granularity=granularity, region=region, espece=espece, period=period,
+        db, granularity=granularity, region=region, espece=espece,
+        environnement=environnement, period=period,
     )
 
 
@@ -135,11 +143,12 @@ def get_alertes(
 @router.get("/heatmap")
 def heatmap(
     region: Optional[str] = Query(None),
+    environnement: Optional[str] = Query(None),
     period: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_active_user),
 ):
-    return ds.heatmap_data(db, **_filters(region, None, period))
+    return ds.heatmap_data(db, **_filters(region, None, period, environnement=environnement))
 
 
 @router.get("/interventions-stats")

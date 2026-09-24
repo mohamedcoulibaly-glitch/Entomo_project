@@ -47,13 +47,44 @@ def test_train_audio_model_exports_onnx(db):
     assert manifest["onnx_file"] == "entomo-audio-v1.onnx"
 
 
-def test_train_image_model_exports_onnx(db):
+def test_train_image_model_exports_onnx(db, site1_id):
+    # train_image_model() n'a plus de repli synthétique (cf. audit du
+    # 2026-09-22 : un modèle "qui marche" sur des aplats de couleur inventés
+    # ne sert à rien de réel) — il lui faut donc de vraies captures avec
+    # image_path distinct pour s'entraîner, comme en production.
+    from datetime import datetime
+    from app.models.capture import Capture
+
+    img_a = FIXTURES_IMAGE / "pytest_species_a.png"
+    img_b = FIXTURES_IMAGE / "pytest_species_b.png"
+    if not img_a.is_file():
+        arr = np.zeros((64, 64, 3), dtype=np.uint8)
+        arr[:, :] = (30, 90, 180)
+        Image.fromarray(arr, mode="RGB").save(img_a)
+    if not img_b.is_file():
+        arr = np.zeros((64, 64, 3), dtype=np.uint8)
+        arr[:, :] = (200, 120, 40)
+        Image.fromarray(arr, mode="RGB").save(img_b)
+
+    db.add(Capture(
+        site_id=site1_id, date_capture=datetime.utcnow(),
+        espece="An. gambiae", image_path=str(img_a), methode_capture="photo",
+    ))
+    db.add(Capture(
+        site_id=site1_id, date_capture=datetime.utcnow(),
+        espece="Ae. aegypti", image_path=str(img_b), methode_capture="photo",
+    ))
+    db.commit()
+
     result = train_image_model(db, pipeline_name="pytest-image")
     assert Path(result.model_path).is_file()
-    assert result.precision > 0
+    assert result.precision >= 0
+    assert result.echantillons >= 2
     manifest = load_manifest("image")
     assert manifest is not None
-    assert manifest["feature_size"] == 48
+    assert manifest["feature_size"] == 1280
+    assert manifest["metrics"]["methode_evaluation"]
+    assert "data_quality" in manifest
 
 
 def test_onnx_audio_inference(onnx_models):
