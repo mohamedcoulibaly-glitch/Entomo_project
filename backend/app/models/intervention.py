@@ -7,6 +7,7 @@ class Intervention(BaseModel):
     titre = Column(String(200), nullable=False)
     description = Column(Text)
     site_id = Column(Integer, ForeignKey("sites_sentinelles.id", ondelete="SET NULL"))
+    campagne_id = Column(Integer, ForeignKey("campagnes.id", ondelete="SET NULL"))
     date_prevue = Column(DateTime)
     date_realisee = Column(DateTime)
     statut = Column(String(50), default="planifiee")  # planifiee, en_cours, realisee, annulee
@@ -18,4 +19,5 @@ class Intervention(BaseModel):
 
     # Relationships
     site = relationship("SiteSentinelle", back_populates="interventions", foreign_keys=[site_id])
+    campagne = relationship("Campagne", back_populates="interventions", foreign_keys=[campagne_id])
     utilisateur = relationship("User", back_populates="interventions", foreign_keys=[utilisateur_id])

@@ -25,7 +25,6 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#137fec",
                         "background-light": "#f6f7f8",
                         "background-dark": "#101922",
                         "brand-primary": "#005689",
@@ -94,160 +93,14 @@
                         <p class="text-sm font-medium leading-normal">Statut: Tous</p>
                         <span class="material-symbols-outlined text-lg">expand_more</span>
                     </button>
+                    <button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-brand-background dark:bg-gray-700 pl-4 pr-3 text-[#111418] dark:text-gray-200" id="filter-campagne">
+                        <p class="text-sm font-medium leading-normal">Campagne: Toutes</p>
+                        <span class="material-symbols-outlined text-lg">expand_more</span>
+                    </button>
                 </div>
 
                 <div id="interventions-list" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-bold text-brand-alert-warning">Planifiées</h3>
-                            <span class="text-xs font-semibold bg-brand-alert-warning/10 text-brand-alert-warning px-2 py-0.5 rounded-full">4</span>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-dashed border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" id="interv-1">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="text-sm font-semibold text-[#111418] dark:text-white">Pulvérisation IRS</p>
-                                    <span class="text-xs text-gray-400">INT-001</span>
-                                </div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Site: Tambacounda</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Date: 20/07/2025</p>
-                                <div class="flex gap-1 mt-2">
-                                    <button class="flex items-center gap-1 h-6 px-2 text-xs rounded bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20" id="btn-en-cours-1">Marquer en cours</button>
-                                    <button class="flex items-center gap-1 h-6 px-2 text-xs rounded bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500" id="btn-annuler-1">Annuler</button>
-                                </div>
-                            </div>
-                            <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-dashed border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" id="interv-2">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="text-sm font-semibold text-[#111418] dark:text-white">Distribution MII</p>
-                                    <span class="text-xs text-gray-400">INT-002</span>
-                                </div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Site: Kédougou</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Date: 25/07/2025</p>
-                                <div class="flex gap-1 mt-2">
-                                    <button class="flex items-center gap-1 h-6 px-2 text-xs rounded bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20">Marquer en cours</button>
-                                    <button class="flex items-center gap-1 h-6 px-2 text-xs rounded bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500">Annuler</button>
-                                </div>
-                            </div>
-                            <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-dashed border-gray-300 dark:border-gray-600 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="text-sm font-semibold text-[#111418] dark:text-white">Traitement larvicide</p>
-                                    <span class="text-xs text-gray-400">INT-003</span>
-                                </div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Site: Kolda</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Date: 01/08/2025</p>
-                                <div class="flex gap-1 mt-2">
-                                    <button class="flex items-center gap-1 h-6 px-2 text-xs rounded bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20">Marquer en cours</button>
-                                    <button class="flex items-center gap-1 h-6 px-2 text-xs rounded bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500">Annuler</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-bold text-brand-primary">En Cours</h3>
-                            <span class="text-xs font-semibold bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded-full">2</span>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="p-3 rounded-lg bg-brand-primary/5 border border-brand-primary/20 cursor-pointer hover:bg-brand-primary/10">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="text-sm font-semibold text-[#111418] dark:text-white">Pulvérisation IRS</p>
-                                    <span class="text-xs text-gray-400">INT-004</span>
-                                </div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Site: Matam</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Début: 10/07/2025 - 65%</p>
-                                <div class="w-full h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 mt-2">
-                                    <div class="h-1.5 rounded-full bg-brand-primary" style="width: 65%"></div>
-                                </div>
-                                <div class="flex gap-1 mt-2">
-                                    <button class="flex items-center gap-1 h-6 px-2 text-xs rounded bg-brand-success/10 text-brand-success hover:bg-brand-success/20">Marquer terminée</button>
-                                </div>
-                            </div>
-                            <div class="p-3 rounded-lg bg-brand-primary/5 border border-brand-primary/20 cursor-pointer hover:bg-brand-primary/10">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="text-sm font-semibold text-[#111418] dark:text-white">Sensibilisation</p>
-                                    <span class="text-xs text-gray-400">INT-005</span>
-                                </div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Site: Dakar</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Début: 12/07/2025 - 30%</p>
-                                <div class="w-full h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 mt-2">
-                                    <div class="h-1.5 rounded-full bg-brand-primary" style="width: 30%"></div>
-                                </div>
-                                <div class="flex gap-1 mt-2">
-                                    <button class="flex items-center gap-1 h-6 px-2 text-xs rounded bg-brand-success/10 text-brand-success hover:bg-brand-success/20">Marquer terminée</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-bold text-brand-success">Terminées</h3>
-                            <span class="text-xs font-semibold bg-brand-success/10 text-brand-success px-2 py-0.5 rounded-full">6</span>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 opacity-75 cursor-pointer">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="text-sm font-semibold text-[#111418] dark:text-white flex items-center gap-1"><span class="material-symbols-outlined text-brand-success text-sm">check_circle</span> Pulvérisation IRS</p>
-                                    <span class="text-xs text-gray-400">INT-006</span>
-                                </div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Site: Tambacounda</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Terminée: 05/07/2025</p>
-                            </div>
-                            <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 opacity-75 cursor-pointer">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="text-sm font-semibold text-[#111418] dark:text-white flex items-center gap-1"><span class="material-symbols-outlined text-brand-success text-sm">check_circle</span> Distribution MII</p>
-                                    <span class="text-xs text-gray-400">INT-007</span>
-                                </div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Site: Kédougou</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Terminée: 30/06/2025</p>
-                            </div>
-                            <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 opacity-75 cursor-pointer">
-                                <div class="flex items-center justify-between mb-1">
-                                    <p class="text-sm font-semibold text-[#111418] dark:text-white flex items-center gap-1"><span class="material-symbols-outlined text-brand-alert-critical text-sm">cancel</span> Traitement larvicide</p>
-                                    <span class="text-xs text-gray-400">INT-008</span>
-                                </div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Site: Kolda</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Annulée: 25/06/2025</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-                    <h3 class="text-lg font-bold text-[#111418] dark:text-white mb-4">Nouvelle Intervention</h3>
-                    <form id="form-nouvelle-intervention" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="interv-titre">Titre</label>
-                            <input class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="interv-titre" placeholder="Titre de l'intervention" />
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="interv-site">Site</label>
-                            <select class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="interv-site">
-                                <option>Sélectionner un site</option>
-                                <option>SIT-024 - Tambacounda</option>
-                                <option>SIT-025 - Kédougou</option>
-                                <option>SIT-026 - Kolda</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="interv-type">Type</label>
-                            <select class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="interv-type">
-                                <option>Pulvérisation IRS</option>
-                                <option>Distribution MII</option>
-                                <option>Traitement larvicide</option>
-                                <option>Sensibilisation</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block" for="interv-date">Date prévue</label>
-                            <input type="date" class="w-full h-10 rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm text-[#111418] dark:text-gray-200 focus:ring-brand-primary focus:border-brand-primary" id="interv-date" />
-                        </div>
-                    </form>
-                    <div class="flex justify-end mt-4">
-                        <button type="button" class="flex h-10 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg bg-brand-primary px-6 text-sm font-bold leading-normal text-white" id="btn-creer-intervention">
-                            <span class="material-symbols-outlined text-lg">add</span> Créer l'intervention
-                        </button>
-                    </div>
+                    <div class="md:col-span-3 text-center py-10 text-gray-400">Chargement…</div>
                 </div>
 
             </div>
@@ -255,14 +108,14 @@
     </div>
 
     <!-- Ento-App Scripts -->
-    <script src="../js/config-boot.js?v=20260903-1"></script>
-    <script src="../js/api.js?v=20260922e"></script>
+    <script src="../js/config-boot.js?v=20260923g"></script>
+    <script src="../js/api.js?v=20260923g"></script>
     <script src="../js/permission-guard.js?v=2"></script>
     <script src="../js/sidebar.js?v=20260903-1"></script>
-    <script src="../js/core.js?v=20260922h"></script>
+    <script src="../js/core.js?v=20260924a"></script>
     <script src="../js/i18n.js?v=20260903-1"></script>
     <script src="../js/pages-generiques.js?v=7"></script>
-    <script src="../js/interventions.js?v=20260903-1"></script>
+    <script src="../js/interventions.js?v=20260924c"></script>
     <!-- /Ento-App Scripts -->
 </body>
 </html>

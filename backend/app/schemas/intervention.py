@@ -6,6 +6,7 @@ class InterventionBase(BaseModel):
     titre: str
     description: Optional[str] = None
     site_id: Optional[int] = None
+    campagne_id: Optional[int] = None
     date_prevue: Optional[datetime] = None
     type_intervention: Optional[str] = "pulverisation"
     responsable: Optional[str] = None
@@ -19,6 +20,7 @@ class InterventionUpdate(BaseModel):
     titre: Optional[str] = None
     description: Optional[str] = None
     site_id: Optional[int] = None
+    campagne_id: Optional[int] = None
     date_prevue: Optional[datetime] = None
     date_realisee: Optional[datetime] = None
     type_intervention: Optional[str] = None
